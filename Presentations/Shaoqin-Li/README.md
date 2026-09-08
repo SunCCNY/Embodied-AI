@@ -20,10 +20,9 @@ on deployment, and most recently retargeting human motion capture onto the robot
 | Embodied AI Week 22.pptx | 2026-08-22 |
 | Embodied AI Week 23.pptx | 2026-08-22 |
 | Embodied AI Week 24.pptx | 2026-08-28 |
-| Embodied AI Week 24 - GMR.pptx | 2026-09-03 |
+| Embodied AI Week 25.pptx | 2026-09-03 |
 
 Week numbers follow the lab meeting schedule, so gaps are weeks I did not present.
-Two decks are numbered 24: the workshop experiment deck, and a separate one on GMR motion
-retargeting.
+Week 25 is the GMR motion retargeting deck.
 
 The lab manuals that came out of this work are in `CUNY-AI/Part-2/`.
