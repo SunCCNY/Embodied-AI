@@ -1,0 +1,8 @@
+Candidate 1: "A Person Dancing" (Pexels, cyberpunk/neon)
+  -> checked actual decoded frame: full body, but dark, cluttered background
+Candidate 2: "Woman Dancing" (Pexels, studio) -- page said "full-body performer"
+  -> checked actual decoded frame at t=0: tight crop, legs and feet only
+  -> REJECTED -- page description was wrong
+Candidate 3: "Woman Dancing" by Antoni Shkraba (Pexels, studio)
+  -> checked poster JPG before downloading: full body, plain background,
+     static camera, mid-dance-move -- confirmed good, downloaded (26.5s, 25fps)

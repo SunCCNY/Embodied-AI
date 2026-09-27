@@ -1,0 +1,17 @@
+Resumed r1_tennis_run1 from model_2999.pt -> trained to model_12998.pt (+10,000 iters)
+Wall time: 3:19:10
+
+Native evaluate.py, before -> after extended training:
+  success_rate   0.9688 -> 0.9844
+  mpkpe          0.2991 -> 0.1588   (nearly halved)
+  ee_pos_error   0.0870 -> 0.0679
+
+sim2sim_r1_tennis.py, same checkpoints:
+  mean joint_pos_error   4.79 rad -> 4.59 rad   (~4% better)
+  max joint_pos_error    9.02 rad -> 8.30 rad   (~8% better)
+
+Follow-up test -- swapped the harness's policy inference from
+onnxruntime/CPU to the raw PyTorch checkpoint on CUDA (matching what
+native training actually used):
+  mean joint_pos_error   4.70 rad   (no meaningful change)
+  max joint_pos_error    8.27 rad   (no meaningful change)

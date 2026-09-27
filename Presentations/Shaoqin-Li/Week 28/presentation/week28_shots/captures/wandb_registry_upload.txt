@@ -1,0 +1,9 @@
+Motion interpolated, input frames: 312, input fps: 30.0, output frames: 519, output fps: 50.0
+Processing frames: 100%|##########| 519/519 [00:01<00:00, 327.85 frame/s]
+wandb: setting up run 42fiawyz
+wandb: Syncing run r1_tennis
+Stacking arrays and saving data...
+Saving to /tmp/motion.npz...
+Uploading to Weights & Biases...
+[INFO]: Logging motion to wandb: r1_tennis
+[INFO]: Motion saved to wandb registry: motions/r1_tennis

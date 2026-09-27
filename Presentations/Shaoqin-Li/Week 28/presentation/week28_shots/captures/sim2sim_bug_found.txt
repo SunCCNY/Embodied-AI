@@ -1,0 +1,5 @@
+--- t=1100 (t_sec=8.800) ---  action range: [-269.296, 262.766]
+--- t=1200 (t_sec=9.600) ---  action range: [-323.632, 319.253]
+[RESULT] mean joint_pos_error: 8.8769 rad
+[RESULT] max joint_pos_error:  16.0417 rad
+[RESULT] final joint_pos_error: 16.0417 rad

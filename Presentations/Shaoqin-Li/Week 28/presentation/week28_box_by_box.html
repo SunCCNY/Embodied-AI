@@ -1,0 +1,980 @@
+<title>Week 28 Box by Box</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --ground:#f6f7f8; --surface:#ffffff; --sunk:#eceef0;
+  --ink:#16202b; --body:#2f3d49; --muted:#61707d; --line:#dde2e6;
+  --teal:#0f6e63; --teal-bg:#e6f1ef;
+  --ochre:#a8741a; --ochre-bg:#f7efdf;
+  --rust:#9d3b2f; --rust-bg:#f8e9e6;
+  --term-bg:#18212b; --term-fg:#d6e0e8;
+  --display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
+  --serif:"Source Serif 4",Georgia,serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){--ground:#10161c; --surface:#161e26; --sunk:#1d262f;
+  --ink:#e8eef3; --body:#c2ced8; --muted:#8698a6; --line:#2a353f;
+  --teal:#5fc4b4; --teal-bg:#12302c; --ochre:#d9a747; --ochre-bg:#33280f;
+  --rust:#e08878; --rust-bg:#33201c; --term-bg:#0b1016; --term-fg:#c8d4de;}
+}
+:root[data-theme="dark"]{--ground:#10161c; --surface:#161e26; --sunk:#1d262f;
+  --ink:#e8eef3; --body:#c2ced8; --muted:#8698a6; --line:#2a353f;
+  --teal:#5fc4b4; --teal-bg:#12302c; --ochre:#d9a747; --ochre-bg:#33280f;
+  --rust:#e08878; --rust-bg:#33201c; --term-bg:#0b1016; --term-fg:#c8d4de;}
+
+*{box-sizing:border-box}
+body{background:var(--ground);color:var(--body);font-family:var(--serif);
+  font-size:17px;line-height:1.55;margin:0;padding-block:0;
+  -webkit-font-smoothing:antialiased}
+.wrap{max-width:1080px;margin:0 auto;padding-inline:20px}
+
+header.top{padding-block:48px 28px;border-bottom:2px solid var(--ink)}
+.kicker{font-family:var(--display);font-weight:700;font-size:12px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--teal);margin:0 0 10px}
+h1{font-family:var(--display);font-weight:700;font-size:clamp(34px,6vw,52px);
+  line-height:1.02;color:var(--ink);margin:0 0 14px;text-wrap:balance;letter-spacing:-.02em}
+.standfirst{font-size:19px;color:var(--muted);max-width:62ch;margin:0}
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+.legend .role{cursor:default}
+
+.act{margin-top:46px;padding-top:14px;border-top:1px solid var(--line)}
+.act h2{font-family:var(--display);font-weight:700;font-size:13px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--muted);margin:0 0 4px}
+.act p{margin:0;font-size:16px;color:var(--muted);max-width:64ch}
+
+section.slide{margin-top:30px;background:var(--surface);border:1px solid var(--line);
+  border-radius:6px;overflow:hidden}
+.slide > .hd{display:flex;gap:14px;align-items:baseline;padding:16px 20px;
+  background:var(--sunk);border-bottom:1px solid var(--line)}
+.num{font-family:var(--mono);font-weight:600;font-size:13px;color:var(--teal);
+  font-variant-numeric:tabular-nums;flex:0 0 auto;padding-top:3px}
+.hd h3{font-family:var(--display);font-weight:600;font-size:20px;color:var(--ink);
+  margin:0;line-height:1.2;text-wrap:balance}
+.hd .job{display:block;font-family:var(--serif);font-weight:400;font-size:15px;
+  color:var(--muted);margin-top:4px}
+
+.box{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0;
+  border-top:1px solid var(--line)}
+.slide .box:first-of-type{border-top:none}
+.said{padding:16px 20px;border-right:1px solid var(--line);min-width:0}
+.means{padding:16px 20px;min-width:0}
+@media (max-width:720px){
+  .box{grid-template-columns:1fr}
+  .said{border-right:none;border-bottom:1px solid var(--line)}
+}
+.role{display:inline-block;font-family:var(--display);font-weight:700;font-size:10px;
+  letter-spacing:.12em;text-transform:uppercase;padding:3px 7px;border-radius:3px;
+  background:var(--sunk);color:var(--muted);margin-bottom:9px}
+.role.title{background:var(--ink);color:var(--ground)}
+.role.card{background:var(--teal-bg);color:var(--teal)}
+.role.flag{background:var(--ochre-bg);color:var(--ochre)}
+.role.fix{background:var(--rust-bg);color:var(--rust)}
+.role.data{background:var(--term-bg);color:var(--term-fg)}
+
+.quote{font-family:var(--serif);font-style:italic;color:var(--ink);margin:0;
+  font-size:16px;line-height:1.5}
+.quote.plain{font-style:normal}
+pre.term{font-family:var(--mono);font-size:11.5px;line-height:1.5;background:var(--term-bg);
+  color:var(--term-fg);padding:12px 14px;border-radius:4px;margin:0;
+  overflow-x:auto;font-variant-numeric:tabular-nums}
+.means p{margin:0 0 9px}
+.means p:last-child{margin-bottom:0}
+.means strong{color:var(--ink);font-weight:600}
+.why{font-family:var(--display);font-weight:700;font-size:10px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--muted);display:block;margin-bottom:9px}
+.media{padding:14px 20px;background:var(--sunk);font-size:15px;color:var(--muted);
+  border-top:1px solid var(--line)}
+.media b{color:var(--ink);font-weight:600}
+
+footer{margin:56px 0 40px;padding-top:18px;border-top:2px solid var(--ink);
+  font-size:15px;color:var(--muted)}
+footer b{color:var(--ink)}
+a{color:var(--teal)}
+@media (prefers-reduced-motion:no-preference){section.slide{scroll-margin-top:16px}}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <p class="kicker">Speaker's companion · 30 slides</p>
+  <h1>Week 28, box by box</h1>
+  <p class="standfirst">Every text box in the deck, with what it says on the left and what it
+  actually means on the right. Written to be read while you rehearse — not while you present.
+  Companion to <em>Week 27, box by box</em>; same tags, same rules.</p>
+  <div class="legend">
+    <span class="role title">Title / subtitle</span>
+    <span class="role card">Result card</span>
+    <span class="role flag">Honesty card</span>
+    <span class="role fix">Correction</span>
+    <span class="role data">Terminal / table</span>
+  </div>
+</header>
+
+<div class="act">
+  <h2>Act 1 · Slides 1–2 — the pipeline</h2>
+  <p>Two slides to place this week on the map: three stages already closed, one arrow left, and
+  that arrow is everything that follows.</p>
+</div>
+
+<section class="slide">
+  <div class="hd"><span class="num">01</span><div><h3>Divider</h3>
+  <span class="job">Job: name the stage in one word — imitation learning.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Eyebrow</span>
+    <p class="quote plain">Week 28</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Series marker. Same convention as every week before it.</p></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Title</span>
+    <p class="quote plain">Imitation Learning</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>One word this project has said since week 16 and never built: this is the week it stops
+    being a future stage on a diagram and becomes a trained policy.</p></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Subline</span>
+    <p class="quote plain">R1 learns to mimic the retargeted tennis motion</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Deliberately narrow claim: <strong>one motion</strong>, <strong>mimic</strong> (not walk, not
+    generalize). The rest of the deck earns the right to say more than this.</p></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Note line</span>
+    <p class="quote plain">video → GVHMR → GMR → imitation learning — the last arrow is this week's work</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The whole project as one arrow chain, same device as week 27's opening line. Three arrows
+    were already closed before this week started; naming that up front means nobody in the room
+    thinks GVHMR or GMR got re-done.</p></div></div>
+</section>
+
+<section class="slide">
+  <div class="hd"><span class="num">02</span><div><h3>The pipeline</h3>
+  <span class="job">Job: show the four stages as a status board, not a diagram to explain.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Subtitle</span>
+    <p class="quote plain">Four stages. Three were done before this week.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Sets the scoreboard before showing it. By the time the room sees three green "DONE" pills
+    and one ochre "THIS WEEK" pill, the sentence has already told them how to read it.</p></div></div>
+
+  <div class="box"><div class="said"><span class="role card">Cards 1–3</span>
+    <p class="quote plain">1. Video · 2. GVHMR · 3. GMR — all marked DONE</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Recap, not re-derivation. Anyone who saw weeks 26–27 recognizes these instantly; anyone new
+    gets just enough (video → human kinematics → R1 joint trajectories) to follow what's next
+    without a re-teach.</p></div></div>
+
+  <div class="box"><div class="said"><span class="role flag">Card 4</span>
+    <p class="quote plain">4. IL Training — R1 motion data → a trained policy — THIS WEEK</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The one ochre card. "A trained policy" is the plain-English translation of everything that
+    follows — a neural network, not a hand-tuned controller.</p></div></div>
+
+  <div class="box"><div class="said"><span class="role card">Body paragraph</span>
+    <p class="quote">GVHMR+GMR were ported to this workstation last week (~11x/2.6x faster than the
+    laptop, numbers matched within noise). This week: pick a training framework, wire up R1, train,
+    and check the result both natively and via an independent sim2sim harness.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Two claims doing real work: the port from laptop to workstation is <em>closed</em>
+    (numbers matched, not just "it ran"), and this week's plan is stated as four discrete jobs —
+    each of which gets its own act below, so the room can track completion live.</p></div></div>
+</section>
+
+<div class="act">
+  <h2>Act 2 · Slides 3–5 — the choice</h2>
+  <p>Three candidate frameworks existed before any code was written for this. This is the
+  discussion that picked one — the same "understand → discuss → confirm → build" order every
+  week in this project has followed.</p>
+</div>
+
+<section class="slide">
+  <div class="hd"><span class="num">03</span><div><h3>Divider</h3>
+  <span class="job">Job: frame this as a real decision, not a foregone one.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Eyebrow / Title</span>
+    <p class="quote plain">THE CHOICE / Which framework?</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Signals a pause for judgment before the build montage resumes — the same rhythm the deck
+    uses again before "SETUP", "THE CODE", "TRAINING" and "SIM2SIM".</p></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Subline</span>
+    <p class="quote plain">GMR's output is designed to feed straight into one of three published
+    training codebases</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Names the actual constraint: this isn't "write an RL trainer from scratch," it's "pick
+    which existing one." That reframing is why slide 4 is a comparison table, not a build log.</p></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Note line</span>
+    <p class="quote plain">TWIST, BeyondMimic, or ASAP — picked before writing a line of training code</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>States the order of operations explicitly, for the record: research first, code second.</p></div></div>
+</section>
+
+<section class="slide">
+  <div class="hd"><span class="num">04</span><div><h3>Three candidates, one hardware reality</h3>
+  <span class="job">Job: let the RTX 5080's own history disqualify two options before preference enters it.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Subtitle</span>
+    <p class="quote plain">This RTX 5080 (Blackwell) has already broken two Isaac-family stacks this project</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Pre-empts the obvious question — "why not just use Isaac Gym, everyone uses Isaac Gym" —
+    with a fact instead of an opinion: it's already failed twice on this exact card.</p></div></div>
+
+  <div class="box"><div class="said"><span class="role data">Table, column 3</span>
+    <p class="quote plain">TWIST: Confirmed broken — NVIDIA forum, missing SM_120 kernels, deprecated,
+    no fix · Original BeyondMimic: High risk — same GPU-PhysX hang already hit and worked around ·
+    mjlab: Low risk — pure CUDA compute, no rendering stack · ASAP: Medium — shares the same risk
+    class, Genesis backend untested</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The load-bearing column. "Confirmed broken" is doing real work — that's an independently
+    filed NVIDIA forum report matching this exact card, not a guess. Everything else in the table
+    is secondary once this column rules two rows out.</p></div></div>
+
+  <div class="box"><div class="said"><span class="role data">Table, column 4</span>
+    <p class="quote plain">R1 support: TWIST none (hardcoded to G1) · BeyondMimic G1-focused but
+    modular · mjlab data-driven, comparable lift to GMR's own R1 work · ASAP no native R1 but an
+    overlapping retargeting path</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>None of the four ship R1 support — the honest baseline is "some assembly required"
+    regardless of choice. This column is here so the deck doesn't imply mjlab was picked because
+    it was easiest; it was picked despite needing the same real work as the others.</p></div></div>
+</section>
+
+<section class="slide">
+  <div class="hd"><span class="num">05</span><div><h3>Why BeyondMimic via mjlab</h3>
+  <span class="job">Job: turn the table into a decision, with sources.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role card">Bullet 1</span>
+    <p class="quote">Structurally avoids a failure class this project already hit twice on this
+    exact GPU.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>"Structurally" is the key word — this isn't a version that happens to work today, it's an
+    architecture (no Isaac Sim/Gym anywhere) that can't hit that specific bug class at all.</p></div></div>
+
+  <div class="box"><div class="said"><span class="role card">Bullet 2–3</span>
+    <p class="quote">Trains headless on pure CUDA compute... Most actively maintained of the four:
+    3.1k stars, 1,115 commits, active CI.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Two different kinds of confidence: technical fit (matches what's proven to work here) and
+    project health (won't be an abandoned repo six months from now).</p></div></div>
+
+  <div class="box"><div class="said"><span class="role fix">Bullet 4 — sourced quote</span>
+    <p class="quote">"This is a re-implementation of BeyondMimic. Based on
+    HybridRobotics/whole_body_tracking, commit f8e20c880d9c8ec7172a13d3a88a65e3a5a88448"</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Verbatim from mjlab's own source file header, tagged as a correction/attribution card
+    because it's the one line in this slide that isn't the presenter's own claim — it's mjlab's
+    authors stating their own provenance, and it matters for the code-walkthrough act that follows
+    (nothing there is invented, it's mirroring a known-good implementation).</p></div></div>
+
+  <div class="box"><div class="said"><span class="role card">Bullet 5</span>
+    <p class="quote">Adding R1 means writing a data-driven robot config — comparable effort to the
+    R1-into-GMR work already finished, not a new research problem.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Manages scope expectations: this is engineering, not a new open question. The room has
+    already seen the GMR R1 work (week 22 onward), so this comparison is a known quantity.</p></div></div>
+</section>
+
+<div class="act">
+  <h2>Act 3 · Slides 6–10 — setup</h2>
+  <p>Five slides: verify the hardware path, add R1 as real code (not config), explain the one
+  external dependency nobody in the room has used before, and show the motion actually land in it.</p>
+</div>
+
+<section class="slide">
+  <div class="hd"><span class="num">06</span><div><h3>Divider</h3>
+  <span class="job">Job: mark the start of the build, after the decision is made.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Eyebrow / Title</span>
+    <p class="quote plain">SETUP / Wiring it up</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Standard section marker.</p></div></div>
+
+  <div class="box"><div class="said"><span class="role fix">Note line</span>
+    <p class="quote plain">three real blockers hit along the way — covered honestly, not glossed over</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Sets the expectation before the section starts: this isn't going to read like everything
+    worked first try. Same honesty convention as week 27's setup section.</p></div></div>
+</section>
+
+<section class="slide">
+  <div class="hd"><span class="num">07</span><div><h3>Step 1 — verify the GPU path before building anything</h3>
+  <span class="job">Job: show the check happened before the investment, not after a failure.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role card">Body paragraph</span>
+    <p class="quote">mjlab needs an NVIDIA GPU for training... confirm this Blackwell card actually
+    runs a real GPU tensor op through the exact torch build mjlab uses.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>"The exact torch build" matters — a generic "CUDA works" check wouldn't have caught the
+    Blackwell kernel-availability problem that broke IsaacGym. This check is specific to what
+    actually gets used.</p></div></div>
+
+  <div class="box"><div class="said"><span class="role data">Terminal</span>
+    <p class="quote plain">capability: (12, 0) · matmul ok, sum: -39756.55078125</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p><strong>(12, 0)</strong> is Blackwell's compute capability code, sm_120 — the exact
+    architecture IsaacGym can't target. The matmul sum is meaningless as a number; its presence at
+    all is the proof — a real GPU operation completed and returned a real (if arbitrary) result.</p></div></div>
+
+  <div class="box"><div class="said"><span class="role card">Caption</span>
+    <p class="quote">torch 2.7.0+cu128 is the confirmed-working build for this card (already
+    established porting GVHMR last week).</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Reuses, doesn't re-derive: this exact version pin was already fought for last week. Citing
+    it here instead of re-explaining it keeps this slide to one job.</p></div></div>
+</section>
+
+<section class="slide">
+  <div class="hd"><span class="num">08</span><div><h3>Step 2 — add R1 as a real robot inside mjlab</h3>
+  <span class="job">Job: correct an assumption before it forms — this isn't a config file.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Subtitle</span>
+    <p class="quote plain">Not a config file — mjlab's robots are code (asset_zoo/robots/&lt;name&gt;/)</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Pre-empts "so you just edited a YAML file" — the honest answer is closer to "wrote a new
+    Python module in someone else's framework," which is a materially bigger task.</p></div></div>
+
+  <div class="box"><div class="said"><span class="role card">Left card</span>
+    <p class="quote plain">PD gains: taken from this project's own r1_stand_sim2sim.py deployment
+    values, NOT a G1-motor-class guess · Effort limits: official Unitree R1_C++.xml ctrlrange</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The single most important honesty claim on this slide, in bold for a reason: every number
+    that governs how hard R1's simulated motors can push is sourced from a real spec sheet or this
+    project's own already-validated deployment code — never a "seems about right" guess.</p></div></div>
+
+  <div class="box"><div class="said"><span class="role data">Terminal</span>
+    <p class="quote plain">R1 tasks registered: [...] SCENE BUILT AND INITIALIZED OK on cuda:0 ·
+    num joints: 24 num bodies: 25</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>24 real joints, 25 bodies — the clean GMR-derived model, no phantom joints. This is the
+    first moment R1 exists as a real, physically-simulated entity inside mjlab, not just files on
+    disk.</p></div></div>
+
+  <div class="box"><div class="said"><span class="role flag">Right card</span>
+    <p class="quote">Only the joint-limit/armature default is a MuJoCo generic (0.01) — no
+    per-motor rotor-inertia sheet exists for R1 the way it does for G1.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The one place this slide admits a limit instead of a source. Flagged, not hidden — this is
+    exactly the kind of gap this project's honesty convention requires surfacing.</p></div></div>
+</section>
+
+<section class="slide">
+  <div class="hd"><span class="num">09</span><div><h3>What is Weights &amp; Biases, and why does training need it?</h3>
+  <span class="job">Job: teach a tool nobody in the room has necessarily used, in the room's own terms.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role card">Left card</span>
+    <p class="quote">A hosted experiment-tracking service... stores them in an account-scoped
+    "Registry" that any later run can pull back by name.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Written for someone who has never heard of WandB — the professor, a classmate. No jargon
+    assumed; "Registry" is introduced and defined in the same sentence it's named.</p></div></div>
+
+  <div class="box"><div class="said"><span class="role fix">Right card, blocker 1</span>
+    <p class="quote">WandB registries can only be created through the web UI, never the API — had
+    to walk through creating one by hand.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>A real, specific limitation of a third-party tool, stated plainly. This is the kind of
+    "what actually broke" line this project's decks always include rather than smoothing over.</p></div></div>
+
+  <div class="box"><div class="said"><span class="role fix">Right card, blocker 2 (implied)</span>
+    <p class="quote plain">Real blocker hit... there is no "just point it at a local file" path in
+    this framework's design.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Sets up why the next slide's terminal panel shows a WandB upload step instead of a simple
+    file save — it's not this project's design choice, it's the framework's.</p></div></div>
+</section>
+
+<section class="slide">
+  <div class="hd"><span class="num">10</span><div><h3>The motion, converted and registered</h3>
+  <span class="job">Job: show the GMR output actually landing inside the new framework.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role card">Body paragraph</span>
+    <p class="quote">GMR's output pickle (root_pos, root_rot, dof_pos — already MuJoCo qpos-shaped)
+    is converted to the CSV mjlab expects...</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>"Already MuJoCo qpos-shaped" is a small but real finding: GMR's own output format happens to
+    closely match what the new framework needs, meaning the converter script is a small, well-
+    scoped piece of glue — not a redesign.</p></div></div>
+
+  <div class="box"><div class="said"><span class="role data">Terminal</span>
+    <p class="quote plain">Motion interpolated... output frames: 519, output fps: 50.0 ...
+    [INFO]: Motion saved to wandb registry: motions/r1_tennis</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The last line is the payoff of the previous slide's whole explanation: the motion is no
+    longer a local file, it's a named entry in an account-scoped registry, ready to be pulled by
+    any training run by that name alone.</p></div></div>
+</section>
+
+<div class="act">
+  <h2>Act 4 · Slides 11–13 — the code</h2>
+  <p>Two files, section by section. Not a code dump — a guided reading of what each part does and
+  why it exists, so the audience could plausibly find their way back into this code later.</p>
+</div>
+
+<section class="slide">
+  <div class="hd"><span class="num">11</span><div><h3>Divider</h3>
+  <span class="job">Job: signal a change of register from "what happened" to "how it's built".</span></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Eyebrow / Title</span>
+    <p class="quote plain">THE CODE / Section by section</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Standard section marker, matching the "SETUP"/"TRAINING"/"SIM2SIM" dividers elsewhere.</p></div></div>
+
+  <div class="box"><div class="said"><span class="role card">Note line</span>
+    <p class="quote plain">r1_constants.py (the robot) + env_cfgs.py (the task)</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Names the two files up front so the next two slides read as "here's file one, here's file
+    two" rather than an undifferentiated wall of code sections.</p></div></div>
+</section>
+
+<section class="slide">
+  <div class="hd"><span class="num">12</span><div><h3>r1_constants.py — the robot</h3>
+  <span class="job">Job: walk all six sections of one file, each in one line of what + why.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role data">Section 1</span>
+    <p class="quote plain">MJCF + get_spec() — points at the GMR-clean R1 model, no phantom joints</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Reuses week 22–27's own finding (the phantom waist/wrist joints) rather than re-deriving
+    it — this file inherits that already-solved problem for free by building on the GMR model.</p></div></div>
+
+  <div class="box"><div class="said"><span class="role data">Section 2</span>
+    <p class="quote plain">Actuator configs (7 groups) — stiffness, damping, effort_limit per
+    joint-torque class</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>These three numbers, repeated seven times (once per motor class), are the entire physical
+    identity of simulated R1 — how stiff, how damped, how strong each joint is.</p></div></div>
+
+  <div class="box"><div class="said"><span class="role data">Sections 3–4</span>
+    <p class="quote plain">STAND_KEYFRAME — the already-validated Goal-1 pose · FULL_COLLISION —
+    feet get real contact, everything else self-collision only</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Both sections are reuse, not new invention: the standing pose from Goal 1, and a contact
+    scheme (feet=condim 3, body=condim 1) that's the standard convention across this project's
+    MuJoCo work.</p></div></div>
+
+  <div class="box"><div class="said"><span class="role data">Sections 5–6</span>
+    <p class="quote plain">get_r1_robot_cfg() — assembles everything, fresh instance every call ·
+    R1_ACTION_SCALE — computed as 0.25 × effort_limit / stiffness per joint</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The action-scale formula is the one piece of real arithmetic in this file — it's what turns
+    a policy's raw, roughly-unit-scale output into a physically sensible joint-position nudge.</p></div></div>
+</section>
+
+<section class="slide">
+  <div class="hd"><span class="num">13</span><div><h3>env_cfgs.py — the tracking task</h3>
+  <span class="job">Job: same treatment for the second file — the task, not the robot.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role data">scene.entities / action.scale</span>
+    <p class="quote plain">Plugs R1 into the shared BeyondMimic environment · scale set to
+    R1_ACTION_SCALE, not a silent shared default</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Two lines, one theme: this file's job is almost entirely "make sure R1's own numbers are
+    actually used," since the underlying tracking environment is shared with G1 and would silently
+    default to the wrong scale if this weren't set explicitly.</p></div></div>
+
+  <div class="box"><div class="said"><span class="role data">self_collision / motion anchor</span>
+    <p class="quote plain">ContactSensorCfg watching the pelvis subtree · anchor_body_name =
+    "torso_link"; 14 tracked bodies; wrist_roll_link stands in for the phantom wrist_yaw_link</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The wrist substitution is the one place a workaround from earlier weeks (the phantom-joint
+    finding) shows up as an explicit code decision rather than something inherited silently.</p></div></div>
+
+  <div class="box"><div class="said"><span class="role data">events / termination</span>
+    <p class="quote plain">foot_friction / base_com re-pointed at R1's real names · ee_body_pos
+    termination ends an episode if ankles/wrists drift too far</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The termination line is worth lingering on: it's the actual mechanism behind
+    "Episode_Termination/anchor_pos" in the training curves two acts from now — this is where that
+    number comes from, not an abstract metric.</p></div></div>
+</section>
+
+<div class="act">
+  <h2>Act 5 · Slides 14–20 — training</h2>
+  <p>The longest act: what was run, what each number in the log means, the real curve, and the
+  result played back — checked natively before anyone is asked to trust the video.</p>
+</div>
+
+<section class="slide">
+  <div class="hd"><span class="num">14</span><div><h3>Divider</h3>
+  <span class="job">Job: mark the shift from code to a real, timed, GPU-hours job.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Eyebrow / Title</span>
+    <p class="quote plain">TRAINING / 3,000 iterations, 4,096 envs</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Puts the two headline numbers in the section title itself, before any slide explains them —
+    the room already has the shape of what's coming.</p></div></div>
+
+  <div class="box"><div class="said"><span class="role card">Note line</span>
+    <p class="quote plain">~1 hour on the RTX 5080, measured, not estimated</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>"Measured, not estimated" is a small phrase carrying real weight in this project's
+    convention — it means a benchmark was actually run and timed before the real job was
+    committed to, not guessed at.</p></div></div>
+</section>
+
+<section class="slide">
+  <div class="hd"><span class="num">15</span><div><h3>Training spec</h3>
+  <span class="job">Job: a reference table — every number, and where it came from.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role data">Rows 1–3</span>
+    <p class="quote plain">Episode length 10.0s · Control rate 125 Hz · Parallel environments
+    4,096 (measured via a 100-iter benchmark first)</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>4,096 isn't a round number picked for style — it's literally the number that came out of a
+    real benchmark run, cited as such in the same row.</p></div></div>
+
+  <div class="box"><div class="said"><span class="role data">Rows 4–7</span>
+    <p class="quote plain">Steps/iter 24 · PPO epochs/mini-batches 5/4 · Learning rate 1e-3 adaptive
+    · gamma/lambda 0.99/0.95</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Standard PPO hyperparameters, unmodified from the framework's own defaults — worth stating
+    plainly that these weren't tuned, since tuning them would be a much bigger, separate claim.</p></div></div>
+
+  <div class="box"><div class="said"><span class="role flag">Rows 8–9</span>
+    <p class="quote plain">Total iterations: 3,000 — a deliberately conservative first real
+    attempt, not the framework's 30,000 default · Wall-clock: 59:15</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The most important row in the table. 3,000 is explicitly framed as a floor, not a target —
+    this single sentence is what makes the sim2sim act's honesty later in the deck land as
+    consistent rather than as backpedaling.</p></div></div>
+</section>
+
+<section class="slide">
+  <div class="hd"><span class="num">16</span><div><h3>Reading the training curves</h3>
+  <span class="job">Job: teach the vocabulary before showing the chart that uses it.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role card">Row 1</span>
+    <p class="quote plain">Mean reward: -0.95 → +27.04 — the clearest single convergence signal</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Calls out explicitly why THIS number, of all of them, is the one to watch first — the sign
+    flip from negative to strongly positive is legible even to someone who's never read an RL
+    training curve before.</p></div></div>
+
+  <div class="box"><div class="said"><span class="role card">Rows 2–3</span>
+    <p class="quote plain">error_joint_pos 2.56→1.16 rad · error_body_pos 0.17→0.068 m (sub-10cm is
+    a reasonable "looks right" threshold)</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Gives the room a concrete acceptable-range anchor (10cm) instead of leaving "lower is
+    better" as the only guidance — turns an abstract error metric into something with physical
+    meaning for this robot's scale.</p></div></div>
+
+  <div class="box"><div class="said"><span class="role flag">Rows 4–5</span>
+    <p class="quote plain">Episode_Termination/anchor_pos 4-17→0.0 · time_out 2-6→8.6 — "it's
+    tracking now"</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The real headline finding of the whole training run, stated as a metric pair rather than an
+    adjective: early on, episodes mostly ended because the robot fell; by the end, they mostly end
+    because time ran out. That flip is the actual evidence of learning, more so than the reward
+    number.</p></div></div>
+</section>
+
+<section class="slide">
+  <div class="hd"><span class="num">17</span><div><h3>The training curves</h3>
+  <span class="job">Job: show the real chart, having just taught how to read it.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role data">Chart</span>
+    <p class="quote plain">Left: mean episode reward (S-curve). Right: three tracking-error
+    metrics, all trending down.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Real TensorBoard data pulled directly from this run's event log, not a mock-up. Worth
+    noting live: joint_pos error actually <em>rises</em> before iteration 900 before dropping
+    sharply — a real, visible artifact of the adaptive-sampling mechanism shifting toward harder
+    frames as easy ones get mastered, not a bug in the plot.</p></div></div>
+
+  <div class="box"><div class="said"><span class="role flag">Caption</span>
+    <p class="quote">3,000 iterations was a first real attempt, not a claim of full convergence.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Repeats the framing from slide 15 deliberately — this caption is read by anyone skimming
+    the deck later without hearing the talk, so the honesty has to survive without narration.</p></div></div>
+</section>
+
+<section class="slide">
+  <div class="hd"><span class="num">18</span><div><h3>Start and end of the run, verbatim</h3>
+  <span class="job">Job: prove the curve with the actual logs it was drawn from.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role data">Left panel — iteration 1</span>
+    <p class="quote plain">Mean reward: -0.85 · Episode_Termination/anchor_pos: 17.4583</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Real, unedited console output from the first logged iteration — the "before" half of every
+    number quoted on slides 16–17.</p></div></div>
+
+  <div class="box"><div class="said"><span class="role data">Right panel — iteration 2999</span>
+    <p class="quote plain">Mean reward: 27.04 · Episode_Termination/anchor_pos: 0.0000 · Time
+    elapsed: 0:59:15</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The "after" half, from the very last logged iteration — 2999, not a round 3000, because
+    rsl_rl's own counter is zero-indexed. That specific number is a small tell that this is a real
+    log, not a summary written after the fact.</p></div></div>
+</section>
+
+<section class="slide">
+  <div class="hd"><span class="num">19</span><div><h3>Checking it natively before trusting the video</h3>
+  <span class="job">Job: get a real held-out number before showing anything that looks like a demo.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Subtitle</span>
+    <p class="quote plain">mjlab's own evaluate.py — 64 held-out episodes, real metrics</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Deliberately run <em>before</em> the video slide, in that order, so the video that follows
+    is confirmation of a number already established, not the only evidence offered.</p></div></div>
+
+  <div class="box"><div class="said"><span class="role data">Terminal</span>
+    <p class="quote plain">success_rate: 0.9688 · mpkpe: 0.2991 · ee_pos_error: 0.0870</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>96.9% success (62/64 episodes survive to timeout) is the actual, formal claim this deck is
+    willing to defend — the video is illustration, this line is the evidence.</p></div></div>
+
+  <div class="box"><div class="said"><span class="role card">Caption</span>
+    <p class="quote">the policy genuinely tracks the motion, not just a training-curve artifact.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Names the exact failure mode this evaluation rules out — a policy that looks convergent on
+    its own training distribution but fails immediately on fresh episodes. 64 held-out episodes is
+    what rules that out.</p></div></div>
+</section>
+
+<section class="slide">
+  <div class="hd"><span class="num">20</span><div><h3>The result</h3>
+  <span class="job">Job: the payoff — R1 actually doing it, on camera.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Subtitle</span>
+    <p class="quote plain">checkpoint model_2999, played back in mjlab's own simulator</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>"mjlab's own simulator" is a quiet but deliberate qualifier — this video is the training
+    environment, not yet the cross-engine sim2sim test that the next act is about to complicate.</p></div></div>
+</section>
+
+<div class="act">
+  <h2>Act 6 · Slides 21–24 — a second motion</h2>
+  <p>Everything up to this point used one clip. This act sources a genuinely new one, live, in the
+  same session — including a real dead end — and runs it through the exact same pipeline with zero
+  code changes, to test generalization rather than assert it.</p>
+</div>
+
+<section class="slide">
+  <div class="hd"><span class="num">21</span><div><h3>Divider</h3>
+  <span class="job">Job: state the actual question — does any of this generalize past one clip?</span></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Eyebrow / Title</span>
+    <p class="quote plain">SECOND MOTION / Does this generalize?</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Everything shown so far — the framework choice, the R1 integration, the trained policy —
+    was proven on exactly one clip. This section exists to ask whether any of it was clip-specific
+    before claiming it wasn't.</p></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Subline</span>
+    <p class="quote plain">Everything so far used one clip — GVHMR's own tennis demo</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Names the honest baseline before improving on it: one clip is not evidence of a general
+    pipeline, it's evidence the pipeline works on one clip.</p></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Note line</span>
+    <p class="quote plain">sourced a fresh video from the open web, same session, no changes to the pipeline</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>"No changes to the pipeline" is the actual claim under test — if GVHMR→GMR→mjlab needed
+    per-motion code edits to work a second time, that would be worth admitting here, not later.</p></div></div>
+</section>
+
+<section class="slide">
+  <div class="hd"><span class="num">22</span><div><h3>Finding a video — and a lesson in not trusting descriptions</h3>
+  <span class="job">Job: show a real dead end, not just the clip that worked.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role card">Body paragraph</span>
+    <p class="quote">Wanted something more dynamic than tennis... a page's own description of a
+    clip is not the same as looking at it.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>States the criteria before the search (dynamic, full body, plain background, static camera —
+    the same properties that made tennis work) so the rejection that follows reads as a real filter,
+    not an arbitrary one.</p></div></div>
+
+  <div class="box"><div class="said"><span class="role data">Terminal</span>
+    <p class="quote plain">Candidate 1: full body, dark/cluttered background · Candidate 2: page
+    said "full-body performer" — decoded frame at t=0 was a tight leg/feet crop, REJECTED ·
+    Candidate 3: confirmed good on the actual poster JPG, downloaded</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Three real candidates, not a curated one — candidate 2 is left in specifically because it's
+    the one that failed, and it failed in a way worth naming: the page text was simply wrong.</p></div></div>
+
+  <div class="box"><div class="said"><span class="role fix">Caption</span>
+    <p class="quote">Candidate 2's page said "full-body performer" — the actual decoded frame
+    showed a tight crop of just legs and feet. Lesson: pull the real poster image or a decoded
+    frame before downloading, every time.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Tagged as a correction because it's exactly that — a first-pass method (trust the page's own
+    description) that turned out wrong, replaced with a cheaper, more reliable one (look at the
+    actual pixels) before it cost real download/processing time.</p></div></div>
+</section>
+
+<section class="slide">
+  <div class="hd"><span class="num">23</span><div><h3>Same pipeline, new motion</h3>
+  <span class="job">Job: run the second clip through, unmodified, and compare the numbers side by side.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Subtitle</span>
+    <p class="quote plain">no code changes — GVHMR → GMR → mjlab, first attempt</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>"First attempt" is doing the same job here it did for the tennis training spec: this isn't
+    a cleaned-up retelling after debugging, it's what happened the first time through.</p></div></div>
+
+  <div class="box"><div class="said"><span class="role data">Left terminal — GVHMR + GMR</span>
+    <p class="quote plain">[Preprocess] End: 99.89s · [HMR4D] Elapsed: 1.03s for data-length=22.1s ·
+    IK solve rate: 305.4 FPS, motion is 30fps → real-time capable · motion saved to
+    out/dancer_r1.pkl</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Same real-time-capable margin the project established for tennis, now shown holding on a
+    second, unrelated clip — one data point becoming a small pattern rather than a one-off.</p></div></div>
+
+  <div class="box"><div class="said"><span class="role data">Right terminal — native eval</span>
+    <p class="quote plain">64/64 episodes completed, truncated · success_rate: 1.0000 · mpkpe:
+    0.2195 · ee_pos_error: 0.1329</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>100% success on the very first attempt at a motion the pipeline had never seen — the
+    strongest single generalization result in the deck, and it's a real held-out-episode number,
+    same evaluation script as the tennis claim.</p></div></div>
+
+  <div class="box"><div class="said"><span class="role card">Comparison rows</span>
+    <p class="quote plain">Mean reward: -0.95→27.04 (tennis) vs -0.61→26.81 (dance) · Native
+    success_rate: 0.9688 vs 1.0000 · mpkpe: 0.2991 vs 0.2195</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Side by side, not sequential — the point of the layout is to make it trivial to see that
+    dance didn't just work, it worked slightly better than tennis did, on identical training
+    budget (3,000 iterations, same hyperparameters).</p></div></div>
+</section>
+
+<section class="slide">
+  <div class="hd"><span class="num">24</span><div><h3>The result, again — on a motion the pipeline had never seen</h3>
+  <span class="job">Job: the second payoff video — proof, not just a number.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Subtitle</span>
+    <p class="quote plain">checkpoint model_2999, 3,000 iterations, first attempt</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Repeats the tennis slide's exact framing on purpose — same checkpoint count, same "first
+    attempt" honesty, so the two results read as genuinely comparable rather than dance getting
+    quietly more effort.</p></div></div>
+
+  <div class="box"><div class="said"><span class="role card">Video caption</span>
+    <p class="quote plain">R1 tracking the freshly-sourced dance motion — 100% native success rate</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Same convention as slide 20: the native training-environment video is illustration, and the
+    formal claim (100%) was already established one slide earlier so this isn't the only evidence
+    offered for it.</p></div></div>
+</section>
+
+<div class="act">
+  <h2>Act 7 · Slides 25–30 — sim2sim, honestly, and next</h2>
+  <p>The section most decks would cut if it didn't fully work. Here it stays in, and goes further
+  than a first pass would — four real bugs found, an observation formula proven correct, two more
+  hypotheses tested and disconfirmed, and an honest landing point stated as a conclusion, not a
+  loose end.</p>
+</div>
+
+<section class="slide">
+  <div class="hd"><span class="num">25</span><div><h3>Divider</h3>
+  <span class="job">Job: ask the harder question out loud before answering it.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Eyebrow / Title</span>
+    <p class="quote plain">SIM2SIM / Does it survive a different engine?</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Framed as a question, not a claim — unlike every other section divider in this deck, this
+    one doesn't promise a clean result on the far side of it.</p></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Subline</span>
+    <p class="quote plain">Native training used MuJoCo-Warp (GPU-batched). Does the policy still
+    work in plain MuJoCo?</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>States precisely what "different engine" means before anyone can read it as a weaker test
+    (e.g. just a device flag) — it's a different solver implementation entirely.</p></div></div>
+
+  <div class="box"><div class="said"><span class="role fix">Note line</span>
+    <p class="quote plain">reported honestly: real bug found and fixed, one divergence still open</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>States the shape of the outcome before the audience has to wonder whether the next few
+    slides are building to good news or bad — it's both, and that's said up front.</p></div></div>
+</section>
+
+<section class="slide">
+  <div class="hd"><span class="num">26</span><div><h3>Sim2sim, honestly</h3>
+  <span class="job">Job: define the term precisely, then report what actually happened.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role card">Body paragraph</span>
+    <p class="quote">Train in one simulator, deploy in a genuinely different one... a real second
+    physics engine implementation, not a device-flag change.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The last clause matters most: it rules out the easy version of this test (just switching a
+    "device=cpu" flag inside the same simulator) in favor of the harder, more meaningful one —
+    genuinely different solver code.</p></div></div>
+
+  <div class="box"><div class="said"><span class="role card">Left card</span>
+    <p class="quote plain">The exported ONNX is self-describing... The official companion tool
+    needed a full ROS2 + C++ stack requiring sudo — not available, so a lighter Python harness was
+    built instead.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Explains a real dead end honestly rather than silently switching plans: the "correct" tool
+    for this job exists and was considered, and the actual constraint (no root access) is named,
+    not glossed over as a design preference.</p></div></div>
+
+  <div class="box"><div class="said"><span class="role flag">Right card — updated</span>
+    <p class="quote">Four real bugs found and fixed: no effort limits, a wrong motion-interpolation
+    model, a +1 frame-index offset, and qvel left at zero instead of the reference motion's own
+    velocity at reset. Every one of the 8 observation terms then verified to floating-point
+    precision — the formula is provably correct. The harness still diverges closed-loop; two more
+    real tests followed, on the next slide.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>This card grew from "one bug, one open question" (the first debugging pass) to "four bugs,
+    a proven-correct formula, still open" (after a second pass) — the honest update, not a
+    rewritten history. "See next slide" is a real pointer: the investigation kept going past what
+    used to be the deck's final word on it.</p></div></div>
+</section>
+
+<section class="slide">
+  <div class="hd"><span class="num">27</span><div><h3>The divergence, captured</h3>
+  <span class="job">Job: show the actual failure, not a description of it.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role data">Terminal</span>
+    <p class="quote plain">action range: [-323.632, 319.253] · mean joint_pos_error: 8.8769 rad</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Real captured output, not a re-typed summary — action values in the hundreds are physically
+    meaningless for a policy whose training-time outputs never exceeded roughly ±3, which is
+    exactly the signal used to diagnose this as a real problem rather than "just noisy tracking."</p></div></div>
+
+  <div class="box"><div class="said"><span class="role flag">Caption — updated</span>
+    <p class="quote">Action magnitude growing into the hundreds is itself the tell — a well-behaved
+    policy, even one tracking poorly, doesn't do this. This is after the effort-limit fix; two
+    further hypotheses were tested next (see next slide).</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The added sentence is the honest update: this number is not the final state of the
+    investigation, it's the state after fix #1 of four, with two more real tests still to come.</p></div></div>
+
+  <div class="box"><div class="said"><span class="role card">Video caption</span>
+    <p class="quote plain">Plain-MuJoCo replay — diverges after the initial correct frame</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>"After the initial correct frame" is precise on purpose: frame zero matches, which is what
+    lets everything after it be read as drift rather than a broken setup from the start.</p></div></div>
+</section>
+
+<section class="slide">
+  <div class="hd"><span class="num">28</span><div><h3>Sim2sim, continued</h3>
+  <span class="job">Job: run the two remaining hypotheses as real tests, not as speculation.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Subtitle</span>
+    <p class="quote plain">two more real tests, and where this actually lands</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Both tests were genuinely run, not reasoned about in the abstract — an extended-training
+    checkpoint and a backend-matched inference path, each with real before/after numbers.</p></div></div>
+
+  <div class="box"><div class="said"><span class="role data">Terminal — extended training</span>
+    <p class="quote plain">Resumed to model_12998.pt (+10,000 iters), 3:19:10 wall time. Native:
+    success_rate 0.9688→0.9844, mpkpe 0.2991→0.1588 (nearly halved). sim2sim: mean joint_pos_error
+    4.79→4.59 rad (~4% better)</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The key contrast in this row: native performance improved dramatically (mpkpe nearly
+    halved) while the sim2sim error barely moved (~4%). If undertraining were the cause, closing
+    most of the native gap should have closed most of the sim2sim gap too — it didn't.</p></div></div>
+
+  <div class="box"><div class="said"><span class="role data">Terminal — CUDA-policy test</span>
+    <p class="quote plain">Swapped onnxruntime/CPU inference for the raw PyTorch checkpoint on
+    CUDA (matching what native training actually used): mean joint_pos_error 4.70 rad — no
+    meaningful change</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Built specifically to test — and ultimately disconfirm — a fork's hypothesis that
+    CPU/GPU floating-point non-determinism explained the gap. Running the exact same weights on
+    the exact same backend as training barely moved the number, which rules that hypothesis out
+    directly rather than by argument.</p></div></div>
+
+  <div class="box"><div class="said"><span class="role flag">Caption</span>
+    <p class="quote">Neither test explains the gap. More training helps native performance a lot
+    but barely moves sim2sim; matching the inference backend exactly makes no meaningful
+    difference either.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Two hypotheses in, two hypotheses out — stated as plainly as the four fixed bugs were, so
+    "we tested it and it wasn't that" carries the same weight as "we found it and fixed it."</p></div></div>
+</section>
+
+<section class="slide">
+  <div class="hd"><span class="num">29</span><div><h3>Where this actually lands</h3>
+  <span class="job">Job: state the actual conclusion, not a shrug — this is the deck's final word on sim2sim.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role card">Confirmed, points 1–3</span>
+    <p class="quote plain">(1) 4 real bugs fixed. (2) Every observation term matches native's own
+    ground truth to floating-point precision. (3) Open-loop physics agreement is real but not
+    perfect: 0.38 rad mean error over 660 steps replaying native's own exact action sequence</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Point 3 is the quiet pivot of the whole investigation: the two engines don't disagree by
+    zero, they disagree by a small, nonzero, measured amount — even under the cleanest possible
+    test (no policy in the loop at all, just replaying known-good actions).</p></div></div>
+
+  <div class="box"><div class="said"><span class="role card">Confirmed, points 4–5</span>
+    <p class="quote plain">(4) More training helps native a lot but barely moves sim2sim (~4-8%) —
+    rules out undertraining. (5) Matching the inference backend exactly makes no meaningful
+    difference — rules out inference non-determinism too</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Both of this slide's own "next tests" from slide 28, restated here as ruled-out causes —
+    the numbered list format makes it legible that this is elimination, not a growing pile of
+    unexplained facts.</p></div></div>
+
+  <div class="box"><div class="said"><span class="role flag">Final conclusion</span>
+    <p class="quote">A genuine, small physics-solver discrepancy between MuJoCo-Warp's GPU-parallel
+    contact solver and native MuJoCo's CPU solver — not a bug in this harness, and not something
+    further tuning is likely to eliminate. A closed-loop controller's own corrections feed back
+    into its future observations, so even a small, bounded per-step physics difference compounds
+    over hundreds of steps. This is a known category of limitation for GPU-parallel physics
+    engines generally, not specific to this project's setup.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The load-bearing sentence of the whole sim2sim arc: after five confirmed findings and two
+    disconfirmed hypotheses, the honest conclusion is a structural one (a real, small,
+    compounding solver-level difference), not a fixable-bug one — which is exactly why the "Next"
+    slide treats the current policy as not yet real-hardware-ready rather than proposing a sixth
+    debugging pass.</p></div></div>
+</section>
+
+<section class="slide">
+  <div class="hd"><span class="num">30</span><div><h3>Next</h3>
+  <span class="job">Job: close on a real, prioritized punch list — not a vague "future work" slide.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role flag">Item 1 — new</span>
+    <p class="quote plain">A harsher sim2sim test would only make this gap worse, not better —
+    treat the current policy as not yet ready for real-hardware deployment on this evidence</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The direct, practical consequence of slide 29's conclusion: this isn't a call to keep
+    debugging the same harness, it's a call to treat the finding as a real constraint on what
+    comes next (no sim2real attempt on this policy as-is).</p></div></div>
+
+  <div class="box"><div class="said"><span class="role card">Item 2 — new</span>
+    <p class="quote plain">Try training an architecture/training recipe known to be more robust to
+    physics-engine differences (e.g. explicit domain randomization over solver-sensitive
+    parameters)</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The constructive answer to item 1 — if the gap is structural, the fix isn't more debugging,
+    it's training the policy to be robust to exactly this class of difference from the start.</p></div></div>
+
+  <div class="box"><div class="said"><span class="role card">Item 3 — carried over</span>
+    <p class="quote plain">Stance-aware ground pass refinement (flagged two weeks ago, still not
+    required to train)</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Deliberately unchanged wording from two decks ago — still true, still not blocking, kept in
+    the list rather than quietly dropped.</p></div></div>
+
+  <div class="box"><div class="said"><span class="role card">Item 4 — new</span>
+    <p class="quote plain">A third motion, further from tennis/dance in character (e.g. a fall
+    recovery or a two-person interaction), to keep stress-testing how general this pipeline
+    actually is</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>This week's item-4 promise ("try a second motion") is now done, so this is its natural
+    successor — the same generalization question, pushed further, since tennis and dance turned
+    out to be closer in character (single-person, rhythmic, standing) than a fall-recovery or
+    two-person clip would be.</p></div></div>
+</section>
+
+<footer>
+  <p><b>Reading the tags.</b> <span class="role card">Result card</span> states something found or
+  built; <span class="role flag">Honesty card</span> bounds a claim before someone else does;
+  <span class="role fix">Correction</span> quotes someone else's source or retracts a first guess;
+  <span class="role data">Terminal / table</span> is real captured output or a reference table,
+  never a mock-up.</p>
+  <p>Deck: <b>embodied ai week 28.pptx</b>, 30 slides · Captures in
+  <code>presentations/week28_shots/captures/</code> (including <code>dance_sourcing_lesson.txt</code>,
+  <code>dance_gvhmr_gmr.txt</code>, <code>dance_native_eval.txt</code>, and
+  <code>sim2sim_extended_and_cuda.txt</code>, added for the second-motion and extended-sim2sim acts) ·
+  Plot from the real TensorBoard log at
+  <code>~/mjlab/logs/rsl_rl/r1_tracking/2026-09-23_19-03-01_r1_tennis_run1/</code> ·
+  Framework: <a href="https://github.com/mujocolab/mjlab">mjlab</a>, reimplementing
+  <a href="https://github.com/HybridRobotics/whole_body_tracking">BeyondMimic</a>.</p>
+</footer>
+</div>

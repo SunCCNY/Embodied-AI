@@ -1,0 +1,13 @@
+[INFO] Running 64 evaluation episodes...
+[INFO] 64/64 episodes completed (step 499, truncated=62, terminated=0)
+
+==================================================
+Evaluation Results
+==================================================
+  success_rate: 0.9688
+  mpkpe: 0.2991
+  r_mpkpe: 0.0637
+  joint_vel_error: 1.1492
+  ee_pos_error: 0.0870
+  ee_ori_error: 0.2632
+==================================================
