@@ -24,6 +24,7 @@ on deployment, and most recently retargeting human motion capture onto the robot
 | [Week 26](Week%2026/) | 2026-09-11 |
 | [Week 27](Week%2027/) | — |
 | [Week 28](Week%2028/) | — |
+| [Week 29](Week%2029/) | — |
 
 Week numbers follow the lab meeting schedule, so gaps are weeks I did not present.
 Week 25 is the GMR motion retargeting deck; Week 26 extends it to all eight GMR input formats
@@ -31,5 +32,7 @@ and compares the R1 against the G1 baseline. Week 27 closes the video pipeline e
 (phone video → GVHMR → SMPL-X → GMR → R1 motion). Week 28 trains imitation-learning policies on
 those motions (BeyondMimic via mjlab) and checks them sim2sim; its folder is a full package —
 deck, speaker companion, the code added to mjlab, and the trained policies — see its README.
+Week 29 trains the R1 dance policy in Isaac Lab (PhysX) and tests whether it transfers to plain MuJoCo;
+its folder (`isaac_dance_transfer/`) has the code, the trained policy, and the results.
 
 The lab manuals that came out of this work are in `CUNY-AI/Part-2/`.
