@@ -1,16 +1,24 @@
 # From Video to Humanoid: A Reproducible Motion-Imitation Pipeline for the Unitree R1, and What Breaks It in Transfer
 
-*Working paper — draft 1, 2026-10-08. Shaoqin Li¹, Yi Sun¹ (author list to be confirmed).*
+*FIRST DRAFT — work in progress, 2026-10-09. Shaoqin Li¹, Yi Sun¹ (author list to be confirmed).*
 *¹ Applied and Embodied AI Laboratory, The City College of New York.*
 
-*Status: every number in this draft comes from a run whose output is in this folder. Section 6.4 (seed study)
-is still running; its table is marked PENDING and must not be cited until it is filled in.*
+> **Status of this draft.** The pipeline is not finished, so neither is the paper. Done: every stage runs end to end
+> **in simulation**, on two web clips, and every number here comes from a run whose output is in this folder.
+> Not yet done:
+> 1. **The authors' own phone video** has not been run through the pipeline. Both clips so far are third-party,
+>    static-camera videos (GVHMR's example clip and a stock dance video).
+> 2. **Sim2real**: nothing has run on the physical R1.
+> 3. **Seed study** (Section 6.4): running; its table is marked PENDING and must not be cited until filled in.
+>
+> Section 8 lists the remaining work. The title, abstract and conclusions will be revised once (1) and (2) are done.
+> Until then, read every claim as a claim about simulation.
 
 ---
 
 ## Abstract
 
-We build and release a complete pipeline that turns an ordinary monocular video of a person into a motion-tracking
+We build and release a pipeline that turns a monocular video of a person into a motion-tracking
 policy for the Unitree R1, a 24-joint humanoid for which no motion-imitation work has been published. The pipeline
 chains four existing systems: GVHMR for world-grounded human motion recovery, GMR for kinematic retargeting, a
 BeyondMimic-style tracking policy trained with PPO in either mjlab (MuJoCo-Warp) or Isaac Lab (PhysX), and a
@@ -24,7 +32,9 @@ failure mode, and it appears identically in policies trained in both engines: at
 Training with randomized delay restores it to 15/20 in both, but in PhysX it costs robustness when there is no delay
 (29/30 → 17/30). (3) Joint-space tracking error overstates the gap for video-derived motion: on the dance, 27% of
 reference frames pin the left shoulder at a joint limit, where the policy reaches a similar hand position through a
-different shoulder configuration. Retargeting reports these frames as limit-compliant.
+different shoulder configuration. Retargeting reports these frames as limit-compliant. All results so far are in
+simulation, on two third-party clips. Running the authors' own phone video and deploying on the physical R1 are in
+progress.
 
 ## 1. Introduction
 
@@ -36,8 +46,8 @@ the stages are developed for a few robots (most often the Unitree G1 and H1), an
 means writing code at every boundary: robot models, IK configurations, joint orderings, unit and frame conventions,
 actuator limits, and an evaluation harness.
 
-This paper reports doing that for the Unitree R1, end to end, on a single workstation, and reports what we found when
-we tested the result. The contributions are:
+This paper reports doing that for the Unitree R1, end to end in simulation, on a single workstation, and reports what we
+found when we tested the result. Hardware deployment is the next step (Section 8). The contributions are:
 
 1. **A reproducible video-to-policy pipeline for the R1.** We add R1 support to GMR (an R1 model and IK configurations
    for all eight GMR input formats), to mjlab and to Isaac Lab (robot definitions and tracking tasks, including a
@@ -292,11 +302,39 @@ reference is comfortably feasible", and joint-space error on such references mix
 harmless redundancy. Task-space error, or a check of how often the reference sits at a limit, is more informative.
 The dance policy also had a quarter of the tennis policy's training iterations, which explains part of the gap.
 
-## 8. Limitations
+## 8. Remaining work
+
+This draft stops at simulation. Three pieces of work remain before it is a complete paper, and the first two can change
+its claims.
+
+**8.1 The authors' own phone video.** Both clips so far are third-party videos filmed with a fixed camera. A phone clip
+tests what they do not:
+- a handheld or moving camera, which needs GVHMR's visual-odometry path (DPVO) instead of the static-camera option;
+- our own lighting, framing and clothing, and partial occlusion;
+- whether the linear ground pass still removes vertical drift on a less clean recovery.
+
+The plan is to record a short whole-body motion, run it through Stages 1–4 unchanged, and report the same measurements
+as for tennis and dance: plausibility checks, how often the reference sits at joint limits, in-engine success, and
+sim2sim survival.
+
+**8.2 Sim2real on the physical R1.** The simulation results already set the order:
+1. **Measure the R1's real command latency** (policy output to motor response) through the low-level DDS interface.
+   Retrain with the delay range centred on the measured value. Section 6.3 shows this is the failure that matters most.
+2. **Supply base linear velocity.** Either add a state estimator, or train and evaluate the no-state-estimation task
+   variant (Section 6.5).
+3. **Check the friction margin** on the lab floor, since survival falls at foot friction 0.15.
+4. **Deploy on the gantry first**, supported and then lowered, using the group's gantry-supported test procedure, with
+   joint-range monitoring and a damping fallback. Then deploy free-standing.
+5. **Report** the same quantities measured in simulation (completion, tracking error, failure mode), so the sim2sim
+   results can be checked against hardware.
+
+**8.3 Seed study** (Section 6.4), running at the time of writing.
+
+## 9. Limitations
 
 - **No hardware.** All results are in simulation, with idealized actuators (PD with torque limits, no motor dynamics).
   The sim2real items listed here (delay, base velocity, friction margin) have not been tested on the physical R1.
-- **Two motions, mostly one seed** (Section 6.4 addresses the seed question for the delay result).
+- **Two third-party, static-camera clips; mostly one seed** (Section 6.4 addresses the seed question for the delay result).
 - The harness holds delay constant for the whole episode. Training redraws it every second and starts at zero, so the
   40–60 ms scenarios are stricter than training.
 - Isaac Lab training ran on native Windows, because GPU PhysX hangs under WSL2 on this GPU. The harness ran under WSL2.
@@ -304,14 +342,15 @@ The dance policy also had a quarter of the tennis policy's training iterations, 
   (from scratch vs fine-tuned).
 - The unexplained cost of delay training in PhysX (29/30 → 17/30).
 
-## 9. Conclusion
+## 10. Conclusion
 
-A video of a person can be turned into a humanoid policy for a robot that no published imitation pipeline supports,
-using only open tools, on one workstation, and every stage can be reproduced exactly. What the resulting policies
+In simulation, a video of a person can be turned into a humanoid policy for a robot that no published imitation
+pipeline supports, using only open tools, on one workstation, and every stage can be reproduced exactly. What the resulting policies
 lacked was not physics fidelity but robustness to things a synchronous sim2sim check does not contain: command delay,
 an unobservable base velocity, and low friction. Two of the three findings concern the check rather than the policy:
 a harness must match the training model's floor and timestep, and joint-space error must be read against how often
-the reference sits at a joint limit.
+the reference sits at a joint limit. Whether these findings carry over to the physical robot is the subject of the
+remaining work in Section 8.
 
 ---
 

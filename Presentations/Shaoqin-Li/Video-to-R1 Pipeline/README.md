@@ -25,6 +25,10 @@ The whole chain was run on two motions: a tennis serve (GVHMR's own example clip
 ("Woman Dancing" by Antoni Shkraba, Pexels, 22 s used). This folder has everything needed to re-run each stage,
 the intermediate data of each stage, the trained policies, and the results.
 
+**Status: work in progress.** Everything here runs in simulation, on two third-party, static-camera clips.
+Not done yet: running my own phone video through the pipeline, and sim2real on the physical R1.
+The paper in `paper/draft.md` is a first draft for the same reason.
+
 Weekly decks with the step-by-step story: `../Week 26` (GMR), `../Week 27`, `../Week 28` (imitation learning + sim2sim),
 `../Week 29` (Isaac Lab dance).
 
