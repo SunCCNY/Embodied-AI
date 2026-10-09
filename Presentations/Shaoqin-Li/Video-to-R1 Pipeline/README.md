@@ -21,7 +21,7 @@ Shaoqin Li, Embodied AI group (Prof. Yi Sun), The City College of New York.
  survives?  which perturbations break it?  (the sim2real to-do list)
 ```
 
-The whole chain was run on two motions: a tennis forehand (GVHMR's own example clip, 10.4 s) and a dance
+The whole chain was run on two motions: a tennis serve (GVHMR's own example clip, 10.4 s) and a dance
 ("Woman Dancing" by Antoni Shkraba, Pexels, 22 s used). This folder has everything needed to re-run each stage,
 the intermediate data of each stage, the trained policies, and the results.
 
@@ -248,7 +248,7 @@ README.md, SETUP.md
 data/gvhmr_outputs/   Stage 1 outputs (tennis, dance)
 data/r1_motions/      Stage 2 outputs (.pkl, .csv) and Stage 3 reference motions (.npz)
 policies/             5 trained policies: ONNX + final checkpoint + env/agent config
-results/              sweeps (JSON), measurements, terminal captures, plots, videos
+results/              sweeps (JSON), measurements, terminal captures, plots, videos, figures (video vs R1 frames)
 paper/                paper draft (in progress)
 ```
 

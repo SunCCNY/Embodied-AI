@@ -16,7 +16,7 @@ chains four existing systems: GVHMR for world-grounded human motion recovery, GM
 BeyondMimic-style tracking policy trained with PPO in either mjlab (MuJoCo-Warp) or Isaac Lab (PhysX), and a
 standalone CPU MuJoCo harness for sim2sim evaluation. We add the R1 to each of them. Every stage reproduces
 bit-for-bit from public clones at pinned commits. We evaluate the policies across engines under the training
-randomization and 16 stress scenarios, on a tennis forehand and a dance taken from video. Three findings matter for
+randomization and 16 stress scenarios, on a tennis serve and a dance taken from video. Three findings matter for
 anyone building a similar pipeline. (1) Our first sim2sim "failure" was not a physics gap but a harness that had no
 floor and the wrong timestep; a one-at-a-time ablation shows these two settings account for all of it, while
 contact dimension, solver iterations, friction and contact priority are negligible. (2) Command delay is the dominant
@@ -166,7 +166,7 @@ clones using only the released files and compared against the outputs used in th
 
 ## 6. Results
 
-Two motions: **tennis**, a forehand from GVHMR's example clip (10.4 s), and **dance**, a stock video (22.1 s used).
+Two motions: **tennis**, a serve from GVHMR's example clip (10.4 s), and **dance**, a stock video (22.1 s used).
 Five policies:
 
 *Table 3 — policies.*
