@@ -1,0 +1,9 @@
+raw setting kept               mean joint_pos_error
+(none: exact mjlab model)      0.5769 rad
+condim                         0.5759 rad
+iters                          0.5769 rad
+friction                       0.5816 rad
+priority                       0.5769 rad
+condim+iters+friction+prio     0.5823 rad
+floor                          6.9690 rad
+timestep                       1.7189 rad

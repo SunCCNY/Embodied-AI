@@ -35,4 +35,9 @@ deck, speaker companion, the code added to mjlab, and the trained policies — s
 Week 29 trains the R1 dance policy in Isaac Lab (PhysX) and tests whether it transfers to plain MuJoCo;
 its folder (`isaac_dance_transfer/`) has the code, the trained policy, and the results.
 
+**[Video-to-R1 Pipeline](Video-to-R1%20Pipeline/)** is the whole project in one runnable folder, not a weekly deck:
+video → GVHMR → SMPL-X → GMR → R1 trajectory → motion-tracking policy (mjlab or Isaac Lab) → sim2sim in plain MuJoCo.
+It has the code for every stage, the intermediate data, five trained policies, the results, and setup steps
+pinned to exact upstream commits. Its README starts with a 10-minute test.
+
 The lab manuals that came out of this work are in `CUNY-AI/Part-2/`.

@@ -1,0 +1,174 @@
+diff --git a/src/mjlab/asset_zoo/robots/__init__.py b/src/mjlab/asset_zoo/robots/__init__.py
+index f855d96..d387521 100644
+--- a/src/mjlab/asset_zoo/robots/__init__.py
++++ b/src/mjlab/asset_zoo/robots/__init__.py
+@@ -16,3 +16,9 @@ from mjlab.asset_zoo.robots.unitree_go1.go1_constants import (
+ from mjlab.asset_zoo.robots.unitree_go1.go1_constants import (
+   get_go1_robot_cfg as get_go1_robot_cfg,
+ )
++from mjlab.asset_zoo.robots.unitree_r1.r1_constants import (
++  R1_ACTION_SCALE as R1_ACTION_SCALE,
++)
++from mjlab.asset_zoo.robots.unitree_r1.r1_constants import (
++  get_r1_robot_cfg as get_r1_robot_cfg,
++)
+diff --git a/src/mjlab/scripts/csv_to_npz.py b/src/mjlab/scripts/csv_to_npz.py
+index ac5a13b..464339b 100644
+--- a/src/mjlab/scripts/csv_to_npz.py
++++ b/src/mjlab/scripts/csv_to_npz.py
+@@ -10,6 +10,7 @@ from mjlab.entity import Entity
+ from mjlab.scene import Scene
+ from mjlab.sim.sim import Simulation, SimulationCfg
+ from mjlab.tasks.tracking.config.g1.env_cfgs import unitree_g1_flat_tracking_env_cfg
++from mjlab.tasks.tracking.config.r1.env_cfgs import unitree_r1_flat_tracking_env_cfg
+ from mjlab.utils.lab_api.math import (
+   axis_angle_from_quat,
+   quat_conjugate,
+@@ -336,9 +337,82 @@ def run_sim(
+         wandb.finish()
+ 
+ 
++# (env_cfg factory, ordered joint names matching the CSV's DOF columns) per robot.
++_ROBOT_TRACKING_ENV_CFGS = {
++  "g1": (
++    unitree_g1_flat_tracking_env_cfg,
++    [
++      "left_hip_pitch_joint",
++      "left_hip_roll_joint",
++      "left_hip_yaw_joint",
++      "left_knee_joint",
++      "left_ankle_pitch_joint",
++      "left_ankle_roll_joint",
++      "right_hip_pitch_joint",
++      "right_hip_roll_joint",
++      "right_hip_yaw_joint",
++      "right_knee_joint",
++      "right_ankle_pitch_joint",
++      "right_ankle_roll_joint",
++      "waist_yaw_joint",
++      "waist_roll_joint",
++      "waist_pitch_joint",
++      "left_shoulder_pitch_joint",
++      "left_shoulder_roll_joint",
++      "left_shoulder_yaw_joint",
++      "left_elbow_joint",
++      "left_wrist_roll_joint",
++      "left_wrist_pitch_joint",
++      "left_wrist_yaw_joint",
++      "right_shoulder_pitch_joint",
++      "right_shoulder_roll_joint",
++      "right_shoulder_yaw_joint",
++      "right_elbow_joint",
++      "right_wrist_roll_joint",
++      "right_wrist_pitch_joint",
++      "right_wrist_yaw_joint",
++    ],
++  ),
++  # R1's clean (GMR-derived) model has 24 real joints only -- no waist_pitch,
++  # no wrist_pitch/wrist_yaw. Those three names exist on the real robot's
++  # actuator list but are non-functional "phantom" channels (see this
++  # project's Goal-1 findings) and were never included in this model.
++  "r1": (
++    unitree_r1_flat_tracking_env_cfg,
++    [
++      "left_hip_pitch_joint",
++      "left_hip_roll_joint",
++      "left_hip_yaw_joint",
++      "left_knee_joint",
++      "left_ankle_pitch_joint",
++      "left_ankle_roll_joint",
++      "right_hip_pitch_joint",
++      "right_hip_roll_joint",
++      "right_hip_yaw_joint",
++      "right_knee_joint",
++      "right_ankle_pitch_joint",
++      "right_ankle_roll_joint",
++      "waist_roll_joint",
++      "waist_yaw_joint",
++      "left_shoulder_pitch_joint",
++      "left_shoulder_roll_joint",
++      "left_shoulder_yaw_joint",
++      "left_elbow_joint",
++      "left_wrist_roll_joint",
++      "right_shoulder_pitch_joint",
++      "right_shoulder_roll_joint",
++      "right_shoulder_yaw_joint",
++      "right_elbow_joint",
++      "right_wrist_roll_joint",
++    ],
++  ),
++}
++
++
+ def main(
+   input_file: str,
+   output_name: str,
++  robot: str = "g1",
+   input_fps: float = 30.0,
+   output_fps: float = 50.0,
+   device: str = "cuda:0",
+@@ -350,6 +424,7 @@ def main(
+   Args:
+     input_file: Path to the input CSV file.
+     output_name: Path to the output npz file.
++    robot: Which robot's tracking env/joint order to use ("g1" or "r1").
+     input_fps: Frame rate of the CSV file.
+     output_fps: Desired output frame rate.
+     device: Device to use.
+@@ -360,10 +435,16 @@ def main(
+     print("[WARNING]: CUDA is not available. Falling back to CPU. This may be slow.")
+     device = "cpu"
+ 
++  if robot not in _ROBOT_TRACKING_ENV_CFGS:
++    raise ValueError(
++      f"Unknown robot '{robot}', expected one of {list(_ROBOT_TRACKING_ENV_CFGS)}"
++    )
++  env_cfg_fn, joint_names = _ROBOT_TRACKING_ENV_CFGS[robot]
++
+   sim_cfg = SimulationCfg()
+   sim_cfg.mujoco.timestep = 1.0 / output_fps
+ 
+-  scene = Scene(unitree_g1_flat_tracking_env_cfg().scene, device=device)
++  scene = Scene(env_cfg_fn().scene, device=device)
+   model = scene.compile()
+ 
+   sim = Simulation(num_envs=1, cfg=sim_cfg, model=model, device=device)
+@@ -391,37 +472,7 @@ def main(
+   run_sim(
+     sim=sim,
+     scene=scene,
+-    joint_names=[
+-      "left_hip_pitch_joint",
+-      "left_hip_roll_joint",
+-      "left_hip_yaw_joint",
+-      "left_knee_joint",
+-      "left_ankle_pitch_joint",
+-      "left_ankle_roll_joint",
+-      "right_hip_pitch_joint",
+-      "right_hip_roll_joint",
+-      "right_hip_yaw_joint",
+-      "right_knee_joint",
+-      "right_ankle_pitch_joint",
+-      "right_ankle_roll_joint",
+-      "waist_yaw_joint",
+-      "waist_roll_joint",
+-      "waist_pitch_joint",
+-      "left_shoulder_pitch_joint",
+-      "left_shoulder_roll_joint",
+-      "left_shoulder_yaw_joint",
+-      "left_elbow_joint",
+-      "left_wrist_roll_joint",
+-      "left_wrist_pitch_joint",
+-      "left_wrist_yaw_joint",
+-      "right_shoulder_pitch_joint",
+-      "right_shoulder_roll_joint",
+-      "right_shoulder_yaw_joint",
+-      "right_elbow_joint",
+-      "right_wrist_roll_joint",
+-      "right_wrist_pitch_joint",
+-      "right_wrist_yaw_joint",
+-    ],
++    joint_names=joint_names,
+     input_fps=input_fps,
+     input_file=input_file,
+     output_fps=output_fps,

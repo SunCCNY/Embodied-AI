@@ -1,0 +1,69 @@
+Validating every *_to_r1.json against its G1 parent and r1_mocap.xml.
+R1 model: 26 bodies.  G1 model: 39 bodies.
+
+smplx_to_r1.json   (structural only)
+  A link resolution   29 reference(s) swept, 14 distinct
+  B human side        identical to G1  (14 scale keys)
+  C scale table       ok   torso 0.84  legs 0.818  arms 0.617
+  D rename offsets    8 rename(s)  [left_toe_link->left_ankle_roll_link offset [0.0, 0.0, 0.0]->[0.0, 0.0, 0.0]; left_toe_link->left_ankle_roll_link offset [0.0, 0.02, 0.0]->[0.0, 0.0, 0.0]; left_wrist_yaw_link->left_wrist_roll_link; right_toe_link->right_ankle_roll_link offset [0.0, -0.02, 0.0]->[0.0, 0.0, 0.0]; right_toe_link->right_ankle_roll_link offset [0.0, 0.0, 0.0]->[0.0, 0.0, 0.0]; right_wrist_yaw_link->right_wrist_roll_link]
+  E weights+scalars   unchanged from G1
+  => PASS
+
+bvh_xsens_to_r1.json   (run end-to-end)
+  A link resolution   29 reference(s) swept, 14 distinct
+  B human side        identical to G1  (14 scale keys)
+  C scale table       ok   torso 0.84  legs 0.818  arms 0.578
+  D rename offsets    4 rename(s)  [left_wrist_yaw_link->left_wrist_roll_link; right_wrist_yaw_link->right_wrist_roll_link]
+  E weights+scalars   unchanged from G1
+  => PASS
+
+bvh_lafan1_to_r1.json   (run end-to-end)
+  A link resolution   29 reference(s) swept, 14 distinct
+  B human side        identical to G1  (14 scale keys)
+  C scale table       ok   torso 0.84  legs 0.818  arms 0.578
+  D rename offsets    4 rename(s)  [left_wrist_yaw_link->left_wrist_roll_link; right_wrist_yaw_link->right_wrist_roll_link]
+  E weights+scalars   unchanged from G1
+  => PASS
+
+bvh_nokov_to_r1.json   (structural only)
+  A link resolution   29 reference(s) swept, 14 distinct
+  B human side        identical to G1  (14 scale keys)
+  C scale table       ok   torso 0.84  legs 0.818  arms 0.578
+  D rename offsets    4 rename(s)  [left_wrist_yaw_link->left_wrist_roll_link; right_wrist_yaw_link->right_wrist_roll_link]
+  E weights+scalars   unchanged from G1
+  => PASS
+
+xsens_mvn_to_r1.json   (structural only)
+  A link resolution   45 reference(s) swept, 18 distinct
+      outside the match tables: $.collision_avoidance.self_collision_pairs[0][0][0], $.collision_avoidance.self_collision_pairs[0][1][0], $.collision_avoidance.self_collision_pairs[1][0][0], $.collision_avoidance.self_collision_pairs[1][1][0], $.collision_avoidance.self_collision_pairs[2][0][0], $.collision_avoidance.self_collision_pairs[2][1][0], $.collision_avoidance.self_collision_pairs[3][0][0], $.collision_avoidance.self_collision_pairs[3][1][0], $.collision_avoidance.self_collision_pairs[4][0][0], $.collision_avoidance.self_collision_pairs[4][1][0], $.collision_avoidance.self_collision_pairs[4][1][1], $.collision_avoidance.self_collision_pairs[4][1][2], $.collision_avoidance.self_collision_pairs[5][0][0], $.collision_avoidance.self_collision_pairs[5][1][0], $.collision_avoidance.self_collision_pairs[5][1][1], $.collision_avoidance.self_collision_pairs[5][1][2]
+  B human side        identical to G1  (14 scale keys)
+  C scale table       ok   torso 0.747  legs 0.727  arms 0.578
+  D rename offsets    4 rename(s)  [left_wrist_yaw_link->left_wrist_roll_link; right_wrist_yaw_link->right_wrist_roll_link]
+  E weights+scalars   unchanged from G1
+  => PASS
+
+fbx_to_r1.json   (structural only)
+  A link resolution   29 reference(s) swept, 14 distinct
+  B human side        identical to G1  (14 scale keys)
+  C scale table       ok   torso 0.84  legs 0.818  arms 0.617
+  D rename offsets    8 rename(s)  [left_toe_link->left_ankle_roll_link offset [0.0, 0.0, 0.0]->[0.0, 0.0, 0.0]; left_wrist_yaw_link->left_wrist_roll_link; right_toe_link->right_ankle_roll_link offset [0.0, 0.0, 0.0]->[0.0, 0.0, 0.0]; right_wrist_yaw_link->right_wrist_roll_link]
+  E weights+scalars   unchanged from G1
+  => PASS
+
+fbx_offline_to_r1.json   (structural only)
+  A link resolution   29 reference(s) swept, 14 distinct
+  B human side        identical to G1  (14 scale keys)
+  C scale table       ok   torso 0.84  legs 0.818  arms 0.617
+  D rename offsets    8 rename(s)  [left_toe_link->left_ankle_roll_link offset [0.0, 0.0, 0.0]->[0.0, 0.0, 0.0]; left_wrist_yaw_link->left_wrist_roll_link; right_toe_link->right_ankle_roll_link offset [0.0, 0.0, 0.0]->[0.0, 0.0, 0.0]; right_wrist_yaw_link->right_wrist_roll_link]
+  E weights+scalars   unchanged from G1
+  => PASS
+
+xrobot_to_r1.json   (structural only)
+  A link resolution   29 reference(s) swept, 14 distinct
+  B human side        identical to G1  (14 scale keys)
+  C scale table       ok   torso 0.84  legs 0.818  arms 0.617
+  D rename offsets    8 rename(s)  [left_toe_link->left_ankle_roll_link offset [0.05, 0.0, 0.0]->[0.0, 0.0, 0.0]; left_wrist_yaw_link->left_wrist_roll_link; right_toe_link->right_ankle_roll_link offset [0.05, 0.0, 0.0]->[0.0, 0.0, 0.0]; right_wrist_yaw_link->right_wrist_roll_link]
+  E weights+scalars   unchanged from G1
+  => PASS
+
+8 of 8 configs pass all five checks.

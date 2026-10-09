@@ -1,0 +1,10 @@
+term               max|harness-isaac|   max|isaac|
+cmd_jp                        0.00000       1.1412
+cmd_jv                        0.00000       7.2630
+anchor_pos_b                  0.00000       0.1189
+anchor_ori_b                  0.00000       0.7920
+lin_vel                       0.00000       0.1262
+ang_vel                       0.00000       0.3842
+joint_pos_rel                 0.00000       3.2218
+joint_vel_rel                 0.00000       4.1383
+last_action                   0.00000       0.0000

@@ -1,0 +1,32 @@
+Geom selection for cross-robot comparison -- 2026-09-10
+======================================================
+
+Why this matters: week26_posture_sweep.py selected 'foot' geoms by the name
+test  name.endswith('_collision')  with a fallback to ALL geoms if none matched.
+The R1 names its collision geoms that way. The G1 names NONE of them that way,
+so on the G1 the test found nothing and fell back to all 72 geoms -- visual
+meshes and the floor plane included. 'lowest point' and 'contact %' would then
+have measured a different thing on each robot, invalidating any comparison.
+
+=== unitree_r1: 64 geoms, 26 bodies
+  named *_collision      : 31
+  on world body (floor?) : 1  ['floor']
+  contype/conaff == 0    : 32 (visual only)
+  PHYSICS SELECTOR       : 31
+     e.g. ['pelvis_collision', 'left_hip_collision', 'left_thigh_collision', 'left_shin_collision', 'left_linkage_brace_collision', 'left_foot1_collision']
+  physics selector == named *_collision set? True
+
+=== unitree_g1: 72 geoms, 39 bodies
+  named *_collision      : 0
+  on world body (floor?) : 1  ['floor']
+  contype/conaff == 0    : 35 (visual only)
+  PHYSICS SELECTOR       : 36
+     e.g. ['<3>', '<5>', '<7>', '<9>', '<11>', '<13>']
+  physics selector == named *_collision set? False
+
+Fix: select on physics, not naming --
+  (geom_contype OR geom_conaffinity) non-zero  AND  geom_bodyid != 0
+
+The R1 set is IDENTICAL under both rules (31 geoms), so every R1 number already
+published in the week 26 deck is unaffected. Verified by re-running the R1 sweep
+and diffing against measurements/week26_posture_sweep.json.

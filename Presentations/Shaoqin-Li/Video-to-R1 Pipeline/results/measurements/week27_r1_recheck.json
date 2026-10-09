@@ -1,0 +1,249 @@
+{
+  "walk": {
+    "frames": 600,
+    "lowest_cm": 0.8190392758793895,
+    "mean_low_cm": 2.0041716376022483,
+    "contact_frames": 14,
+    "contact_pct": 2.3,
+    "pelvis_range_cm": 4.82,
+    "limit_violation_frames": 0,
+    "peak_joint_speed": 10.2,
+    "speed_exceeded_frames": 0,
+    "looks_static": false,
+    "ik_fps": 160.4,
+    "window": [
+      200,
+      800
+    ],
+    "total_frames": 7840,
+    "clip": "walk1_subject1.bvh"
+  },
+  "run": {
+    "frames": 600,
+    "lowest_cm": 1.253582969957321,
+    "mean_low_cm": 2.456689551653165,
+    "contact_frames": 0,
+    "contact_pct": 0.0,
+    "pelvis_range_cm": 12.41,
+    "limit_violation_frames": 0,
+    "peak_joint_speed": 9.6,
+    "speed_exceeded_frames": 0,
+    "looks_static": false,
+    "ik_fps": 149.1,
+    "window": [
+      200,
+      800
+    ],
+    "total_frames": 7135,
+    "clip": "run1_subject2.bvh"
+  },
+  "sprint": {
+    "frames": 600,
+    "lowest_cm": -2.1301970648955475,
+    "mean_low_cm": 2.9634233222986155,
+    "contact_frames": 17,
+    "contact_pct": 2.8,
+    "pelvis_range_cm": 23.6,
+    "limit_violation_frames": 0,
+    "peak_joint_speed": 19.6,
+    "speed_exceeded_frames": 0,
+    "looks_static": false,
+    "ik_fps": 136.6,
+    "window": [
+      200,
+      800
+    ],
+    "total_frames": 8194,
+    "clip": "sprint1_subject2.bvh"
+  },
+  "dance": {
+    "frames": 600,
+    "lowest_cm": -0.17193228489050094,
+    "mean_low_cm": 1.8221992293963385,
+    "contact_frames": 31,
+    "contact_pct": 5.2,
+    "pelvis_range_cm": 22.11,
+    "limit_violation_frames": 0,
+    "peak_joint_speed": 18.0,
+    "speed_exceeded_frames": 0,
+    "looks_static": false,
+    "ik_fps": 121.8,
+    "window": [
+      200,
+      800
+    ],
+    "total_frames": 3945,
+    "clip": "dance1_subject1.bvh"
+  },
+  "fight": {
+    "frames": 600,
+    "lowest_cm": -2.2206925898202785,
+    "mean_low_cm": 2.7522107935426106,
+    "contact_frames": 47,
+    "contact_pct": 7.8,
+    "pelvis_range_cm": 38.01,
+    "limit_violation_frames": 0,
+    "peak_joint_speed": 32.9,
+    "speed_exceeded_frames": 8,
+    "looks_static": false,
+    "ik_fps": 123.2,
+    "window": [
+      200,
+      800
+    ],
+    "total_frames": 7347,
+    "clip": "fight1_subject2.bvh"
+  },
+  "fightAndSports": {
+    "frames": 600,
+    "lowest_cm": -1.0284167661228816,
+    "mean_low_cm": 2.1718707440881904,
+    "contact_frames": 126,
+    "contact_pct": 21.0,
+    "pelvis_range_cm": 30.34,
+    "limit_violation_frames": 0,
+    "peak_joint_speed": 29.5,
+    "speed_exceeded_frames": 8,
+    "looks_static": false,
+    "ik_fps": 117.5,
+    "window": [
+      200,
+      800
+    ],
+    "total_frames": 7355,
+    "clip": "fightAndSports1_subject1.bvh"
+  },
+  "jumps": {
+    "frames": 600,
+    "lowest_cm": -9.8969042743194,
+    "mean_low_cm": 5.19652412809168,
+    "contact_frames": 36,
+    "contact_pct": 6.0,
+    "pelvis_range_cm": 29.88,
+    "limit_violation_frames": 0,
+    "peak_joint_speed": 17.7,
+    "speed_exceeded_frames": 0,
+    "looks_static": false,
+    "ik_fps": 201.0,
+    "window": [
+      200,
+      800
+    ],
+    "total_frames": 7334,
+    "clip": "jumps1_subject1.bvh"
+  },
+  "ground": {
+    "frames": 600,
+    "lowest_cm": -45.63235239046283,
+    "mean_low_cm": -22.98756658071948,
+    "contact_frames": 11,
+    "contact_pct": 1.8,
+    "pelvis_range_cm": 68.58,
+    "limit_violation_frames": 0,
+    "peak_joint_speed": 28.7,
+    "speed_exceeded_frames": 2,
+    "looks_static": false,
+    "ik_fps": 165.6,
+    "window": [
+      200,
+      800
+    ],
+    "total_frames": 4742,
+    "clip": "ground1_subject1.bvh"
+  },
+  "fallAndGetUp": {
+    "frames": 600,
+    "lowest_cm": -42.87565803145016,
+    "mean_low_cm": -7.96442889016712,
+    "contact_frames": 32,
+    "contact_pct": 5.3,
+    "pelvis_range_cm": 77.09,
+    "limit_violation_frames": 0,
+    "peak_joint_speed": 32.1,
+    "speed_exceeded_frames": 4,
+    "looks_static": false,
+    "ik_fps": 122.5,
+    "window": [
+      200,
+      800
+    ],
+    "total_frames": 5047,
+    "clip": "fallAndGetUp1_subject1.bvh"
+  },
+  "obstacles": {
+    "frames": 600,
+    "lowest_cm": 0.7130142981700055,
+    "mean_low_cm": 47.36710604327637,
+    "contact_frames": 3,
+    "contact_pct": 0.5,
+    "pelvis_range_cm": 94.43,
+    "limit_violation_frames": 0,
+    "peak_joint_speed": 11.5,
+    "speed_exceeded_frames": 0,
+    "looks_static": false,
+    "ik_fps": 129.9,
+    "window": [
+      200,
+      800
+    ],
+    "total_frames": 5391,
+    "clip": "obstacles1_subject1.bvh"
+  },
+  "aiming": {
+    "frames": 600,
+    "lowest_cm": 0.9312746005932767,
+    "mean_low_cm": 1.46799559016872,
+    "contact_frames": 4,
+    "contact_pct": 0.7,
+    "pelvis_range_cm": 3.99,
+    "limit_violation_frames": 0,
+    "peak_joint_speed": 6.7,
+    "speed_exceeded_frames": 0,
+    "looks_static": false,
+    "ik_fps": 127.2,
+    "window": [
+      200,
+      800
+    ],
+    "total_frames": 7184,
+    "clip": "aiming1_subject1.bvh"
+  },
+  "push": {
+    "frames": 600,
+    "lowest_cm": 1.624666980090881,
+    "mean_low_cm": 2.506935679791502,
+    "contact_frames": 0,
+    "contact_pct": 0.0,
+    "pelvis_range_cm": 7.85,
+    "limit_violation_frames": 0,
+    "peak_joint_speed": 15.6,
+    "speed_exceeded_frames": 0,
+    "looks_static": false,
+    "ik_fps": 159.5,
+    "window": [
+      200,
+      800
+    ],
+    "total_frames": 3066,
+    "clip": "push1_subject2.bvh"
+  },
+  "multipleActions": {
+    "frames": 600,
+    "lowest_cm": -13.067929384447499,
+    "mean_low_cm": -1.709927479662166,
+    "contact_frames": 80,
+    "contact_pct": 13.3,
+    "pelvis_range_cm": 72.14,
+    "limit_violation_frames": 0,
+    "peak_joint_speed": 12.5,
+    "speed_exceeded_frames": 0,
+    "looks_static": false,
+    "ik_fps": 116.7,
+    "window": [
+      200,
+      800
+    ],
+    "total_frames": 4587,
+    "clip": "multipleActions1_subject1.bvh"
+  }
+}

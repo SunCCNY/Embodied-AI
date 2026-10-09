@@ -1,0 +1,10 @@
+[Input]: docs/example_video/dancer.mp4
+(L, W, H) = (662, 2160, 4096)
+[Preprocess] End. Time elapsed: 99.89s
+[HMR4D] Predicting
+[HMR4D] Elapsed: 1.03s for data-length=22.1s
+
+[headless] dancer/hmr4d_results.pt: 662 frames, human height ... (from betas[0])
+[ground] mode=linear: ...
+[headless] IK solve rate: 305.4 FPS (2.2s for 662 frames), motion is 30 fps -> real-time capable
+[headless] motion saved to out/dancer_r1.pkl

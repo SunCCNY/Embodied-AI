@@ -1,0 +1,44 @@
+====================================================================
+  1. bvh_xsens_to_r1.json  vs  bvh_xsens_to_g1.json
+====================================================================
+
+  ik_match_table1 -- 14 bodies each
+    bodies renamed for the R1 : ['left_wrist_roll_link', 'right_wrist_roll_link']
+    bodies they replace       : ['left_wrist_yaw_link', 'right_wrist_yaw_link']
+    shared bodies retuned     : 0
+
+  ik_match_table2 -- 14 bodies each
+    bodies renamed for the R1 : ['left_wrist_roll_link', 'right_wrist_roll_link']
+    bodies they replace       : ['left_wrist_yaw_link', 'right_wrist_yaw_link']
+    shared bodies retuned     : 0
+
+  human_scale_table:
+    Hips             G1 0.9    -> R1 0.84     changed
+    Chest4           G1 0.9    -> R1 0.84     changed
+    LeftHip          G1 0.9    -> R1 0.818    changed
+    RightHip         G1 0.9    -> R1 0.818    changed
+    LeftKnee         G1 0.9    -> R1 0.818    changed
+    RightKnee        G1 0.9    -> R1 0.818    changed
+    LeftFootMod      G1 0.9    -> R1 0.818    changed
+    RightFootMod     G1 0.9    -> R1 0.818    changed
+    LeftShoulder     G1 0.75   -> R1 0.578    changed
+    RightShoulder    G1 0.75   -> R1 0.578    changed
+    LeftElbow        G1 0.75   -> R1 0.578    changed
+    RightElbow       G1 0.75   -> R1 0.578    changed
+    RightWrist       G1 0.75   -> R1 0.578    changed
+    LeftWrist        G1 0.75   -> R1 0.578    changed
+
+====================================================================
+  2. where do the scale factors come from?
+====================================================================
+  segment          R1  performer    ratio     config
+  --------------------------------------------------
+  thigh        0.291m     0.433m    0.673      0.818
+  shank        0.310m     0.422m    0.735      0.818
+  upper arm    0.221m     0.313m    0.704      0.578
+  forearm      0.117m     0.256m    0.456      0.578
+
+  The ratio column is what the geometry implies; the config column is what we
+  actually use.  They do not agree, so the scale factors were TUNED, not read
+  off the robot.  Setting them from the ratios and re-measuring the motion is
+  an open experiment -- see GMR_HANDOFF.md.

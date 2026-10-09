@@ -1,0 +1,114 @@
+### full capture, all 4249 frames (ONE run, no --start/--end)
+
+================================================================
+  full_capture.pkl  ->  unitree_r1
+  4249 frames @ 120 fps = 35.4 s   |   24 joints
+================================================================
+
+  1. FEET -- does the robot ever touch the ground?
+       lowest contact point:  min  +3.22 cm   mean  +4.03 cm   max  +5.57 cm
+       -> FLOATING the whole time.  0 of 4249 frames make contact.
+
+  2. PELVIS -- does the body rise and fall like a real one?
+       height 0.600 .. 0.786 m   (range 18.60 cm)
+       -> moves, as a real body would
+
+  3. LIMITS -- is any joint pushed past its mechanical stop?
+       -> none. every joint stays inside its range.
+
+  4. SPEED -- could a motor actually move this fast?
+       peak joint speed 14.4 rad/s   (limit set to 20)
+       -> within a plausible servo budget
+
+================================================================
+  VERDICT: this motion is NOT physically realisable.
+     - feet never contact the ground
+
+  This is the lesson of Experiment 4.  Retargeting solves ONE problem: put the
+  robot's hands and feet where the human's were.  It succeeds at that, which is
+  why the video looks convincing.  Nothing in the pipeline ever asked about
+  gravity, contact, torque, or whether the robot could stay upright -- so
+  nothing in the output respects them.
+
+  A retargeted motion is a REFERENCE, not a controller.  Making it real is the
+  job of the policy you trained in Lab 2: track this trajectory while actually
+  balancing.  That two-stage design -- retarget, then RL -- is the architecture
+  behind every paper in the reading packet.
+================================================================
+
+
+### frames 600-1800, retargeted as their own run
+
+================================================================
+  mine.pkl  ->  unitree_r1
+  1200 frames @ 120 fps = 10.0 s   |   24 joints
+================================================================
+
+  1. FEET -- does the robot ever touch the ground?
+       lowest contact point:  min  -1.15 cm   mean  +0.50 cm   max  +1.80 cm
+       -> touches down on 762/1200 frames (64%)
+
+  2. PELVIS -- does the body rise and fall like a real one?
+       height 0.648 .. 0.733 m   (range 8.49 cm)
+       -> moves, as a real body would
+
+  3. LIMITS -- is any joint pushed past its mechanical stop?
+       -> none. every joint stays inside its range.
+
+  4. SPEED -- could a motor actually move this fast?
+       peak joint speed 27.3 rad/s   (limit set to 20)
+       -> exceeded on 5 frames
+
+================================================================
+  VERDICT: this motion is NOT physically realisable.
+     - feet penetrate the floor by 1.15 cm
+     - joint speed implausible on 5 frames
+
+  This is the lesson of Experiment 4.  Retargeting solves ONE problem: put the
+  robot's hands and feet where the human's were.  It succeeds at that, which is
+  why the video looks convincing.  Nothing in the pipeline ever asked about
+  gravity, contact, torque, or whether the robot could stay upright -- so
+  nothing in the output respects them.
+
+  A retargeted motion is a REFERENCE, not a controller.  Making it real is the
+  job of the policy you trained in Lab 2: track this trajectory while actually
+  balancing.  That two-stage design -- retarget, then RL -- is the architecture
+  behind every paper in the reading packet.
+================================================================
+
+
+### frames 0-360, the calibration T-pose
+
+================================================================
+  tpose.pkl  ->  unitree_r1
+  360 frames @ 120 fps = 3.0 s   |   24 joints
+================================================================
+
+  1. FEET -- does the robot ever touch the ground?
+       lowest contact point:  min  +4.53 cm   mean  +4.58 cm   max  +4.63 cm
+       -> FLOATING the whole time.  0 of 360 frames make contact.
+
+  2. PELVIS -- does the body rise and fall like a real one?
+       height 0.787 .. 0.787 m   (range 0.06 cm)
+       -> FROZEN. A moving human does not hold this constant.
+
+  3. LIMITS -- is any joint pushed past its mechanical stop?
+       -> none. every joint stays inside its range.
+
+  4. SPEED -- could a motor actually move this fast?
+       peak joint speed 0.6 rad/s   (limit set to 20)
+       -> within a plausible servo budget
+
+  !! WARNING -- THIS LOOKS LIKE A CALIBRATION POSE, NOT A MOTION.
+     The pelvis moves 0.06 cm and the fastest joint reaches
+     0.6 rad/s.  Real motion does not look like this.
+     Xsens captures begin with a stationary T-pose.  Skip past it:
+        --start 600 --end 1800
+     Every number above describes the T-pose.  Re-run before
+     drawing any conclusion from them.
+
+================================================================
+  VERDICT: withheld -- you measured a calibration pose.
+  Re-run with --start 600 --end 1800 and read the result then.
+================================================================
+

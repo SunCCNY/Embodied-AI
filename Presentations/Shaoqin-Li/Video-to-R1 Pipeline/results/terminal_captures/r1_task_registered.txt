@@ -1,0 +1,4 @@
+R1 tasks registered: ['Mjlab-Tracking-Flat-Unitree-R1',
+                       'Mjlab-Tracking-Flat-Unitree-R1-No-State-Estimation']
+SCENE BUILT AND INITIALIZED OK on cuda:0
+num joints: 24 num bodies: 25

@@ -1,0 +1,63 @@
+STAGE 3 -- the join: video -> GVHMR -> SMPL-X -> GMR -> R1   (2026-09-16)
+======================================================================
+Source: GVHMR/outputs/demo/tennis/hmr4d_results.pt (312 frames @ 30 fps, 10.4 s,
+static camera).  Script: r1_gmr/gvhmr_to_robot_headless.py (new; fourth headless
+sibling).  Config: smplx_to_r1.json -- the same file OMOMO used, no new config.
+Frame convention CHECKED: GVHMR's world is y-up; GMR's get_gvhmr_data_offline_fast
+applies the y-up -> z-up rotation (the commented-out one in load_gvhmr_pred_file is
+a duplicate, not a missing step).  After it, pelvis z ~1.0 m, head ~1.6 m, ankles
+0.07-0.23 m -> upright.  Visual check media/week28/gvhmr_r1_tennis_strip.png:
+the forehand swing at frame 240 is clearly reproduced.
+
+  check (body_geoms selector)        R1             G1
+  ----------------------------------------------------------
+  floor contact                41/312 (13.1%)  19/312 (6.1%)
+  deepest penetration              -2.67 cm       -0.87 cm
+  mean lowest point                +5.65 cm       +6.77 cm
+  highest lowest point            +15.15 cm      +18.08 cm
+  pelvis range                     22.60 cm       25.33 cm
+  joint limit violations                  0              0
+  peak joint speed                22.7 rad/s     23.9 rad/s  (5 / 1 frames > 20)
+  IK solve rate                   129.4 fps      181.3 fps
+  human height (betas[0])            1.728 m        1.728 m
+
+WHAT THIS SHOWS
+  1. The pipeline is closed end to end on this laptop: 10 s of video -> 7:47 of
+     GVHMR -> 2.4 s of IK -> a GMR motion pickle (root_pos, root_rot wxyz, dof_pos,
+     fps) = the reference-motion format imitation learning consumes.
+  2. Video-derived SMPL-X is noisier than mocap, as expected: the SOURCE ankles
+     drift from 0.07 m to 0.23 m over the clip while the player is on the ground
+     at both ends.  That ~15 cm of GVHMR vertical drift is what the +15 / +18 cm
+     float on both robots is.  It is a stage-1 property, not a retargeting one,
+     and it is why a ground-height pass (or GMR's offset_human_data_to_ground)
+     will be needed before these trajectories are fed to imitation learning.
+  3. Servo speed is exceeded on 5 (R1) / 1 (G1) frames at 22.7 / 23.9 rad/s --
+     a tennis swing is genuinely fast; same magnitude on both robots.
+  4. Joint limits: 0 on both, again.  Now holds on video data too.
+
+CORRECTION TO THE 09-10 OMOMO NUMBERS (measurements/week27_smplx_r1_vs_g1.txt)
+  exp4_check_motion.py still carried the NAME-BASED geom selector that
+  week26_posture_sweep.py had already replaced on 09-10.  On the G1 it fell back
+  to all geoms including the floor plane, whose bottom sits at z=0, so the G1
+  read as "touching down" on nearly every frame.  Recomputed with body_geoms():
+
+                              published (wrong)       correct
+    OMOMO G1 floor contact      141/143 (99%)      79/143 (55%)
+    OMOMO G1 deepest            -1.04 cm           -0.36 cm
+    OMOMO G1 mean lowest        -0.35 cm           +0.82 cm
+    OMOMO R1 (unchanged)        112/143 (78%), -2.33 cm, -0.55 cm
+
+  Consequences:
+    - "The contact gap reproduces on a second dataset" is WITHDRAWN.  On OMOMO the
+      R1 contacts MORE than the G1 (78% vs 55%), and on the tennis video it also
+      contacts more (13% vs 6%).  Only LAFAN1 (bvh, 13 categories, computed with
+      the fixed selector) shows R1 < G1 (5.1% vs 10.6%).  The direction is
+      dataset/format-dependent, not an R1 property.
+    - The "less often but deeper" clue and the leg-length hypothesis built on it
+      lose their OMOMO support.  The leg-scale sweep is still a fine experiment,
+      but it is no longer motivated by a reproduced gap.
+    - Week 26 deck slide 18 ("Finding 5") and the matching script section carry
+      the wrong OMOMO row and the wrong conclusion.  NOT yet edited.
+  exp4_check_motion.py is now fixed (physics-based selector, same as
+  body_geoms()); the R1 numbers it printed were always right because the R1
+  names its collision geoms.

@@ -1,0 +1,70 @@
+diff --git a/source/whole_body_tracking/whole_body_tracking/tasks/tracking/mdp/__init__.py b/source/whole_body_tracking/whole_body_tracking/tasks/tracking/mdp/__init__.py
+index aecbb98..4dc8070 100644
+--- a/source/whole_body_tracking/whole_body_tracking/tasks/tracking/mdp/__init__.py
++++ b/source/whole_body_tracking/whole_body_tracking/tasks/tracking/mdp/__init__.py
+@@ -4,6 +4,7 @@ from isaaclab.envs.mdp import *  # noqa: F401, F403
+ 
+ from whole_body_tracking.tasks.tracking.mdp import *  # noqa: F401, F403
+ 
++from .actions import *  # noqa: F401, F403
+ from .commands import *  # noqa: F401, F403
+ from .events import *  # noqa: F401, F403
+ from .observations import *  # noqa: F401, F403
+diff --git a/source/whole_body_tracking/whole_body_tracking/tasks/tracking/mdp/commands.py b/source/whole_body_tracking/whole_body_tracking/tasks/tracking/mdp/commands.py
+index 5325068..9919e96 100644
+--- a/source/whole_body_tracking/whole_body_tracking/tasks/tracking/mdp/commands.py
++++ b/source/whole_body_tracking/whole_body_tracking/tasks/tracking/mdp/commands.py
+@@ -28,16 +28,31 @@ if TYPE_CHECKING:
+ 
+ 
+ class MotionLoader:
+-    def __init__(self, motion_file: str, body_indexes: Sequence[int], device: str = "cpu"):
++    def __init__(
++        self,
++        motion_file: str,
++        body_indexes: Sequence[int],
++        device: str = "cpu",
++        joint_names: Sequence[str] | None = None,
++        body_names: Sequence[str] | None = None,
++    ):
+         assert os.path.isfile(motion_file), f"Invalid file path: {motion_file}"
+         data = np.load(motion_file)
+         self.fps = data["fps"]
+-        self.joint_pos = torch.tensor(data["joint_pos"], dtype=torch.float32, device=device)
+-        self.joint_vel = torch.tensor(data["joint_vel"], dtype=torch.float32, device=device)
+-        self._body_pos_w = torch.tensor(data["body_pos_w"], dtype=torch.float32, device=device)
+-        self._body_quat_w = torch.tensor(data["body_quat_w"], dtype=torch.float32, device=device)
+-        self._body_lin_vel_w = torch.tensor(data["body_lin_vel_w"], dtype=torch.float32, device=device)
+-        self._body_ang_vel_w = torch.tensor(data["body_ang_vel_w"], dtype=torch.float32, device=device)
++        jperm = slice(None)
++        bperm = slice(None)
++        if "joint_names" in data.files and joint_names is not None:
++            src = [str(n) for n in data["joint_names"]]
++            jperm = [src.index(n) for n in joint_names]
++        if "body_names" in data.files and body_names is not None:
++            src = [str(n) for n in data["body_names"]]
++            bperm = [src.index(n) for n in body_names]
++        self.joint_pos = torch.tensor(data["joint_pos"][:, jperm], dtype=torch.float32, device=device)
++        self.joint_vel = torch.tensor(data["joint_vel"][:, jperm], dtype=torch.float32, device=device)
++        self._body_pos_w = torch.tensor(data["body_pos_w"][:, bperm], dtype=torch.float32, device=device)
++        self._body_quat_w = torch.tensor(data["body_quat_w"][:, bperm], dtype=torch.float32, device=device)
++        self._body_lin_vel_w = torch.tensor(data["body_lin_vel_w"][:, bperm], dtype=torch.float32, device=device)
++        self._body_ang_vel_w = torch.tensor(data["body_ang_vel_w"][:, bperm], dtype=torch.float32, device=device)
+         self._body_indexes = body_indexes
+         self.time_step_total = self.joint_pos.shape[0]
+ 
+@@ -71,7 +86,13 @@ class MotionCommand(CommandTerm):
+             self.robot.find_bodies(self.cfg.body_names, preserve_order=True)[0], dtype=torch.long, device=self.device
+         )
+ 
+-        self.motion = MotionLoader(self.cfg.motion_file, self.body_indexes, device=self.device)
++        self.motion = MotionLoader(
++            self.cfg.motion_file,
++            self.body_indexes,
++            device=self.device,
++            joint_names=self.robot.joint_names,
++            body_names=self.robot.body_names,
++        )
+         self.time_steps = torch.zeros(self.num_envs, dtype=torch.long, device=self.device)
+         self.body_pos_relative_w = torch.zeros(self.num_envs, len(cfg.body_names), 3, device=self.device)
+         self.body_quat_relative_w = torch.zeros(self.num_envs, len(cfg.body_names), 4, device=self.device)

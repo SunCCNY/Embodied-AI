@@ -1,0 +1,45 @@
+
+!!! CORRECTION 2026-09-16: the G1 column was computed with the old name-based geom
+!!! selector (fell back to all geoms incl. the floor plane). Correct G1: 79/143 (55%),
+!!! deepest -0.36 cm, mean +0.82 cm. Point 2 and 3 below are WITHDRAWN. See week28_gvhmr_join.txt.
+SMPL-X (OMOMO sub16_clothesstand_000, 143 frames @ 30 fps) -- R1 vs G1
+======================================================================
+Same clip, same body model, same window. Only tgt_robot differs, so the only
+thing that changes is which *_to_r1 / *_to_g1 config GMR loads.
+
+  check                        R1            G1
+  ------------------------------------------------
+  floor contact          112/143 (78%)  141/143 (99%)
+  deepest penetration        -2.33 cm      -1.04 cm
+  mean lowest point          -0.55 cm      -0.35 cm
+  pelvis range                3.41 cm       3.48 cm
+  joint limit violations             0             0
+  peak joint speed           7.5 rad/s     9.4 rad/s
+  IK solve rate              86.9 fps     130.0 fps
+  human height assumed         1.749 m       1.749 m
+
+WHAT THIS ADDS
+  1. smplx is now the THIRD format run end to end (with bvh_xsens, bvh_lafan1).
+     smplx_to_r1.json was written by hand months before the generator existed,
+     and it is the file that uses the DIFFERENT arm ratio (0.617, not 0.578).
+     It produces a clean, real-time, limit-respecting motion on a dataset it had
+     never seen -- evidence the proportional scale rule is right rather than
+     fitted.
+
+  2. THE CONTACT GAP REPRODUCES ON A SECOND DATASET AND A SECOND FORMAT.
+        LAFAN1 (13 categories, bvh)   R1  5.1%  vs G1 10.6%   (R1 = 48% of G1)
+        OMOMO  (1 clip, smplx)        R1 78%    vs G1 99%     (R1 = 79% of G1)
+     Different capture system, different skeleton, different motion type, same
+     direction. So it is a property of the R1 setup, not a LAFAN1 artifact.
+
+  3. A DETAIL THAT POINTS AT THE CAUSE. The R1 contacts the floor LESS often
+     (78% vs 99%) yet penetrates DEEPER when it does (-2.33 vs -1.04 cm). Feet
+     that were uniformly too high would contact less and penetrate less. Both
+     at once means the foot target is landing in the wrong place with more
+     spread, which is what a leg-length mismatch looks like.
+
+     HYPOTHESIS (untested): the leg scale factor is the cause. The config uses
+     0.818 for the legs, but the R1's measured segment ratios against the human
+     are thigh 0.673 and shank 0.735 (measurements/config_and_links_output.txt).
+     0.818 was tuned, not derived. A sweep of the leg scale against contact %,
+     on clips from both datasets, would test it directly and is cheap.

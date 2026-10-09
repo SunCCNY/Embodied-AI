@@ -1,0 +1,50 @@
+{
+ "week28_gvhmr_tennis/r1": {
+  "frames": 312,
+  "lowest_cm": -2.673751063762144,
+  "mean_low_cm": 5.654012389020243,
+  "contact_frames": 41,
+  "contact_pct": 13.1,
+  "pelvis_range_cm": 22.6,
+  "limit_violation_frames": 0,
+  "peak_joint_speed": 22.7,
+  "speed_exceeded_frames": 5,
+  "looks_static": false
+ },
+ "week27_smplx/r1": {
+  "frames": 143,
+  "lowest_cm": -2.332653558416211,
+  "mean_low_cm": -0.5524284991717056,
+  "contact_frames": 112,
+  "contact_pct": 78.3,
+  "pelvis_range_cm": 3.41,
+  "limit_violation_frames": 0,
+  "peak_joint_speed": 7.5,
+  "speed_exceeded_frames": 0,
+  "looks_static": false
+ },
+ "week28_gvhmr_tennis/g1": {
+  "frames": 312,
+  "lowest_cm": -0.8678383629146632,
+  "mean_low_cm": 6.765258957633612,
+  "contact_frames": 19,
+  "contact_pct": 6.1,
+  "pelvis_range_cm": 25.33,
+  "limit_violation_frames": 0,
+  "peak_joint_speed": 23.9,
+  "speed_exceeded_frames": 1,
+  "looks_static": false
+ },
+ "week27_smplx/g1": {
+  "frames": 143,
+  "lowest_cm": -0.35552503571395455,
+  "mean_low_cm": 0.8184233664827665,
+  "contact_frames": 79,
+  "contact_pct": 55.2,
+  "pelvis_range_cm": 3.48,
+  "limit_violation_frames": 0,
+  "peak_joint_speed": 9.4,
+  "speed_exceeded_frames": 0,
+  "looks_static": false
+ }
+}

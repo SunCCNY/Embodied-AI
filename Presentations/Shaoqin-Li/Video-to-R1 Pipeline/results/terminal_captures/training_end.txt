@@ -1,0 +1,15 @@
+                          Learning iteration 2999/3000
+
+                               Run name: r1_tennis_run1
+                            Total steps: 294912000
+                       Steps per second: 70226
+                            Mean reward: 27.04
+                    Mean episode length: 480.49
+         Episode_Reward/motion_body_pos: 0.9012
+        Metrics/motion/error_anchor_pos: 0.2649
+          Metrics/motion/error_body_pos: 0.0679
+         Metrics/motion/error_joint_pos: 1.1612
+           Episode_Termination/time_out: 8.6250
+         Episode_Termination/anchor_pos: 0.0000
+--------------------------------------------------------------------------------
+                         Iteration time: 1.40s   Time elapsed: 0:59:15   ETA: 0:00:00

@@ -1,0 +1,57 @@
+STAGE 3b -- the ground pass: removing GVHMR's vertical drift before IK   (2026-09-17)
+=====================================================================================
+Problem (from week28_gvhmr_join.txt): GVHMR's world-frame output has no floor.  On
+tennis.mp4 the lowest SMPL-X foot joint climbs 0.005 m (frame 0) -> 0.15 m (frame 300)
+while the player is on the ground at both ends.  Shape of the drift, measured on the
+source human data after GMR's y-up -> z-up rotation:
+    linear fit of lowest foot joint: slope +1.62 cm/s, residual sd 1.69 cm
+i.e. a clean ramp, not a step and not per-frame noise.  The robot inherited it as a
++15 cm float by the end of the clip.
+
+Fix: `gvhmr_to_robot_headless.py --ground linear` (now the default).  On the HUMAN
+frames before IK: rolling-min (+-0.5 s) lower envelope of the lowest foot joint ->
+straight-line fit -> subtract per frame -> shift so the clip's lowest foot sits at
+`--ground_target` (0 m).  GMR itself is untouched.  Other modes kept for comparison:
+`none` (old behaviour), `const` (subtract clip minimum only), `perframe` (GMR's own
+`offset_to_ground=True`, which pins the lowest foot to +0.10 m on EVERY frame).
+
+Same checker as week 28 (physics geom selector, 1 cm contact tolerance).  All rows are
+the identical 312 frames.  "drift" = slope of the robot's lowest contact point over the
+clip; "1st s / last s" = its mean over the first / last 30 frames.
+
+  case          lowest    mean     max   contact      drift   1st s   last s  pelvis rng  lim   peak  >20
+  r1/none       -2.67   +5.65  +15.15   41 (13.1%)  +1.28    -0.67   +11.48    22.60 cm    0   22.7    5
+  r1/const      -3.02   +5.31  +14.80   39 (12.5%)  +1.28    -1.01   +11.14    22.60       0   22.7    5
+  r1/linear     -2.33   +3.58   +9.62   23 ( 7.4%)  +0.04    +3.07    +3.58    18.34       0   22.7    5
+  r1/perframe   +3.76   +6.70   +8.23    0 ( 0.0%)  -0.02    +6.55    +7.30    12.73       0   22.7    5
+  g1/linear     +0.13   +4.54  +12.16    2 ( 0.6%)  -0.01    +4.76    +3.59    20.86       0   23.9    1
+  (cm unless stated; drift in cm/s; lim = joint-limit violation frames; peak in rad/s)
+
+WHAT THIS SHOWS
+  1. `linear` removes the drift: +1.28 -> +0.04 cm/s, first and last second now agree
+     (+3.1 vs +3.6 cm, were -0.7 vs +11.5).  Joint limits, peak speed and the >20 rad/s
+     frame count are byte-identical across all four R1 rows -- the pass only translates
+     the target, it does not change the pose the IK finds.
+  2. `const` is useless here: subtracting one number leaves the ramp intact (same
+     +1.28 cm/s).  A constant offset is only right when the drift is zero.
+  3. `perframe` (GMR's built-in) gets 0 % contact AND cuts the pelvis range from 22.6 to
+     12.7 cm: it deletes the crouch at frame ~120 and the swing lift at ~240 because it
+     re-zeroes every frame.  Reference motion for imitation learning must keep those.
+  4. The residual +3.6 cm mean float after `linear` is GVHMR's per-frame noise (envelope
+     residual sd 1.7 cm) plus genuine foot lifts, not drift.  A stance-aware pass (pin
+     the foot only while it is planted) would be the next refinement; not needed to
+     start IL.
+  5. G1 control on the same passed frames: drift also gone (-0.01 cm/s), floats slightly
+     more than the R1 (+4.54 vs +3.58 mean, 0.6 % vs 7.4 % contact) -- the tennis clip
+     keeps the "R1 contacts more" direction noted on 09-16.
+
+BUG CAUGHT DURING THE BUILD: the first version shifted the fitted line by -min instead of
++min and put the lowest foot at -8.4 cm; the `[ground] ... after` print line exposed it
+immediately.  Keep that print.
+
+FILES
+  gvhmr_to_robot_headless.py            (--ground / --ground_target; pre-edit copy .pre_ground)
+  measurements/week28_gvhmr_tennis_{r1,g1}_ground_{none,const,linear,perframe}.pkl
+  measurements/week28_ground_pass_metrics.json
+  media/week28/gvhmr_r1_tennis_ground.mp4, gvhmr_r1_tennis_ground_strip.png (before/after)
+The pickle now carries a "ground_pass" dict (mode, fit, target, before/after ranges).

@@ -1,0 +1,15 @@
+full capture   :  4249 frames, root z 0.5998 .. 0.7858
+windowed run   :  1200 frames, root z 0.6481 .. 0.7330
+same frames in the full run  : root z 0.7110 .. 0.7854
+
+root height difference (full - windowed):
+   mean +0.0590 m   sd 0.004326 m   min +0.0512   max +0.0642
+
+joint angles, same frames: max |difference| = 5.053e-01 rad  (mean 6.038e-02)
+
+A near-constant vertical offset with a small sd points at the GROUND OFFSET,
+which GMR computes from the clip it is given.  A joint difference of this size
+points at the IK itself: mink is warm-started from the previous frame, so
+arriving at frame 600 having tracked from frame 0 lands in a different local
+solution than starting there cold.  Separating the two is the open experiment:
+re-run with the ground offset disabled and see how much of the gap survives.

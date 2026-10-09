@@ -1,0 +1,132 @@
+{
+ "r1/none": {
+  "frames": 312,
+  "lowest_cm": -2.67,
+  "mean_low_cm": 5.65,
+  "max_low_cm": 15.15,
+  "contact_frames": 41,
+  "contact_pct": 13.1,
+  "drift_cm_per_s": 1.28,
+  "first1s_low_cm": -0.67,
+  "last1s_low_cm": 11.48,
+  "pelvis_range_cm": 22.6,
+  "pelvis_min_m": 0.67,
+  "pelvis_max_m": 0.896,
+  "limit_violation_frames": 0,
+  "peak_joint_speed": 22.7,
+  "speed_exceeded_frames": 5,
+  "ground_pass": {
+   "mode": "none"
+  }
+ },
+ "r1/const": {
+  "frames": 312,
+  "lowest_cm": -3.02,
+  "mean_low_cm": 5.31,
+  "max_low_cm": 14.8,
+  "contact_frames": 39,
+  "contact_pct": 12.5,
+  "drift_cm_per_s": 1.28,
+  "first1s_low_cm": -1.01,
+  "last1s_low_cm": 11.14,
+  "pelvis_range_cm": 22.6,
+  "pelvis_min_m": 0.667,
+  "pelvis_max_m": 0.893,
+  "limit_violation_frames": 0,
+  "peak_joint_speed": 22.7,
+  "speed_exceeded_frames": 5,
+  "ground_pass": {
+   "mode": "const",
+   "fit": "const 0.004 m",
+   "target_m": 0.0,
+   "before_m": [
+    0.0042601823806762695,
+    0.2104893922805786
+   ],
+   "after_m": [
+    0.0,
+    0.20622920989990234
+   ]
+  }
+ },
+ "r1/linear": {
+  "frames": 312,
+  "lowest_cm": -2.33,
+  "mean_low_cm": 3.58,
+  "max_low_cm": 9.62,
+  "contact_frames": 23,
+  "contact_pct": 7.4,
+  "drift_cm_per_s": 0.04,
+  "first1s_low_cm": 3.07,
+  "last1s_low_cm": 3.58,
+  "pelvis_range_cm": 18.34,
+  "pelvis_min_m": 0.658,
+  "pelvis_max_m": 0.842,
+  "limit_violation_frames": 0,
+  "peak_joint_speed": 22.7,
+  "speed_exceeded_frames": 5,
+  "ground_pass": {
+   "mode": "linear",
+   "fit": "linear slope +1.54 cm/s, intercept -0.012 m, envelope resid sd 1.74 cm",
+   "target_m": 0.0,
+   "before_m": [
+    0.0042601823806762695,
+    0.2104893922805786
+   ],
+   "after_m": [
+    0.0,
+    0.14197180722355152
+   ]
+  }
+ },
+ "r1/perframe": {
+  "frames": 312,
+  "lowest_cm": 3.76,
+  "mean_low_cm": 6.7,
+  "max_low_cm": 8.23,
+  "contact_frames": 0,
+  "contact_pct": 0.0,
+  "drift_cm_per_s": -0.02,
+  "first1s_low_cm": 6.55,
+  "last1s_low_cm": 7.3,
+  "pelvis_range_cm": 12.73,
+  "pelvis_min_m": 0.704,
+  "pelvis_max_m": 0.831,
+  "limit_violation_frames": 0,
+  "peak_joint_speed": 22.7,
+  "speed_exceeded_frames": 5,
+  "ground_pass": {
+   "mode": "perframe"
+  }
+ },
+ "g1/linear": {
+  "frames": 312,
+  "lowest_cm": 0.13,
+  "mean_low_cm": 4.54,
+  "max_low_cm": 12.16,
+  "contact_frames": 2,
+  "contact_pct": 0.6,
+  "drift_cm_per_s": -0.01,
+  "first1s_low_cm": 4.76,
+  "last1s_low_cm": 3.59,
+  "pelvis_range_cm": 20.86,
+  "pelvis_min_m": 0.728,
+  "pelvis_max_m": 0.936,
+  "limit_violation_frames": 0,
+  "peak_joint_speed": 23.9,
+  "speed_exceeded_frames": 1,
+  "ground_pass": {
+   "mode": "linear",
+   "fit": "linear slope +1.54 cm/s, intercept -0.012 m, envelope resid sd 1.74 cm",
+   "target_m": 0.0,
+   "before_m": [
+    0.0042601823806762695,
+    0.2104893922805786
+   ],
+   "after_m": [
+    0.0,
+    0.14197180722355152
+   ]
+  }
+ }
+}

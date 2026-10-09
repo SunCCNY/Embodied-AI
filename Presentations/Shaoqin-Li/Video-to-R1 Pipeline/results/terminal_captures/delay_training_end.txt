@@ -1,0 +1,14 @@
+                 Learning iteration 15997/15998
+                       Run name: r1_tennis_delay_ft
+                    Total steps: 294912000
+               Steps per second: 89276
+                    Mean reward: 28.88
+            Mean episode length: 473.61
+ Episode_Reward/motion_body_pos: 0.9212
+Metrics/motion/error_anchor_pos: 0.2432
+  Metrics/motion/error_body_pos: 0.0653
+ Metrics/motion/error_joint_pos: 0.8524
+   Episode_Termination/time_out: 7.9167
+ Episode_Termination/anchor_pos: 0.0417
+                 Iteration time: 1.10s   Time elapsed: 0:54:50
+----------------------------------------

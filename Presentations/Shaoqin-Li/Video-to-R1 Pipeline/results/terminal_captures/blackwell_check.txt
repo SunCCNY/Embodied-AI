@@ -1,0 +1,5 @@
+torch: 2.7.0+cu128
+cuda available: True
+device: NVIDIA GeForce RTX 5080
+capability: (12, 0)
+matmul ok, sum: -39756.55078125

@@ -1,0 +1,112 @@
+CONTROL -- R1 re-run under the physics-based geom selector
+  (ik_fps is timing noise and is not compared)
+  every R1 metric identical to measurements/week26_posture_sweep.json
+
+R1 vs G1 -- 13 LAFAN1 categories, identical clips and window
+
+  lowest point (cm)
+    category                   R1         G1      R1-G1
+    --------------------------------------------------
+    walk                     0.82       0.39      +0.43
+    run                      1.25      -0.05      +1.30
+    sprint                  -2.13      -2.61      +0.48
+    dance                   -0.17      -1.32      +1.15
+    fight                   -2.22      -4.12      +1.89
+    fightAndSports          -1.03      -2.02      +1.00
+    jumps                   -9.90     -15.11      +5.21
+    ground                 -45.63     -37.34      -8.30
+    fallAndGetUp           -42.88     -41.72      -1.15
+    obstacles                0.71      -0.11      +0.82
+    aiming                   0.93       0.45      +0.48
+    push                     1.62       0.79      +0.84
+    multipleActions        -13.07      -7.66      -5.41
+    mean                    -8.59      -8.49      -0.10
+
+  floor contact (%)
+    category                   R1         G1      R1-G1
+    --------------------------------------------------
+    walk                      2.3        3.7       -1.4
+    run                       0.0       14.7      -14.7
+    sprint                    2.8        6.5       -3.7
+    dance                     5.2        7.3       -2.1
+    fight                     7.8       30.7      -22.9
+    fightAndSports           21.0       30.8       -9.8
+    jumps                     6.0        9.0       -3.0
+    ground                    1.8        3.8       -2.0
+    fallAndGetUp              5.3        7.7       -2.4
+    obstacles                 0.5        5.5       -5.0
+    aiming                    0.7        5.0       -4.3
+    push                      0.0        1.7       -1.7
+    multipleActions          13.3       11.5       +1.8
+    mean                      5.1       10.6       -5.5
+
+  peak speed (rad/s)
+    category                   R1         G1      R1-G1
+    --------------------------------------------------
+    walk                     10.2        6.9       +3.3
+    run                       9.6        9.8       -0.2
+    sprint                   19.6       20.0       -0.4
+    dance                    18.0       16.4       +1.6
+    fight                    32.9       31.4       +1.5
+    fightAndSports           29.5       25.7       +3.8
+    jumps                    17.7       15.2       +2.5
+    ground                   28.7       21.2       +7.5
+    fallAndGetUp             32.1       51.4      -19.3
+    obstacles                11.5       11.1       +0.4
+    aiming                    6.7        7.3       -0.6
+    push                     15.6       10.8       +4.8
+    multipleActions          12.5       10.2       +2.3
+    mean                     18.8       18.3       +0.6
+
+  limit viol. (fr)
+    category                   R1         G1      R1-G1
+    --------------------------------------------------
+    walk                        0          0         +0
+    run                         0          0         +0
+    sprint                      0          0         +0
+    dance                       0          0         +0
+    fight                       0          0         +0
+    fightAndSports              0          0         +0
+    jumps                       0          0         +0
+    ground                      0          0         +0
+    fallAndGetUp                0          0         +0
+    obstacles                   0          0         +0
+    aiming                      0          0         +0
+    push                        0          0         +0
+    multipleActions             0          0         +0
+    mean                        0          0         +0
+
+  IK rate (fps)
+    category                   R1         G1      R1-G1
+    --------------------------------------------------
+    walk                    160.4      207.6      -47.2
+    run                     149.1      188.2      -39.1
+    sprint                  136.6      175.5      -38.9
+    dance                   121.8      157.9      -36.1
+    fight                   123.2      168.2      -45.0
+    fightAndSports          117.5      176.9      -59.4
+    jumps                   201.0      151.2      +49.8
+    ground                  165.6      143.8      +21.8
+    fallAndGetUp            122.5      133.2      -10.7
+    obstacles               129.9      189.2      -59.3
+    aiming                  127.2      193.0      -65.8
+    push                    159.5      210.5      -51.0
+    multipleActions         116.7      163.5      -46.8
+    mean                    140.8      173.7      -32.9
+
+What the baseline settles
+
+  joint limits   R1 0 violating frames, G1 0, out of ~7800 each
+                 -> both zero: a property of the method, not of the R1
+  floor sinking  R1 sinks >10cm in ['fallAndGetUp', 'ground', 'multipleActions']
+                 G1 sinks >10cm in ['fallAndGetUp', 'ground', 'jumps']
+                 mean lowest point  R1 -8.59 cm   G1 -8.49 cm   difference -0.10 cm
+                 largest single gap: ground (R1 -45.63 vs G1 -37.34 cm)
+                 -> BOTH robots sink, by the same amount on average.
+                    Inherent to kinematic retargeting, not an R1 defect.
+                    (The category lists differ only because clips sit either
+                     side of the -10 cm line -- do not read that as a robot
+                     difference; the means are what matter.)
+  servo speed    R1 over 20 rad/s in ['fallAndGetUp', 'fight', 'fightAndSports', 'ground']
+                 G1 over 20 rad/s in ['fallAndGetUp', 'fight', 'fightAndSports', 'ground']
+                 -> same set: the motion demands it, not the robot
