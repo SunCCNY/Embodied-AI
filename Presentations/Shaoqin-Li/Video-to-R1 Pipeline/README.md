@@ -29,6 +29,8 @@ the intermediate data of each stage, the trained policies, and the results.
 Not done yet: running my own phone video through the pipeline, and sim2real on the physical R1.
 The paper in `paper/draft.md` is a first draft for the same reason.
 
+**Writing the paper or slides?** Start with [EVIDENCE.md](EVIDENCE.md): every figure, video and number, mapped to the claim it supports.
+
 Weekly decks with the step-by-step story: `../Week 26` (GMR), `../Week 27`, `../Week 28` (imitation learning + sim2sim),
 `../Week 29` (Isaac Lab dance).
 
@@ -198,6 +200,8 @@ Raw numbers: `results/sweeps/*.json` and `results/terminal_captures/`. Videos: `
    (`results/terminal_captures/floor_timestep_ablation.txt`). Once the model matched training exactly, the error dropped to 0.577 rad.
 3. **Command delay is the main weakness, and training with delay fixes most of it.** The same pattern shows up in both engines: 40 ms
    took survival from 2/20 to 15/20 (mjlab, tennis) and from 0/20 to 15/20 (Isaac, dance).
+   A seed study (3 training seeds per arm, `results/sweeps/seed_study/`) confirms the gain comes from the delay, not from
+   the extra 3,000 iterations: at 40 ms, 2–8/20 without delay vs 15–20/20 with it; at 60 ms, 0/20 vs 8–14/20.
 4. **The policy depends on base linear velocity.** Removing it leaves 4–5/20 survivors. A real R1 does not measure this
    directly, so sim2real needs a velocity estimator or a policy trained without it. Removing base position is harmless (20/20).
 
@@ -252,7 +256,7 @@ README.md, SETUP.md
 data/gvhmr_outputs/   Stage 1 outputs (tennis, dance)
 data/r1_motions/      Stage 2 outputs (.pkl, .csv) and Stage 3 reference motions (.npz)
 policies/             5 trained policies: ONNX + final checkpoint + env/agent config
-results/              sweeps (JSON), measurements, terminal captures, plots, videos, figures (video vs R1 frames)
+results/              sweeps (JSON), measurements, terminal captures, plots, videos, figures (paper figures + video vs R1 frames; see EVIDENCE.md)
 paper/                paper draft (in progress)
 ```
 

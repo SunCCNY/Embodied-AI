@@ -5,11 +5,11 @@
 
 > **Status of this draft.** The pipeline is not finished, so neither is the paper. Done: every stage runs end to end
 > **in simulation**, on two web clips, and every number here comes from a run whose output is in this folder.
+> The seed study (Section 6.4) finished on 2026-10-09.
 > Not yet done:
 > 1. **The authors' own phone video** has not been run through the pipeline. Both clips so far are third-party,
 >    static-camera videos (GVHMR's example clip and a stock dance video).
 > 2. **Sim2real**: nothing has run on the physical R1.
-> 3. **Seed study** (Section 6.4): running; its table is marked PENDING and must not be cited until filled in.
 >
 > Section 8 lists the remaining work. The title, abstract and conclusions will be revised once (1) and (2) are done.
 > Until then, read every claim as a claim about simulation.
@@ -29,8 +29,9 @@ anyone building a similar pipeline. (1) Our first sim2sim "failure" was not a ph
 floor and the wrong timestep; a one-at-a-time ablation shows these two settings account for all of it, while
 contact dimension, solver iterations, friction and contact priority are negligible. (2) Command delay is the dominant
 failure mode, and it appears identically in policies trained in both engines: at 40 ms, survival is 2/20 and 0/20.
-Training with randomized delay restores it to 15/20 in both, but in PhysX it costs robustness when there is no delay
-(29/30 → 17/30). (3) Joint-space tracking error overstates the gap for video-derived motion: on the dance, 27% of
+Training with randomized delay restores it to 15/20 in both. Across three training seeds the gain comes from the delay
+itself (15–20/20, against 2–8/20 for an equally long control run without delay), but in PhysX it costs robustness when
+there is no delay (29/30 → 17/30). (3) Joint-space tracking error overstates the gap for video-derived motion: on the dance, 27% of
 reference frames pin the left shoulder at a joint limit, where the policy reaches a similar hand position through a
 different shoulder configuration. Retargeting reports these frames as limit-compliant. All results so far are in
 simulation, on two third-party clips. Running the authors' own phone video and deploying on the physical R1 are in
@@ -227,7 +228,7 @@ Only the floor and the timestep matter. Once they match, the policy tracks the w
 | training randomization | 30/30 | 30/30 | 29/30 | 29/30 | 17/30 |
 | + 20 ms delay | 19/20 | 20/20 | | | 18/20 |
 | + 40 ms delay | 2/20 | 15/20 | | 0/20 | 15/20 |
-| + 60 ms delay | | 8/20 | | | 11/20 |
+| + 60 ms delay | 0/20 | 8/20 | | | 11/20 |
 | + 2× pushes | 17/20 | | | | |
 | + 3× pushes | 11/20 | 11/20 | | | |
 | + foot friction 0.15 | 5/20 | 10/20 | | | |
@@ -255,16 +256,33 @@ slightly less precise (joint error 0.577 → 0.597). The Isaac policy pays heavi
 We do not yet know why. Two candidates: the mjlab policy was fine-tuned from a converged checkpoint while the Isaac
 policy was trained from scratch, and 3,000 iterations may not be enough for the harder problem.
 
-### 6.4 Seed study — PENDING
+### 6.4 Seed study: is the gain from delay or from more training?
 
-*Running at the time of writing.* Two questions: (a) does the 40 ms gain come from delay or just from 3,000 more
-iterations? We continue the same tennis checkpoint for 3,000 iterations **without** delay as a control. (b) How much
-does the result vary across training seeds? Three seeds per arm (control: 42, 43, 44; delay: 42, 43, 44), each
-evaluated on nominal, training randomization, 20/40/60 ms delay, 3× pushes and friction 0.15.
+The mjlab delay policy was fine-tuned for 3,000 extra iterations, so its improvement could come from the extra training
+rather than from the delay. To separate the two, we continued the same tennis checkpoint (12,998 iterations) for 3,000
+iterations **without** delay (control), using three training seeds per arm. The delay arm reuses the existing run as
+seed 42. All six policies were then swept in the harness.
 
-| Scenario | control (s42 / s43 / s44) | delay (s42 / s43 / s44) |
+*Table 6: seed study, tennis, mjlab. Survival per training seed (42 / 43 / 44).*
+
+| Scenario | control: +3,000 iterations, no delay | delay: +3,000 iterations, 0–50 ms delay |
 |---|---|---|
-| PENDING | | |
+| training randomization (30) | 30 / 30 / 30 | 30 / 30 / 30 |
+| + 20 ms delay (20) | 19 / 19 / 20 | 20 / 20 / 20 |
+| **+ 40 ms delay (20)** | **4 / 8 / 2** | **15 / 20 / 20** |
+| **+ 60 ms delay (20)** | **0 / 0 / 0** | **8 / 12 / 14** |
+| + 3× pushes (20) | 12 / 13 / 13 | 11 / 17 / 10 |
+| + foot friction 0.15 (20) | 5 / 3 / 6 | 10 / 9 / 10 |
+| joint error, nominal | 0.566 / 0.552 / 0.555 | 0.597 / 0.632 / 0.588 |
+
+Extra training alone leaves 40 ms survival at 2–8/20 (mean 4.7), close to the original policy's 2/20. With delay
+training it is 15–20/20 (mean 18.3), and at 60 ms 8–14/20 against 0/20 for every control seed. **The gain comes from
+the delay randomization, not from the additional iterations.** It costs nothing under the training randomization
+(30/30 in all six runs), and costs a small amount of precision: nominal joint error is 0.59–0.63 against 0.55–0.57.
+One side effect we did not expect: survival at foot friction 0.15 roughly doubles (mean 4.7 → 9.7 of 20), while
+survival under 3× pushes is unchanged (mean 12.7 in both arms). Seed-to-seed spread reaches 7 of 20 episodes (pushes, delay arm), so
+single-seed differences smaller than that should not be read as real. Raw results: `results/sweeps/seed_study/`;
+policies: `policies/seed_study/`; figure: `results/figures/fig_delay_seeds.png`.
 
 ### 6.5 Base linear velocity
 
@@ -328,13 +346,15 @@ sim2sim survival.
 5. **Report** the same quantities measured in simulation (completion, tracking error, failure mode), so the sim2sim
    results can be checked against hardware.
 
-**8.3 Seed study** (Section 6.4), running at the time of writing.
+**8.3 Isaac Lab seeds.** The seed study covers the mjlab tennis policy only. The PhysX delay policy's cost (29/30 → 17/30)
+is still a single run.
 
 ## 9. Limitations
 
 - **No hardware.** All results are in simulation, with idealized actuators (PD with torque limits, no motor dynamics).
   The sim2real items listed here (delay, base velocity, friction margin) have not been tested on the physical R1.
-- **Two third-party, static-camera clips; mostly one seed** (Section 6.4 addresses the seed question for the delay result).
+- **Two third-party, static-camera clips.** Three training seeds only for the mjlab delay result (Section 6.4); every
+  other policy is a single seed.
 - The harness holds delay constant for the whole episode. Training redraws it every second and starts at zero, so the
   40–60 ms scenarios are stricter than training.
 - Isaac Lab training ran on native Windows, because GPU PhysX hangs under WSL2 on this GPU. The harness ran under WSL2.

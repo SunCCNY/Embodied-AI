@@ -1,4 +1,5 @@
 """Diagnostic: is the dance shoulder error at joint-limit frames, and is the hand still placed correctly?"""
+import os
 import numpy as np, mujoco
 import sim2sim_v5_dr as V, sim2sim_r1_tennis_v4_standalone as H
 env = V.Env(); b = env.base
@@ -20,4 +21,6 @@ e = np.sqrt(((q[:, L] - ref[:, L])**2).mean(1))
 print(f"frames {n}; left shoulder pinned at a limit in reference: {pinned.mean()*100:.0f}%")
 print(f"left-shoulder RMS error  pinned {e[pinned].mean():.3f} rad   free {e[~pinned].mean():.3f} rad")
 he = np.linalg.norm(hp - refhand, axis=1)
+if os.environ.get("SAVE"):                                 # raw series for the paper figure
+    np.savez(os.environ["SAVE"], q=q[:, L], ref=ref[:, L], rng=rng[L], pinned=pinned, hand_err=he, names=np.array([H.JOINT_NAMES[i] for i in L]))
 print(f"left-hand position error (world)  pinned {he[pinned].mean()*100:.1f} cm   free {he[~pinned].mean()*100:.1f} cm   overall {he.mean()*100:.1f} cm")

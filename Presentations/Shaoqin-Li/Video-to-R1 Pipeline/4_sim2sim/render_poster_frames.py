@@ -16,7 +16,7 @@ spec.worldbody.add_geom(type=mujoco.mjtGeom.mjGEOM_PLANE, size=[0, 0, 0.05], mat
 spec.worldbody.add_light(pos=[0, 0, 4], dir=[0, 0, -1], type=mujoco.mjtLightType.mjLIGHT_DIRECTIONAL, diffuse=[0.6, 0.6, 0.6])
 spec.visual.headlight.ambient = [0.35, 0.35, 0.35]; spec.visual.headlight.diffuse = [0.5, 0.5, 0.5]
 m = spec.compile(); d = mujoco.MjData(m)
-W, Hh = (1624, 1440)
+W, Hh = (int(os.environ.get("RW", 1624)), int(os.environ.get("RH", 1440)))
 m.vis.global_.offwidth, m.vis.global_.offheight = W, Hh
 r = mujoco.Renderer(m, Hh, W)
 torso = m.body("torso_link").id
