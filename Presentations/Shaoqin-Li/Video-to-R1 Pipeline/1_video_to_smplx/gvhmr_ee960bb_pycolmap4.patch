@@ -1,0 +1,37 @@
+diff --git a/hmr4d/utils/preproc/relpose/solver_two_view.py b/hmr4d/utils/preproc/relpose/solver_two_view.py
+index b11e7c6..ae61f50 100644
+--- a/hmr4d/utils/preproc/relpose/solver_two_view.py
++++ b/hmr4d/utils/preproc/relpose/solver_two_view.py
+@@ -84,6 +84,7 @@ class PycolmapRansacTwoViewGeometrySolver:
+             min_E_F_inlier_ratio=0.8,
+             max_H_inlier_ratio=0.9,
+             compute_relative_pose=True,
++            detect_watermark=False,  # pycolmap>=3.11 flags near-static frame pairs as a watermark and returns no pose
+         )
+         print(self.options.summary())
+ 
+@@ -102,9 +103,9 @@ class PycolmapRansacTwoViewGeometrySolver:
+         )
+ 
+         # cam2_from_cam1 means T_0_to_1 in our language
+-        Rt = answer.cam2_from_cam1.matrix().astype(np.float32)  # shape (3, 4)
+         T = np.eye(4)
+-        T[:3] = Rt
++        if answer.cam2_from_cam1 is not None:  # None = no reliable two-view pose; treat as no camera motion
++            T[:3] = answer.cam2_from_cam1.matrix().astype(np.float32)  # shape (3, 4)
+         return T
+ 
+ 
+diff --git a/tools/demo/demo.py b/tools/demo/demo.py
+index a10fb64..434131b 100644
+--- a/tools/demo/demo.py
++++ b/tools/demo/demo.py
+@@ -178,7 +178,7 @@ def load_data_dict(cfg):
+     if cfg.static_cam:
+         R_w2c = torch.eye(3).repeat(length, 1, 1)
+     else:
+-        traj = torch.load(cfg.paths.slam)
++        traj = torch.load(cfg.paths.slam, weights_only=False)  # our own numpy VO output; torch>=2.6 defaults to weights_only=True
+         if cfg.use_dpvo:  # DPVO
+             traj_quat = torch.from_numpy(traj[:, [6, 3, 4, 5]])
+             R_w2c = quaternion_to_matrix(traj_quat).mT

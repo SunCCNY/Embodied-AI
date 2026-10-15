@@ -112,7 +112,7 @@ shared by training and evaluation.
 We run GVHMR unmodified at commit `ee960bb`, with the static-camera option. On the RTX 5080 (Blackwell), the stock
 install fails in five separate ways (torch pins, no pytorch3d wheel, split CUDA headers, an undeclared dependency,
 a missing `nvcc`). SETUP.md gives the working recipe. Processing time is 40.6 s for the 10.4 s tennis clip and
-100.9 s for the 22.1 s dance clip, almost all of it preprocessing (detection, 2D pose, features).
+100.9 s for the 26.5 s dance clip (662 frames at 25 fps), almost all of it preprocessing (detection, 2D pose, features).
 
 ### 4.2 Stage 2: SMPL-X → R1 (GMR)
 We add the R1 to GMR as a model, its meshes, IK configurations and parameter entries; one script installs these into a
@@ -177,7 +177,9 @@ clones using only the released files and compared against the outputs used in th
 
 ## 6. Results
 
-Two motions: **tennis**, a serve from GVHMR's example clip (10.4 s), and **dance**, a stock video (22.1 s used).
+Two motions: **tennis**, a serve from GVHMR's example clip (10.4 s), and **dance**, a stock video (26.5 s at 25 fps). *CORRECTED 2026-10-14:* GMR's GVHMR loader assumes 30 fps, so the dance
+reference was retargeted 1.2× too fast (26.5 s of dancing performed in 22.1 s). All dance results below are for that
+sped-up reference; the pipeline now takes the video's real frame rate (`--src_fps`).
 Five policies:
 
 *Table 3 — policies.*

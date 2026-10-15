@@ -38,3 +38,22 @@ for r, (name, t, a, b, la, lb) in enumerate(ROWS):
 d.text((cw - pad, ch - 30), "Sim2sim in plain MuJoCo, training randomization + 40 ms command delay. One episode per panel; "
        "survival counts are over 20 seeds. Grey = robot, green = reference.", font=fs, fill="#52514e", anchor="ra")
 c.save(os.path.join(HERE, "figures", "fig_delay_before_after.png")); print("wrote fig_delay_before_after.png", c.size)
+
+# ---------- dance: original video vs R1 policy (panels rendered by 4_sim2sim/render_poster_frames.py) ----------
+# Times are VIDEO times (frame / 25 fps). The robot reference runs 1.2x faster (see README frame-rate note).
+F = os.path.join(HERE, "figures")
+fb, fr, fs = (ImageFont.truetype(FONT + n, s) for n, s in (("arialbd.ttf", 44), ("arial.ttf", 30), ("arial.ttf", 24)))
+W, H, arrow, pad = 450, 800, 70, 30
+cw, ch = pad * 2 + (W * 2 + arrow) * 2 + 80, pad + 70 + H + 110
+c = Image.new("RGB", (cw, ch), "white"); d = ImageDraw.Draw(c); x = pad
+for i, title, sub in ((320, "Lunge, video 12.8 s", "tracks the video closely"),
+                      (560, "Arms overhead, video 22.4 s", "reference pinned at shoulder limits")):
+    v = Image.open(f"{F}/dance_video_frame_{i}.png").resize((W, H)); r = Image.open(f"{F}/dance_r1_frame_{i}.png").resize((W, H))
+    d.text((x, pad), title, font=fb, fill="#0b0b0b")
+    c.paste(v, (x, pad + 70)); c.paste(r, (x + W + arrow, pad + 70))
+    y = pad + 70 + H // 2; ax = x + W + 12
+    d.polygon([(ax, y - 9), (ax + 28, y - 9), (ax + 28, y - 20), (ax + arrow - 24, y), (ax + 28, y + 20), (ax + 28, y + 9), (ax, y + 9)], fill="#673AB7")
+    d.text((x, pad + 70 + H + 14), "Original video  →  R1 policy in MuJoCo: " + sub, font=fr, fill="#52514e")
+    x += W * 2 + arrow + 80
+d.text((cw - pad, ch - 34), "Video: “Woman Dancing” by Antoni Shkraba, Pexels.", font=fs, fill="#52514e", anchor="ra")
+c.save(os.path.join(F, "fig_dance_video_vs_r1.png")); print("wrote fig_dance_video_vs_r1.png", c.size)

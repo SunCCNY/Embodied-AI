@@ -94,6 +94,9 @@ def main():
     ap.add_argument("--start", type=int, default=None, help="first frame (inclusive)")
     ap.add_argument("--end", type=int, default=None, help="last frame (exclusive)")
     ap.add_argument("--tgt_fps", type=int, default=30)
+    ap.add_argument("--src_fps", type=float, default=None,
+                    help="frame rate of the source VIDEO. GMR's GVHMR loader assumes 30 and never resamples a slower\n"
+                         "clip, so a 25 fps video would play 1.2x too fast. Pass the real value (e.g. 25, 24).")
     ap.add_argument("--width", type=int, default=640)
     ap.add_argument("--height", type=int, default=480)
     ap.add_argument("--ground", choices=["none", "const", "linear", "perframe"], default="linear",
@@ -106,8 +109,14 @@ def main():
 
     smplx_data, body_model, smplx_output, actual_human_height = load_gvhmr_pred_file(
         args.gvhmr_pred_file, args.body_models)
+    tgt_fps = args.tgt_fps
+    if args.src_fps is not None:
+        import torch
+        smplx_data["mocap_frame_rate"] = torch.tensor(args.src_fps)
+        if args.src_fps <= args.tgt_fps:   # GMR only downsamples; keep the native rate and label it correctly
+            tgt_fps = args.src_fps
     frames, aligned_fps = get_gvhmr_data_offline_fast(
-        smplx_data, body_model, smplx_output, tgt_fps=args.tgt_fps)
+        smplx_data, body_model, smplx_output, tgt_fps=tgt_fps)
 
     total = len(frames)
     lo = args.start or 0

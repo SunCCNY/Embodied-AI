@@ -8,6 +8,17 @@ Everything is in this folder on GitHub:
 
 Status: simulation only, two third-party clips. No phone video and no hardware yet (paper §8). Do not caption anything as real-robot.
 
+## NEW 2026-10-14: three unseen stock clips (this week's presentation)
+
+Start with `results/new_clips_2026-10-14/README.md`. Woman at home (fixed camera), boxing silhouette (**moving camera**)
+and street hip-hop (**moving camera**): Pexels clips, trained with the seed-study recipe.
+- **Best slide material:** `results/new_clips_2026-10-14/videos/<clip>_side_by_side.mp4`, the original video next to the R1
+  doing the same motion, frame-synchronized. Stills: `results/new_clips_2026-10-14/stills/`.
+- **Headline numbers:** all three complete their clip in plain MuJoCo under training randomization (29–30/30). At 40 ms delay,
+  0–1/20 survive without delay training and 19–20/20 with it. Boxing is weakest (largest error; falls under strong pushes
+  and on a slippery floor).
+- Credit on the slide: videos by Pexels contributors (links in that README).
+
 ## Paper-ready figures (`results/figures/`)
 
 | File | Shows | Supports | Made by |
@@ -38,7 +49,7 @@ Training curves: `results/plots/training_curves.png` (mjlab tennis), `results/pl
 | `r1_tennis_sim2sim_latency2_FAIL.mp4` | +40 ms delay, policy without delay training: falls at 1.56 s | §6.3 |
 | `r1_tennis_sim2sim_latency2_delaytrained.mp4` | +40 ms delay, delay-trained: completes | §6.3 |
 | `r1_dance_mjlab_in_mujoco.mp4`, `r1_dance_isaac_in_mujoco.mp4` | dance, mjlab- vs Isaac-trained policy in plain MuJoCo | §6.2, cross-engine |
-| `r1_dance_isaac_latency2_nodelay.mp4` / `_delaytrained.mp4` | Isaac dance at +40 ms: falls at 1.18 s vs completes 22 s | §6.3 |
+| `r1_dance_isaac_latency2_nodelay.mp4` / `_delaytrained.mp4` | Isaac dance at +40 ms: falls at 1.18 s vs completes the clip (22.1 s of robot time) | §6.3 |
 
 ## Numbers (`results/`)
 
@@ -58,5 +69,8 @@ Training curves: `results/plots/training_curves.png` (mjlab tennis), `results/pl
 - No phone video and no physical-robot result exists yet.
 - "Joint error" is the L2 norm over 24 joints (mjlab's `error_joint_pos`), not a per-joint error. Per-joint RMS = value / √24.
 - The tennis clip is a **serve** (GVHMR's example clip), not a forehand.
+- **The dance reference runs 1.2× faster than the dancer** (25 fps video treated as 30 fps, found 2026-10-14). Don't say
+  "the R1 dances at the dancer's speed"; the dance sequence and poses are right, the timing is compressed. Times on the dance
+  figures are video times.
 - The Isaac delay policy's drop (29/30 → 17/30) is a single run and unexplained.
 - Most policies are single training seeds. Only the mjlab delay result has 3 seeds.

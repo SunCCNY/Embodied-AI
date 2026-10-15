@@ -53,6 +53,11 @@ The problems below are why the stock install does not work on a Blackwell GPU. E
 5. **SMPL-X body model (not included here; its license forbids redistribution):** register at
    https://smpl-x.is.tue.mpg.de and put `SMPLX_NEUTRAL.npz` in `~/GVHMR/inputs/checkpoints/body_models/smplx/`.
 
+6. **Moving camera (no `-s`) needs a patch** with pycolmap ≥ 3.11 and torch ≥ 2.6:
+   `git apply $PIPE/1_video_to_smplx/gvhmr_ee960bb_pycolmap4.patch`. It fixes two crashes. pycolmap flags near-static
+   frame pairs as a "watermark" and returns no camera pose (`'NoneType' object has no attribute 'matrix'`), and torch
+   refuses to reload GVHMR's own camera-trajectory file (`Weights only load failed`). The fixed-camera path is unaffected.
+
 Run it on GVHMR's own tennis clip (static camera):
 
 ```bash
@@ -73,6 +78,10 @@ python "$PIPE/2_smplx_to_r1/install_r1_into_gmr.py" --gmr ~/GMR \
     --meshes "$PIPE/3_motion_to_policy/mjlab_overlay/src/mjlab/asset_zoo/robots/unitree_r1/xmls/assets"
 # expected last line:  OK -- the R1 is installed in GMR
 ```
+
+**Give the real frame rate.** GMR's GVHMR loader assumes 30 fps and never resamples a slower video, so a 25 fps clip
+would play 1.2× too fast on the robot. Pass the video's frame rate to both steps:
+`gvhmr_to_robot_headless.py ... --src_fps 25` and later `csv_to_npz.py ... --input-fps 25`.
 
 MuJoCo offscreen rendering under WSL2 (only needed for the optional render scripts): the default GL backend crashes
 with `D3D12: Removing Device`. Use `MUJOCO_GL=osmesa`. If `libOSMesa` is missing and you have no sudo, you can get it without root:

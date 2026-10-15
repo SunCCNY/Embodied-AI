@@ -121,7 +121,7 @@ for j, ax in enumerate(axs):
 axs[0].legend(frameon=False, fontsize=9, loc="lower left", bbox_to_anchor=(0, 1.0), ncol=2, borderaxespad=0.2)
 axs[0].set_title("Dance: the left-shoulder error sits where the reference is pinned at a limit", loc="left",
                  fontsize=11.5, fontweight="bold", color=INK, pad=22)
-axs[-1].set_xlabel("Time in clip (s)")
+axs[-1].set_xlabel("Time in the robot reference (s); video time = 1.2 × this")
 fig.text(0.99, 0.005, "Left shoulder, nominal rollout, mjlab dance policy. Dashed = joint limits; shaded = reference frames at a limit (27%).",
          ha="right", fontsize=7.5, color=INK2)
 fig.tight_layout(rect=(0, 0.02, 1, 1)); fig.savefig(os.path.join(OUT, "fig_dance_shoulder_limits.png"), facecolor="white"); plt.close(fig)

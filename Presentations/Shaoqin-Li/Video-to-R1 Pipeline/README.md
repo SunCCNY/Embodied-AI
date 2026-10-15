@@ -22,12 +22,15 @@ Shaoqin Li, Embodied AI group (Prof. Yi Sun), The City College of New York.
 ```
 
 The whole chain was run on two motions: a tennis serve (GVHMR's own example clip, 10.4 s) and a dance
-("Woman Dancing" by Antoni Shkraba, Pexels, 22 s used). This folder has everything needed to re-run each stage,
+("Woman Dancing" by Antoni Shkraba, Pexels, 26.5 s at 25 fps; see the frame-rate note below). This folder has everything needed to re-run each stage,
 the intermediate data of each stage, the trained policies, and the results.
 
 **Status: work in progress.** Everything here runs in simulation, on two third-party, static-camera clips.
 Not done yet: running my own phone video through the pipeline, and sim2real on the physical R1.
 The paper in `paper/draft.md` is a first draft for the same reason.
+
+**New 2026-10-14:** three unseen stock clips, two with a moving camera, went through the whole pipeline. See
+[results/new_clips_2026-10-14/README.md](results/new_clips_2026-10-14/README.md) for side-by-side videos and sim2sim results.
 
 **Writing the paper or slides?** Start with [EVIDENCE.md](EVIDENCE.md): every figure, video and number, mapped to the claim it supports.
 
@@ -83,7 +86,7 @@ can skip this stage.
 conda activate gmr && cd ~/GMR
 python "$PIPE/2_smplx_to_r1/gvhmr_to_robot_headless.py" \
     --gvhmr_pred_file "$PIPE/data/gvhmr_outputs/tennis_hmr4d_results.pt" \
-    --body_models ~/GVHMR/inputs/checkpoints/body_models --save_path tennis_r1.pkl
+    --body_models ~/GVHMR/inputs/checkpoints/body_models --src_fps 30 --save_path tennis_r1.pkl   # --src_fps = the video's frame rate
 python "$PIPE/2_smplx_to_r1/exp4_check_motion.py" tennis_r1.pkl          # plausibility report
 python "$PIPE/3_motion_to_policy/gmr_pkl_to_mjlab_csv.py" --pkl tennis_r1.pkl --csv tennis_r1.csv
 ```
@@ -145,7 +148,7 @@ The delay version is `--task Tracking-Flat-R1-Delay-v0`. PhysX lists the joints 
 
 ### Stages 1–2 (RTX 5080)
 
-| | Tennis (10.4 s, 312 frames) | Dance (22.1 s, 662 frames) |
+| | Tennis (10.4 s, 312 frames) | Dance (26.5 s video, 662 frames at 25 fps) |
 |---|---|---|
 | GVHMR preprocess + predict | 39.8 s + 0.85 s | 99.9 s + 1.03 s |
 | GMR inverse kinematics | 332–449 frames/s | 305 frames/s |
@@ -206,6 +209,12 @@ Raw numbers: `results/sweeps/*.json` and `results/terminal_captures/`. Videos: `
    directly, so sim2real needs a velocity estimator or a policy trained without it. Removing base position is harmless (20/20).
 
 ### Known limitations and open questions
+
+- **CORRECTED 2026-10-14, frame rate:** GMR's GVHMR loader assumes every video is 30 fps and never resamples a slower one.
+  The dance video is 25 fps, so its robot reference runs **1.2× too fast**: the whole 26.5 s dance in 22.1 s. Every dance
+  result here (training, sweeps, videos, shoulder analysis) is for that sped-up reference. Tennis (29.8 fps) is off by
+  only 0.6%. `gvhmr_to_robot_headless.py --src_fps <video fps>` now keeps the real timing (used for the 2026-10-14 clips);
+  pass the same value to `csv_to_npz.py --input-fps`.
 
 - **The Isaac delay-trained policy got worse with no delay** (29/30 → 17/30) and has a higher joint error. Not yet explained.
   It may have tuned itself toward mid-range delay; a longer run would show whether it recovers.

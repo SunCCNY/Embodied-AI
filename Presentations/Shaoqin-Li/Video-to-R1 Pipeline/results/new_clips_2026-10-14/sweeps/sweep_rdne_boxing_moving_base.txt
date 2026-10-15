@@ -1,0 +1,8 @@
+scenario                 seeds  survived  mean err (rad)  median steps  failure reasons
+nominal                      1    1/1              1.159           747  {}
+train_DR                    30   29/30             1.197           747  {'ee_z': 1}
+train_DR+push3x             20    5/20             1.349           426  {'anchor_z': 1, 'ee_z': 14}
+train_DR+latency1           20   17/20             1.260           747  {'ee_z': 3}
+train_DR+latency2           20    0/20             1.626            82  {'ee_z': 20}
+train_DR+latency3           20    0/20             1.728            32  {'ee_z': 20}
+train_DR+fric0.15           20    2/20             1.371           108  {'ee_z': 17, 'anchor_z': 1}
