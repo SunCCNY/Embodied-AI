@@ -27,7 +27,7 @@ the intermediate data of each stage, the trained policies, and the results.
 
 **Status: work in progress.** Everything here runs in simulation, on two third-party, static-camera clips.
 Not done yet: running my own phone video through the pipeline, and sim2real on the physical R1.
-The paper in `paper/draft.md` is a first draft for the same reason.
+The paper is a first draft for the same reason; its LaTeX version is in `paper/latex/` (compiled: `paper/latex/main.pdf`).
 
 **New 2026-10-14:** three unseen stock clips, two with a moving camera, went through the whole pipeline. See
 [results/new_clips_2026-10-14/README.md](results/new_clips_2026-10-14/README.md) for side-by-side videos and sim2sim results.

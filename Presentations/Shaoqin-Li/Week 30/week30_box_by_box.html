@@ -1,0 +1,772 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Week 30 Box by Box</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --ground:#f6f7f8; --surface:#ffffff; --sunk:#eceef0;
+  --ink:#16202b; --body:#2f3d49; --muted:#61707d; --line:#dde2e6;
+  --teal:#0f6e63; --teal-bg:#e6f1ef;
+  --ochre:#a8741a; --ochre-bg:#f7efdf;
+  --rust:#9d3b2f; --rust-bg:#f8e9e6;
+  --term-bg:#18212b; --term-fg:#d6e0e8;
+  --display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
+  --serif:"Source Serif 4",Georgia,serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){--ground:#10161c; --surface:#161e26; --sunk:#1d262f;
+  --ink:#e8eef3; --body:#c2ced8; --muted:#8698a6; --line:#2a353f;
+  --teal:#5fc4b4; --teal-bg:#12302c; --ochre:#d9a747; --ochre-bg:#33280f;
+  --rust:#e08878; --rust-bg:#33201c; --term-bg:#0b1016; --term-fg:#c8d4de;}
+}
+:root[data-theme="dark"]{--ground:#10161c; --surface:#161e26; --sunk:#1d262f;
+  --ink:#e8eef3; --body:#c2ced8; --muted:#8698a6; --line:#2a353f;
+  --teal:#5fc4b4; --teal-bg:#12302c; --ochre:#d9a747; --ochre-bg:#33280f;
+  --rust:#e08878; --rust-bg:#33201c; --term-bg:#0b1016; --term-fg:#c8d4de;}
+
+*{box-sizing:border-box}
+body{background:var(--ground);color:var(--body);font-family:var(--serif);
+  font-size:17px;line-height:1.55;margin:0;padding-block:0;
+  -webkit-font-smoothing:antialiased}
+.wrap{max-width:1080px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+header.top{padding-block:48px 28px;border-bottom:2px solid var(--ink)}
+.kicker{font-family:var(--display);font-weight:700;font-size:12px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--teal);margin:0 0 10px}
+h1{font-family:var(--display);font-weight:700;font-size:clamp(34px,6vw,52px);
+  line-height:1.02;color:var(--ink);margin:0 0 14px;text-wrap:balance;letter-spacing:-.02em}
+.standfirst{font-size:19px;color:var(--muted);max-width:62ch;margin:0}
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+.legend .role{cursor:default}
+
+.act{margin-top:46px;padding-top:14px;border-top:1px solid var(--line)}
+.act h2{font-family:var(--display);font-weight:700;font-size:13px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--muted);margin:0 0 4px}
+.act p{margin:0;font-size:16px;color:var(--muted);max-width:64ch}
+
+section.slide{margin-top:30px;background:var(--surface);border:1px solid var(--line);
+  border-radius:6px;overflow:hidden}
+.slide > .hd{display:flex;gap:14px;align-items:baseline;padding:16px 20px;
+  background:var(--sunk);border-bottom:1px solid var(--line)}
+.num{font-family:var(--mono);font-weight:600;font-size:13px;color:var(--teal);
+  font-variant-numeric:tabular-nums;flex:0 0 auto;padding-top:3px}
+.hd h3{font-family:var(--display);font-weight:600;font-size:20px;color:var(--ink);
+  margin:0;line-height:1.2;text-wrap:balance}
+.hd .job{display:block;font-family:var(--serif);font-weight:400;font-size:15px;
+  color:var(--muted);margin-top:4px}
+
+.box{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0;
+  border-top:1px solid var(--line)}
+.slide .box:first-of-type{border-top:none}
+.said{padding:16px 20px;border-right:1px solid var(--line);min-width:0}
+.means{padding:16px 20px;min-width:0}
+@media (max-width:720px){
+  .box{grid-template-columns:1fr}
+  .said{border-right:none;border-bottom:1px solid var(--line)}
+}
+.role{display:inline-block;font-family:var(--display);font-weight:700;font-size:10px;
+  letter-spacing:.12em;text-transform:uppercase;padding:3px 7px;border-radius:3px;
+  background:var(--sunk);color:var(--muted);margin-bottom:9px}
+.role.title{background:var(--ink);color:var(--ground)}
+.role.card{background:var(--teal-bg);color:var(--teal)}
+.role.flag{background:var(--ochre-bg);color:var(--ochre)}
+.role.fix{background:var(--rust-bg);color:var(--rust)}
+.role.data{background:var(--term-bg);color:var(--term-fg)}
+
+.quote{font-family:var(--serif);font-style:italic;color:var(--ink);margin:0;
+  font-size:16px;line-height:1.5}
+.quote.plain{font-style:normal}
+pre.term{font-family:var(--mono);font-size:11.5px;line-height:1.5;background:var(--term-bg);
+  color:var(--term-fg);padding:12px 14px;border-radius:4px;margin:0;
+  overflow-x:auto;font-variant-numeric:tabular-nums}
+.means p{margin:0 0 9px}
+.means p:last-child{margin-bottom:0}
+.means strong{color:var(--ink);font-weight:600}
+.why{font-family:var(--display);font-weight:700;font-size:10px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--muted);display:block;margin-bottom:9px}
+.media{padding:14px 20px;background:var(--sunk);font-size:15px;color:var(--muted);
+  border-top:1px solid var(--line)}
+.media b{color:var(--ink);font-weight:600}
+
+footer{margin:56px 0 40px;padding-top:18px;border-top:2px solid var(--ink);
+  font-size:15px;color:var(--muted)}
+footer b{color:var(--ink)}
+a{color:var(--teal)}
+@media (prefers-reduced-motion:no-preference){section.slide{scroll-margin-top:16px}}
+pre.term{white-space:pre-wrap;overflow-wrap:anywhere}
+</style>
+
+</head><body>
+<div class="wrap">
+<header class="top">
+  <p class="kicker">Speaker's companion · 26 slides</p>
+  <h1>Week 30, box by box</h1>
+  <p class="standfirst">Every text box in the deck, with what it says on the left and what it
+  means on the right. Written to be read while you rehearse, not while you present.
+  Companion to <em>Week 27, box by box</em>; same tags, same rules. The left column is quoted
+  from the final deck file by script; the right column was written by hand.</p>
+  <div class="legend">
+    <span class="role title">Title / subtitle</span>
+    <span class="role card">Result card</span>
+    <span class="role flag">Honesty card</span>
+    <span class="role fix">Correction / risk</span>
+    <span class="role data">Terminal / table</span>
+  </div>
+</header>
+
+<div class="act">
+  <h2>Act 1 · Slides 1–2 — the setup</h2>
+  <p>Say what the week is about and what kind of week it was: tests run, plans proposed, nothing on hardware.</p>
+</div>
+
+<section class="slide">
+  <div class="hd"><span class="num">01</span><div><h3>Title</h3>
+  <span class="job">Job: name the week and mark it simulation only.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Eyebrow</span>
+    <p class="quote plain">WEEK 30</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Series marker, as always.</p></div></div>
+  <div class="box"><div class="said"><span class="role title">Title</span>
+    <p class="quote plain">GVHMR on a moving camera</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The headline result is a <strong>test of GVHMR as it already exists</strong>, on videos where the camera moves. It is not a new algorithm. Last week was the fixed-camera case; this week is the moving-camera case.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">Subtitle</span>
+    <p class="quote">plus: making the simulator more real, and a new series of R1 skills</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Two more topics ride along: calibrating the simulator from the real R1, and the new skill series. Both are <strong>proposals</strong>, and slides 13 and 16 say so again on their own banners.</p></div></div>
+  <div class="box"><div class="said"><span class="role flag">Date and scope line</span>
+    <p class="quote plain">tests run on 2026-10-14 -- simulation only</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The date is absolute on purpose: the new-clip runs happened on 2026-10-14. <strong>"Simulation only"</strong> sets the ceiling for every claim after this.</p></div></div>
+</section>
+
+<section class="slide">
+  <div class="hd"><span class="num">02</span><div><h3>Three questions this week</h3>
+  <span class="job">Job: the three requests, in the order the deck answers them.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Eyebrow and title</span>
+    <p class="quote plain">What I set out to answer<br>Three questions this week</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Three questions, three parts. If someone only remembers the structure, this slide gives it.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">Question 1</span>
+    <p class="quote">1. What does GVHMR need from a video?<br>It works best when the whole body, feet included, is in frame, one person is in the shot and the camera is fixed. Those are a lot of restrictions.<br><br>Before I try to improve it, I tested how it behaves as it is, on videos where the camera moves.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The rules are <strong>working rules for my pipeline</strong>, not proven limits of GVHMR. The second paragraph is the plan for the week: test the original behaviour first, then think about improving it.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">Question 2</span>
+    <p class="quote">2. Can real R1 data make the simulator more real?<br>My policies survive in simulation but break when I add a command delay. I looked at how to measure that on the lab R1 instead of guessing it.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The link between the two sentences is <strong>command delay</strong>: the delay values in simulation were picked by me, and the real robot's delay has never been measured. Part 2 is the plan to measure it.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">Question 3</span>
+    <p class="quote">3. What is the next series?<br>Train the R1 on single skills (walk, run, jump, kick, punch, grab), keep each as an item in a bag, and chain them in a MuJoCo game I steer myself.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Six skills named, but the first milestone is only walk, run and jump. Kick, punch and grab come later.</p></div></div>
+</section>
+
+<div class="act">
+  <h2>Act 2 · Slides 3–12 — Part 1, the moving-camera test</h2>
+  <p>The finished result of the week: what GVHMR asks for, what broke, how it got fixed, what the robot did.</p>
+</div>
+
+<section class="slide">
+  <div class="hd"><span class="num">03</span><div><h3>Part 1 divider</h3>
+  <span class="job">Job: announce that this part is a test, not a change.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Part and title</span>
+    <p class="quote plain">PART 1<br>The moving-camera test</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Part dividers mark which parts are results (Part 1) and which are plans (Parts 2 and 3).</p></div></div>
+  <div class="box"><div class="said"><span class="role card">Subtitle and strapline</span>
+    <p class="quote">I ran the original GVHMR path before changing anything<br>what it needs, what broke, how it got fixed</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p><strong>"Before changing anything"</strong> is the method: run the original path, record what happens, then decide what to improve.</p></div></div>
+</section>
+
+<section class="slide">
+  <div class="hd"><span class="num">04</span><div><h3>What GVHMR asks of a video</h3>
+  <span class="job">Job: list the input rules and mark them as my rules.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Title</span>
+    <p class="quote plain">What GVHMR asks of a video<br>The rules I follow so the result is reliable</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>"The rules I follow" is deliberate. It does not say "the limits of GVHMR".</p></div></div>
+  <div class="box"><div class="said"><span class="role card">Card 1</span>
+    <p class="quote">Whole body in frame<br>Feet included. GVHMR can guess hidden joints, but I expect the result to get less reliable when the legs are cut off, and I did not measure how much. Most stock boxing footage is upper-body close-ups, so I had to hunt for a usable clip.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Hidden legs are expected to make the pose less reliable, but <strong>this was not measured</strong>. The stock-footage remark explains why clip hunting was slow: most boxing videos are close-ups.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">Card 2</span>
+    <p class="quote">One person<br>GVHMR follows a single person track. I choose clips with one person in view; I did not test what happens with a crowd.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>A <strong>single person track</strong> is how GVHMR works. A crowd was never tested.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">Card 3</span>
+    <p class="quote">A fixed camera is preferred<br>GVHMR can handle a moving camera, but my earlier tests (the tennis serve) used a fixed camera. This week is the first time I ran the moving-camera path.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Upstream GVHMR already includes a moving-camera mode. What was new this week is that <strong>I ran it for the first time</strong> on my own clips.</p></div></div>
+  <div class="box"><div class="said"><span class="role flag">Footer note</span>
+    <p class="quote plain">These are the rules I trust for my pipeline, not proven limits of the method.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The honesty line for the slide. Say it out loud if asked "so what are the limits?".</p></div></div>
+</section>
+
+<section class="slide">
+  <div class="hd"><span class="num">05</span><div><h3>The three clips</h3>
+  <span class="job">Job: show what was tested and how clips were chosen.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Title</span>
+    <p class="quote plain">The three clips<br>Free Pexels stock videos, picked from 18 candidates</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The pool was 18 free Pexels videos. Three survived the checks.</p></div></div>
+  <div class="box"><div class="said"><span class="role data">Table (clip, camera, length, note)</span>
+    <pre class="term">Clip                      Camera              Length  Note
+Woman dancing at home     fixed               8.7 s   fixed-camera reference example (different motion and scene)
+Man shadow boxing         moving, follows him 15 s    backlit silhouette; both ankles pinned at their limits in the stance
+Person dancing (street)   moving, handheld    15 s    handheld shake</pre></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>One fixed and two moving. The woman clip is called a <strong>fixed-camera reference example</strong>, not a control, because its motion and scene differ from the other two. The boxing note already hints at the weak result on slide 9.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">Selection note</span>
+    <p class="quote">I counted people per frame, checked whether the body touches the frame edge and estimated camera motion for all 18 candidates, then checked each one by eye. Clips are credited to their Pexels contributors.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The screening was automatic (people per frame, body at the frame edge, camera motion), then by eye. Credit to the Pexels contributors is part of the licence habit.</p></div></div>
+</section>
+
+<section class="slide">
+  <div class="hd"><span class="num">06</span><div><h3>What broke first</h3>
+  <span class="job">Job: show both crashes without a staged traceback.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Title</span>
+    <p class="quote plain">What broke first<br>The fixed-camera clip ran unchanged. Both moving-camera clips crashed.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Fixed camera ran as downloaded. Moving camera crashed twice, at two different places.</p></div></div>
+  <div class="box"><div class="said"><span class="role data">Terminal panel</span>
+    <pre class="term"># error text as recorded in SETUP.md (stage 1, moving-camera clips, no patch)
+crash 1  AttributeError: &#x27;NoneType&#x27; object has no attribute &#x27;matrix&#x27;
+         (pycolmap marks near-static frame pairs as a &quot;watermark&quot;
+          and returns no camera pose)
+crash 2  Weights only load failed
+         (torch &gt;= 2.6 refuses to reload GVHMR&#x27;s own
+          camera-trajectory file)
+fixed-camera path (-s): unaffected</pre><p class="quote plain" style="margin-top:8px;font-size:14px">error text recorded in SETUP.md (stage 1, moving-camera clips)</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p><strong>Read the header line.</strong> This text is the error as recorded in SETUP.md at the time, not a new traceback captured this week. A fresh capture would need a run on the workstation without the patch. If asked, say exactly that.</p></div></div>
+  <div class="box"><div class="said"><span class="role fix">Crash 1</span>
+    <p class="quote">Crash 1: no camera pose<br>pycolmap treats two nearly identical frames as a watermark and returns no camera pose, so the next line fails.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>pycolmap treats two nearly identical frames as a watermark and returns no pose, so the code calls a method on <code>None</code>.</p></div></div>
+  <div class="box"><div class="said"><span class="role fix">Crash 2</span>
+    <p class="quote">Crash 2: torch refuses its own file<br>Newer torch refuses to reload GVHMR&#x27;s own saved camera trajectory unless I allow it.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>A newer torch loads files with <code>weights_only</code> on by default, so it refuses to reload a file GVHMR itself saved. A serialization compatibility change, not a bug in the motion estimate.</p></div></div>
+</section>
+
+<section class="slide">
+  <div class="hd"><span class="num">07</span><div><h3>How it got fixed</h3>
+  <span class="job">Job: show the real changed lines and say what kind of change it is.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Title</span>
+    <p class="quote plain">How it got fixed<br>Two small edits to GVHMR&#x27;s existing moving-camera path</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Two small edits to the existing moving-camera path.</p></div></div>
+  <div class="box"><div class="said"><span class="role data">Patch excerpt</span>
+    <pre class="term">+++ hmr4d/utils/preproc/relpose/solver_two_view.py
++            detect_watermark=False,  # pycolmap&gt;=3.11 flags near-static frame pairs as a watermark and returns no pose
+-        Rt = answer.cam2_from_cam1.matrix().astype(np.float32)  # shape (3, 4)
+-        T[:3] = Rt
++        if answer.cam2_from_cam1 is not None:  # None = no reliable two-view pose; treat as no camera motion
++            T[:3] = answer.cam2_from_cam1.matrix().astype(np.float32)  # shape (3, 4)
++++ tools/demo/demo.py
+-        traj = torch.load(cfg.paths.slam)
++        traj = torch.load(cfg.paths.slam, weights_only=False)  # our own numpy VO output; torch&gt;=2.6 defaults to weights_only=True</pre><p class="quote plain" style="margin-top:8px;font-size:14px">the changed lines of gvhmr_ee960bb_pycolmap4.patch (- removed, + added)</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Real lines from <code>gvhmr_ee960bb_pycolmap4.patch</code>. First edit: stop the watermark detector. Second edit: when no pose is available, treat the pair as "no camera motion" instead of crashing. The torch fix is the other half of the patch.</p></div></div>
+  <div class="box"><div class="said"><span class="role flag">Footer note</span>
+    <p class="quote plain">These are compatibility patches, not a new motion-recovery algorithm. With them the moving-camera clips ran end to end.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>This is the answer to "did you improve the algorithm?": <strong>no</strong>, these are compatibility fixes. Improving it is the next question, now that the original behaviour is known.</p></div></div>
+</section>
+
+<section class="slide">
+  <div class="hd"><span class="num">08</span><div><h3>Fixed camera: video next to the R1</h3>
+  <span class="job">Job: give the reference look before the moving-camera clips.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Title</span>
+    <p class="quote plain">Fixed camera: video next to the R1<br>A fixed-camera reference example, 8.7 s</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The reference case. If the audience has seen only this one, they will think the pipeline is easy.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">Caption</span>
+    <p class="quote">left: original video   right: the R1 doing the same motion in MuJoCo</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Left is the original, right is the R1 in MuJoCo. Both play in sync.</p></div></div>
+  <div class="media"><b>Embedded video:</b> woman_home_fixed.mp4, 8.7 s, original on the left and the simulated R1 on the right. Press play in slideshow mode.</div>
+</section>
+
+<section class="slide">
+  <div class="hd"><span class="num">09</span><div><h3>Moving camera: boxing</h3>
+  <span class="job">Job: show the weakest result without hiding it.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Title</span>
+    <p class="quote plain">Moving camera: boxing<br>Camera follows him; the weakest of the three</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>"The weakest of the three" is stated in the subtitle so nobody has to find it themselves. Explanation if asked: the reference holds both ankles at their limits most of the time (slide 12). That is a plausible reason, not a tested one.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">Caption</span>
+    <p class="quote">left: original video   right: the R1 (simulation)</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Original video on the left, simulated R1 on the right.</p></div></div>
+  <div class="media"><b>Embedded video:</b> rdne_boxing_moving.mp4, 15 s. Backlit silhouette, camera follows the man.</div>
+</section>
+
+<section class="slide">
+  <div class="hd"><span class="num">10</span><div><h3>Moving camera: street dance</h3>
+  <span class="job">Job: show the handheld-shake case.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Title</span>
+    <p class="quote plain">Moving camera: street dance<br>Handheld shake</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Handheld shake is a different camera problem from the smooth follow in boxing. The survival numbers are on slide 11.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">Caption</span>
+    <p class="quote">left: original video   right: the R1 (simulation)</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Original video on the left, simulated R1 on the right.</p></div></div>
+  <div class="media"><b>Embedded video:</b> street_hiphop_moving.mp4, 15 s.</div>
+</section>
+
+<section class="slide">
+  <div class="hd"><span class="num">11</span><div><h3>Did the robot survive in a second simulator?</h3>
+  <span class="job">Job: report the survival numbers and what they allow.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Title</span>
+    <p class="quote plain">Did the robot survive in a second simulator?<br>Survival out of 20 runs in plain MuJoCo, before -&gt; after delay training</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>"Second simulator" means plain MuJoCo, not the trainer's own engine. Each cell is <strong>before delay training -> after delay training</strong>.</p></div></div>
+  <div class="box"><div class="said"><span class="role data">Table</span>
+    <pre class="term">Test                              woman (fixed)     boxing (moving)   street (moving)
+training randomization (of 30)    30 -&gt; 30          29 -&gt; 30          29 -&gt; 29
++20 ms delay                      20 -&gt; 20          17 -&gt; 19          17 -&gt; 20
++40 ms delay                      0 -&gt; 20           0 -&gt; 19           1 -&gt; 19
++60 ms delay                      0 -&gt; 16           0 -&gt; 13           0 -&gt; 14
+3x pushes                         15 -&gt; 18          5 -&gt; 7            3 -&gt; 8
+slippery floor                    15 -&gt; 15          2 -&gt; 3            14 -&gt; 18</pre></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The first row is out of 30; the others are out of 20. Look at the +40 ms row: <strong>0, 0, 1 survive before</strong> and <strong>20, 19, 19 after</strong>. The first row, the normal training randomization, shows all three motions transfer.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">Takeaway</span>
+    <p class="quote">All three motions transferred: 29 to 30 of 30 trials survived the normal training randomization. At 40 ms delay almost nothing survived without delay training and almost everything did with it, on fixed and moving cameras alike.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The claim stops at "almost nothing survived without delay training and almost everything did with it". Slide 12 explains why this is not a clean test of delay training for these three clips.</p></div></div>
+</section>
+
+<section class="slide">
+  <div class="hd"><span class="num">12</span><div><h3>What this does not show</h3>
+  <span class="job">Job: bound every claim before someone else does.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Title</span>
+    <p class="quote plain">What this does not show<br>The honest slide</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Six limits, each a sentence you can read aloud.</p></div></div>
+  <div class="box"><div class="said"><span class="role flag">Limit 1: training confound</span>
+    <p class="quote">Each clip got its own newly trained policy, with 3,000 extra training iterations in the delay stage. Only the earlier tennis test, with three seeds and a no-delay control, separates delay training from extra training.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Each new clip got its <strong>own</strong> newly trained policy, with extra iterations. Only the tennis test (three seeds, no-delay control) separates delay training from extra training: control 4/8/2 of 20 against 15/20/20 with delay training.</p></div></div>
+  <div class="box"><div class="said"><span class="role flag">Limit 2: camera</span>
+    <p class="quote">Three different clips with three different cameras cannot isolate the effect of the camera.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Three clips differ in motion, scene and camera at once.</p></div></div>
+  <div class="box"><div class="said"><span class="role flag">Limit 3: no ground truth</span>
+    <p class="quote">I have no true human pose for these stock clips, so robot tracking error is not a measure of how well GVHMR reconstructed the person.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>A low robot tracking error would not prove GVHMR got the human right; a high one would not prove it got it wrong.</p></div></div>
+  <div class="box"><div class="said"><span class="role flag">Limit 4: boxing</span>
+    <p class="quote">Boxing is weakest. Its reference holds both ankles at their limits most of the time, which is a likely explanation, not a tested one.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The ankle explanation is a hypothesis. A fair test would change the stance or the retargeting weights while staying inside the real joint limits, then retrain with a matched budget.</p></div></div>
+  <div class="box"><div class="said"><span class="role flag">Limit 5: scope</span>
+    <p class="quote">One seed per clip. Simulation only. No hardware.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>One training seed per clip (many evaluation trials per seed), simulation only, no robot.</p></div></div>
+  <div class="box"><div class="said"><span class="role fix">Correction: frame rate</span>
+    <p class="quote">GMR assumes 30 fps. My earlier dance clip was retargeted 1.2x too fast; the new clips use their real frame rates.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Found this week: the retargeting tool assumes 30 fps. The older dance clip was retargeted 1.2 times too fast. The new clips use their real frame rates. This is a retraction of the speed in the earlier dance video.</p></div></div>
+</section>
+
+<div class="act">
+  <h2>Act 3 · Slides 13–15 — Part 2, a more real simulator</h2>
+  <p>A plan, not a result. The robot is not touched until the gantry arrives.</p>
+</div>
+
+<section class="slide">
+  <div class="hd"><span class="num">13</span><div><h3>Part 2 divider</h3>
+  <span class="job">Job: mark Part 2 as a plan before any claim is made.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Part and title</span>
+    <p class="quote plain">PART 2<br>Making the simulator more real</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Question 2 from slide 2.</p></div></div>
+  <div class="box"><div class="said"><span class="role flag">Subtitle and gate</span>
+    <p class="quote">using data from the real R1 in the lab<br>a plan this week -- the safety gantry has not arrived, so nothing runs on the robot yet</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The gate is stated on the divider itself: the safety gantry has not arrived, so <strong>nothing runs on the robot</strong>.</p></div></div>
+</section>
+
+<section class="slide">
+  <div class="hd"><span class="num">14</span><div><h3>Why I need real data</h3>
+  <span class="job">Job: justify measuring and state what is blocked.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Title</span>
+    <p class="quote plain">Why I need real data<br>My policies are only as good as the simulator they train in</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The simulator sets the ceiling for every policy trained in it.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">Point 1</span>
+    <p class="quote">Command delay is the clearest example: at 40 ms the policy trained without delay mostly falls, while the delay-trained one survives. I picked those delays; I have not measured the real robot&#x27;s.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The delay story from Part 1, restated as a reason: the numbers I randomise are guesses.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">Point 2</span>
+    <p class="quote">The lab robot is an R1 EDU light version with non-dexterous hands. The SDK and logs are available.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Facts about the lab robot: R1 EDU light, hands not dexterous, SDK and logs available. Do not say anything more specific about the hands.</p></div></div>
+  <div class="box"><div class="said"><span class="role flag">Point 3: the gate</span>
+    <p class="quote">Prof. Sun does not recommend testing it in person until the safety gantry arrives, so I will not run anything on it yet.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Prof. Sun's advice. Nothing runs on the real R1 until the gantry is there.</p></div></div>
+  <div class="box"><div class="said"><span class="role flag">Point 4: the SDK example</span>
+    <p class="quote">The official SDK example is not a passive logger: it takes over the robot&#x27;s motion service and publishes commands. I will not run it unchanged.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The official example <code>r1_ankle_swing_example.cpp</code> releases the motion service and sends commands. It is an actuator test, not a logger.</p></div></div>
+</section>
+
+<section class="slide">
+  <div class="hd"><span class="num">15</span><div><h3>The approach I propose</h3>
+  <span class="job">Job: lay out a four-step plan that starts with no hardware.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Title</span>
+    <p class="quote plain">The approach I propose<br>Measure first, then tune the simulator, then check on motions it has not seen</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The order matters: measure, tune, check on new motions, then use.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">Step 1</span>
+    <p class="quote">1. Start with logs<br>use the logs that already exist now; record new timestamped joint data and commands only after the gantry arrives</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Existing logs first. New recordings wait for the gantry.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">Step 2</span>
+    <p class="quote">2. Fit<br>the delay, how fast each motor responds, and its limits and friction</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Fit delay, motor response, limits and friction as simple models.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">Step 3</span>
+    <p class="quote">3. Check<br>predict a motion I did not use for fitting and compare it with the recording</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The held-out check is what makes the fit believable: predict first, compare second.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">Step 4</span>
+    <p class="quote">4. Use<br>put the measured ranges into the training randomization</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Measured ranges replace my guessed ranges in training.</p></div></div>
+  <div class="box"><div class="said"><span class="role flag">Caveats</span>
+    <p class="quote plain">A learned actuator model is a later option, if the simple fit still leaves a systematic gap. Things to confirm first: the joint mapping (the SDK example lists 26 joints with the head; my simulation controls 24), and that estimated torque is not ground truth and a body sensor (IMU) alone does not give a drift-free base velocity.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Three things to confirm before trusting any fit: the joint mapping (26 in the SDK example against 24 controlled in simulation), that estimated torque is not a measured ground truth, and that an IMU alone does not give a drift-free base velocity. A learned actuator model is a later option only if a systematic gap remains.</p></div></div>
+</section>
+
+<div class="act">
+  <h2>Act 4 · Slides 16–18 — Part 3, the bag of skills</h2>
+  <p>The new series. A proposal with a first milestone you set: walk, run and jump as one fluent chain.</p>
+</div>
+
+<section class="slide">
+  <div class="hd"><span class="num">16</span><div><h3>Part 3 divider</h3>
+  <span class="job">Job: introduce the skill series.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Part and title</span>
+    <p class="quote plain">PART 3<br>A bag of R1 skills</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Question 3 from slide 2.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">Subtitle and strapline</span>
+    <p class="quote">train single actions, then chain them in a MuJoCo game I steer myself<br>walk, run, jump, kick, punch, grab -- each trained separately through my pipeline</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Six skills named. Each is trained separately through the same video or mocap, retargeting, and tracking pipeline already used for the other clips.</p></div></div>
+</section>
+
+<section class="slide">
+  <div class="hd"><span class="num">17</span><div><h3>The idea</h3>
+  <span class="job">Job: show the three components and the milestone.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Title</span>
+    <p class="quote plain">The idea<br>A school scene in MuJoCo, and the R1 gets from one point to another with the skills in the bag</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>One sentence for the whole series.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">Card 1</span>
+    <p class="quote">One policy per skill<br>Each skill is a motion video or mocap clip, retargeted by GMR and trained as its own policy. Each is one item in the bag.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The bag is a set of independent policies.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">Card 2</span>
+    <p class="quote">A switcher<br>I pick the skill, the switcher blends from one policy to the next.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The switcher is the new piece of engineering.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">Card 3</span>
+    <p class="quote">A game<br>A school scene in MuJoCo. I steer the R1 and it uses the skills to travel between points.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The game is the acceptance test, and it runs in plain MuJoCo.</p></div></div>
+  <div class="box"><div class="said"><span class="role flag">Milestone</span>
+    <p class="quote plain">First milestone I set: connect walk, run and jump fluently, as one chain.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Your milestone, in your words. Walk to run is the first internal step toward it, not a smaller target.</p></div></div>
+</section>
+
+<section class="slide">
+  <div class="hd"><span class="num">18</span><div><h3>What already exists</h3>
+  <span class="job">Job: show prior art was checked before designing.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Title</span>
+    <p class="quote plain">What already exists<br>I checked for similar work before designing anything</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Prior art was searched first, as the project rule requires.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">Reference 1</span>
+    <p class="quote">RoboJuDo switches between several trained policies with interpolation, supports BeyondMimic-style motion policies and keyboard control. Its published robot support is G1, H1 and GR1, not the R1, so it is a reference to adapt, not a drop-in.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>RoboJuDo (github.com/hansz8/robojudo). Right idea, wrong robots. R1 support was not verified.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">Reference 2</span>
+    <p class="quote">ASE and DeepMimic are the classic multi-skill and hierarchy references. DeepMimic&#x27;s own motion data includes walk, run, jump and punch for its simulated humanoid, and its README now points to MimicKit. Neither gives a ready policy for the R1.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Classic references for multi-skill control. DeepMimic's motion folder is real evidence that walk, run, jump and punch clips exist for its own humanoid.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">Reference 3</span>
+    <p class="quote">A 2026 paper, Switch, trains one tracker on skill transitions and switches skills on a G1 humanoid. It is the paper I present next.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The bridge to the next six slides. Switch is a paper, not a code release you can download. Slide 19 says where it was demonstrated.</p></div></div>
+  <div class="box"><div class="said"><span class="role flag">Search limit</span>
+    <p class="quote plain">No verified R1-ready walk, run and jump switching package was established in this review.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>An absence claim limited to what this review established. It does not say nothing exists.</p></div></div>
+</section>
+
+<div class="act">
+  <h2>Act 5 · Slides 19–24 — one paper: Switch</h2>
+  <p>A related-work paper in the five-part paper format: introduction, challenges, framework, results, core values. Everything quantitative on these slides belongs to the authors, not to this project.</p>
+</div>
+
+<section class="slide">
+  <div class="hd"><span class="num">19</span><div><h3>A paper for this idea: Switch</h3>
+  <span class="job">Job: introduce the paper and say whose work it is.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Title and subtitle</span>
+    <p class="quote plain">A paper for this idea: Switch<br>Learning Agile Skills Switching for Humanoid Robots</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Switch (Lau et al., April 2026 preprint, arXiv 2604.14834). <strong>You are presenting their work.</strong> Say it in the first sentence.</p></div></div>
+  <div class="box"><div class="said"><span class="role data">Figure 1 (picture)</span>
+    <p class="quote plain">Picture: paper Figure 1.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The authors' G1 robot switching between get up, kick, lay down, Kung Fu and dance. It shows what <strong>fluent</strong> looks like in their setting. It is not the R1 and not walk, run and jump.</p></div></div>
+  <div class="box"><div class="said"><span class="role flag">Figure credit</span>
+    <p class="quote plain">Figure 1 of the paper: the authors&#x27; G1 robot switching between skills. Source: Lau et al., arXiv 2604.14834.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The credit line stays on the slide. The figure is a crop of the paper PDF, unedited.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">Left card: the paper</span>
+    <p class="quote">The paper<br>Yuen-Fui Lau, Qihan Zhao, Yinhuai Wang, Runyi Yu, Hok Wai Tsui, Qifeng Chen, Ping Tan. HKUST. April 2026 preprint. Unitree G1 humanoid.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Seven authors, HKUST. It is an arXiv preprint.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">Right card: why this paper</span>
+    <p class="quote">Why I picked it<br>Connecting my walk, run and jump skills is my next challenge, and this paper is about exactly that. I present their work, not an experiment of mine.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The reason is the project milestone: connect walk, run and jump fluently. It is the closest paper found for that.</p></div></div>
+</section>
+
+<section class="slide">
+  <div class="hd"><span class="num">20</span><div><h3>Introduction and summary</h3>
+  <span class="job">Job: the paper in three cards.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Title</span>
+    <p class="quote plain">Introduction and summary<br>Skills that work alone can still fail at the handoff</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The whole paper in one line: skills that work alone can still fail at the handoff.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">Card 1</span>
+    <p class="quote">The problem they see<br>Whole-body controllers can now do agile single skills. Switching between two of them is still unreliable, because the controller never trained on the states that appear during a switch.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The authors' diagnosis: poorly modeled transitions. The controller has no training on the states between skills, so it fails when it meets them.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">Card 2</span>
+    <p class="quote">What Switch does<br>Three parts: a skill graph that links similar moments of different skills, one tracking policy trained on those links, and an online scheduler that picks the path to the skill you ask for.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The three parts, in plain words. Slide 22 shows them in the authors' own figure.</p></div></div>
+  <div class="box"><div class="said"><span class="role flag">Card 3: my connection</span>
+    <p class="quote">My connection<br>A bag of three good clips is not a chain. I should judge my R1 on the connected rollout, not only on walk, run and jump shown separately.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Your own point. It matches the milestone: judge the connected rollout, not three separate videos.</p></div></div>
+</section>
+
+<section class="slide">
+  <div class="hd"><span class="num">21</span><div><h3>Core challenges</h3>
+  <span class="job">Job: show why switching fails, using the authors&#x27; figure.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Title</span>
+    <p class="quote plain">Core challenges<br>Why switching fails, and what plain tracking does after a push</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Three challenges, plus one picture of what happens after a hard push.</p></div></div>
+  <div class="box"><div class="said"><span class="role data">Figure 3 (picture)</span>
+    <p class="quote plain">Picture: paper Figure 3.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>A 500 N push in simulation knocks the G1 down. Top row: the scheduler plans a path through get-up motion and the robot resumes the kick. Bottom row: plain tracking of the original reference never recovers.</p></div></div>
+  <div class="box"><div class="said"><span class="role flag">Figure caption</span>
+    <p class="quote plain">Figure 3 of the paper (their simulation): a 500 N push knocks the robot down. Top: with the scheduler it gets up and resumes the kick. Bottom: plain tracking stays down.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The caption says "their simulation" on purpose. This is the 500 N case, not the separate 25 N push test in Figure 5 of the paper.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">Card 1</span>
+    <p class="quote">Unseen transition states<br>The controller fails when it meets states it was never trained on, such as the moment between two skills.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Plain trackers fail on states they never saw. Switching creates exactly such states.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">Card 2</span>
+    <p class="quote">Too many pairs<br>Recording every possible transition between every pair of skills grows too fast as skills are added.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The number of skill pairs grows quickly, so recording every transition does not scale. The authors build the missing transitions instead.</p></div></div>
+  <div class="box"><div class="said"><span class="role flag">Card 3</span>
+    <p class="quote">No recovery plan<br>A fixed reference has no explicit recovery plan after a large deviation, even though the low-level tracker still reacts to feedback. For me: a jump has to start from the state the run leaves, and a bad landing needs a recovery.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The point from the paper: that a fixed reference has no explicit plan for coming back after a large deviation, although the low-level tracker still reacts to feedback. The last sentence is your own connection to the jump and landing risk on slide 25, not a claim from the paper.</p></div></div>
+</section>
+
+<section class="slide">
+  <div class="hd"><span class="num">22</span><div><h3>Framework</h3>
+  <span class="job">Job: explain the method as a route map, with no equations.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Title</span>
+    <p class="quote plain">Framework<br>Three steps: link similar states, train on the links, plan online</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Link similar states, train on the links, plan online. Three steps, left to right in the figure.</p></div></div>
+  <div class="box"><div class="said"><span class="role data">Figure 2 (picture)</span>
+    <p class="quote plain">Picture: paper Figure 2.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>(a) the skill graph is built from motion-capture skills retargeted to the robot. (b) one tracking policy is trained on the graph, with a reward that follows the successor frame through the buffer nodes (the circled question marks). (c) at run time the scheduler takes the current state, the graph and the skill label from the user and outputs the next target.</p></div></div>
+  <div class="box"><div class="said"><span class="role flag">Figure credit</span>
+    <p class="quote plain">Figure 2 of the paper (Lau et al.).</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Authors' figure.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">Card a</span>
+    <p class="quote">a. Build a skill graph<br>Each motion frame is a point. Similar frames of different skills get a link, with extra buffer frames where the gap is large.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Think of a route map. Each frame is a stop. Links join stops that look alike in different skills. Buffer frames fill a long gap with extra stops.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">Card b</span>
+    <p class="quote">b. Train one tracker<br>The policy practices the linked transitions in simulation, with a reward that guides it through the buffer frames.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The policy sees the links during training, so switching is something it practised.</p></div></div>
+  <div class="box"><div class="said"><span class="role flag">Card c</span>
+    <p class="quote">c. Schedule online<br>From the robot&#x27;s current state, the scheduler finds the path to the commanded skill. The hardware runs the simpler nearest-neighbor variant.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The paper offers two planners. A full graph search and a nearest-neighbor lookup. The <strong>hardware demonstration used nearest-neighbor</strong>, so do not say the robot ran the full search.</p></div></div>
+</section>
+
+<section class="slide">
+  <div class="hd"><span class="num">23</span><div><h3>Results (the authors&#x27; numbers)</h3>
+  <span class="job">Job: report their numbers with their definitions.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Title</span>
+    <p class="quote plain">Results (the authors&#x27; numbers)<br>Skill switching success in their MuJoCo test, % of 50 trials</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>"The authors' numbers" is in the title on purpose. None of this is from your runs.</p></div></div>
+  <div class="box"><div class="said"><span class="role data">Table (from the paper's Table II)</span>
+    <pre class="term">Method                                  1 switch    2 switches    3 switches
+Base (trained on single skills)         2           2             2
+GMT (general tracker)                   30          10            2
+Base + skill graph                      100         100           100
+Base + skill graph + buffer frames      100         100           100
+Full Switch (+ foot contact reward)     100         100           100</pre></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Success means the robot reached the commanded skill from an arbitrary start. Training on single skills only gives 2%. A general tracker (GMT) falls from 30% to 2% as switches are added. Anything trained on the skill graph reaches 100% in these tests.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">Error line</span>
+    <p class="quote">Whole-body position error, Switch vs GMT (m, Table II): 0.075 vs 0.396, 0.090 vs 0.491, 0.098 vs 0.588 for 1, 2 and 3 switches.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Position error in metres from the same table. Lower is better, and Switch is lower than GMT at every difficulty.</p></div></div>
+  <div class="box"><div class="said"><span class="role flag">Honesty footnote</span>
+    <p class="quote plain">Policies trained in IsaacGym, tested in MuJoCo, four skills, 50 trials per difficulty. A trial counts as failed if the root-relative average body position error passes 0.5 m at any point. Fifty evaluation trials are not fifty training runs. The buffer frames and contact reward cannot raise a column that is already at 100, and some velocity and acceleration errors did not improve. These are their results, not mine.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The key limits. <strong>The 0.5 m failure threshold is their definition.</strong> Fifty evaluation trials are not fifty training seeds. The buffer frames and contact reward cannot be credited for the success column, which is already at 100. Some velocity and acceleration errors did not improve.</p></div></div>
+</section>
+
+<section class="slide">
+  <div class="hd"><span class="num">24</span><div><h3>Core values for my project</h3>
+  <span class="job">Job: say what to take from it and what it does not show.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Title</span>
+    <p class="quote plain">Core values for my project<br>What I would take from it, and what it does not show</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Two jobs: usefulness for the R1 plan, and honesty about the limits.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">Left card: what I would use</span>
+    <p class="quote">What I would use<br>Treat the handoff as part of the experiment. Compare plain switching with a transition-aware controller, measure whether the complete walk, run and jump chain succeeds, and look at the failed landings. These are experiments I propose; none has been run.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>A <strong>proposed</strong> experiment, not a result: compare plain switching against a transition-aware controller, and measure the whole chain with failed landings kept in the count.</p></div></div>
+  <div class="box"><div class="said"><span class="role flag">Middle card: what it does not show</span>
+    <p class="quote">What it does not show<br>Their robot is a G1, not the R1. Skills they show include kicks, Kung Fu, dance and getting up, not my walk, run and jump. Their 100% belongs to their tests. I did not find an author code release.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>G1, not R1. Dynamic skills such as kicks and dance, not walk, run and jump. Preprint. No author code release was found by this review, which is not proof that none exists.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">Right card: how it differs from my plan</span>
+    <p class="quote">How it differs from my plan<br>Switch trains one tracker on the transitions. My first idea was one separate policy per skill. Separate policies stay as a baseline to compare against, and a shared tracker is the fallback if switching them fails.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Switch uses <strong>one tracker trained on the transitions</strong>. Your first plan was independent policies. Both are worth trying: independent policies as the baseline, the shared tracker as the fallback.</p></div></div>
+</section>
+
+<div class="act">
+  <h2>Act 6 · Slides 25–26 — back to the plan</h2>
+  <p>Why fluent switching is hard on the R1, and the plan in order.</p>
+</div>
+
+<section class="slide">
+  <div class="hd"><span class="num">25</span><div><h3>Why fluent is harder than it sounds</h3>
+  <span class="job">Job: explain the risk without discouraging the plan.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Title</span>
+    <p class="quote plain">Why fluent is harder than it sounds<br>Three tracked clips are not a game</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The three Part 1 clips each track one fixed motion. A game needs more.</p></div></div>
+  <div class="box"><div class="said"><span class="role fix">Risk 1: steering</span>
+    <p class="quote">A policy that tracks one walking clip does not walk in an arbitrary direction or speed. The game needs a walk I can steer.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>A tracking policy is closed-loop: it reacts to the state of the robot, but it follows one fixed reference motion. Steering needs a walk whose direction and speed come from a command.</p></div></div>
+  <div class="box"><div class="said"><span class="role fix">Risk 2: switching</span>
+    <p class="quote">Switching needs the end of one skill to match the start of the next: matching speed, heading, and a stable posture.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Pose, velocity, foot contact and heading at the end of one skill must match what the next skill expects, so the next policy takes over without a reset to its own starting pose.</p></div></div>
+  <div class="box"><div class="said"><span class="role fix">Risk 3: landing</span>
+    <p class="quote">Jumping adds a landing, so the switcher needs a recovery path when a landing goes wrong.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Landing changes the robot from flight to ground contact, and locomotion has to resume from the landed state. Blending between policies does not by itself establish balance, so a failed landing needs a recovery path.</p></div></div>
+  <div class="box"><div class="said"><span class="role flag">Risk 4: grab</span>
+    <p class="quote">Grabbing adds hands and objects, which my pipeline does not handle yet. It comes last.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Grab is last because it needs hand, object and contact support that the pipeline does not have yet.</p></div></div>
+</section>
+
+<section class="slide">
+  <div class="hd"><span class="num">26</span><div><h3>Next</h3>
+  <span class="job">Job: end on the plan in order and ask for the go.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Title</span>
+    <p class="quote plain">Next<br>My plan, in order</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Three steps, in order.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">Step 1</span>
+    <p class="quote">1. Walk and run<br>Train a steerable walk and a run, and make them switch cleanly. Walk to run first.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Training on the workstation. <strong>Nothing has started</strong>; it waits for your go and for the choice of mocap or your own video.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">Step 2</span>
+    <p class="quote">2. Add jump<br>Add jump with a landing and a recovery, then check the whole chain in a plain MuJoCo scene.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Jump is added after walk and run switch cleanly.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">Step 3</span>
+    <p class="quote">3. School scene<br>Build the school scene and steer the R1 from one point to another. Calibrate the simulator with real R1 data when the gantry arrives.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The school scene is last. Calibration has two stages: analysis of existing logs can start without touching the robot, and new physical recordings wait for the gantry.</p></div></div>
+</section>
+
+<footer>
+  <p><b>Reading the tags.</b> <span class="role card">Result card</span> states something found or proposed;
+  <span class="role flag">Honesty card</span> bounds it before someone else does;
+  <span class="role fix">Correction / risk</span> retracts something or names a risk;
+  <span class="role data">Terminal / table</span> is real captured output or deck data, never a mock-up.</p>
+  <p>Deck: <b>embodied ai week 30.pptx</b>, 26 slides · Speaker script: <code>week30_speaker_script.md</code> ·
+  Moving-camera tests run on 2026-10-14 · Parts 2 and 3 are plans. Part 4 (slides 19–24) presents another group's paper: its numbers are theirs.</p>
+  <p>Sources: <a href="https://github.com/zju3dv/GVHMR">GVHMR</a> ·
+  <a href="https://github.com/hansz8/robojudo">RoboJuDo</a> and its
+  <a href="https://github.com/HansZ8/RoboJuDo/blob/release/docs/policy.md">policy docs</a> ·
+  <a href="https://github.com/xbpeng/DeepMimic/tree/master/data/motions">DeepMimic motions</a> ·
+  <a href="https://github.com/xbpeng/MimicKit">MimicKit</a> · <a href="https://arxiv.org/abs/2604.14834">Switch paper</a> (<a href="https://arxiv.org/html/2604.14834v1">full text</a>). The Q&amp;A prep is in the speaker script
+  (<code>week30_speaker_script.md</code>, also embedded as the slide notes).</p>
+</footer>
+</div>
+</body></html>

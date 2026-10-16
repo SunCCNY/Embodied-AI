@@ -25,6 +25,7 @@ on deployment, and most recently retargeting human motion capture onto the robot
 | [Week 27](Week%2027/) | — |
 | [Week 28](Week%2028/) | — |
 | [Week 29](Week%2029/) | — |
+| [Week 30](Week%2030/) | — |
 
 Week numbers follow the lab meeting schedule, so gaps are weeks I did not present.
 Week 25 is the GMR motion retargeting deck; Week 26 extends it to all eight GMR input formats
@@ -34,6 +35,7 @@ those motions (BeyondMimic via mjlab) and checks them sim2sim; its folder is a f
 deck, speaker companion, the code added to mjlab, and the trained policies — see its README.
 Week 29 trains the R1 dance policy in Isaac Lab (PhysX) and tests whether it transfers to plain MuJoCo;
 its folder (`isaac_dance_transfer/`) has the code, the trained policy, and the results.
+Week 30 tests GVHMR on moving-camera video, proposes calibrating the simulator from real R1 data, and starts a series on single R1 skills; its folder has the deck, the speaker script and the speaker's companion.
 
 **[Video-to-R1 Pipeline](Video-to-R1%20Pipeline/)** is the whole project in one runnable folder, not a weekly deck:
 video → GVHMR → SMPL-X → GMR → R1 trajectory → motion-tracking policy (mjlab or Isaac Lab) → sim2sim in plain MuJoCo.
