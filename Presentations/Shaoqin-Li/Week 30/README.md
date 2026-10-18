@@ -1,6 +1,6 @@
 # Week 30: GVHMR on a moving camera, a more real simulator, and a bag of R1 skills
 
-- `Embodied AI Week 30.pptx`: the deck (26 slides, three embedded videos, speaker script in the slide notes).
+- `Embodied AI Week 30.pptx`: the deck (27 slides, three embedded videos, speaker script in the slide notes). Slide 27 lists the references with links, including GVHMR.
   Part 1 is the moving-camera test run on 2026-10-14, a result. Parts 2 and 3 are proposals: calibrating the simulator
   from real R1 data, and training single skills (walk, run, jump, ...) to chain in a MuJoCo game.
   Slides 19-24 present one related paper, Switch (Lau et al., arXiv 2604.14834); figures and numbers there are the

@@ -164,6 +164,11 @@ Three independent policies can each look good and still fail when connected. A w
 
 I would develop the milestone in stages. First I would establish controllable walking and running and test their transitions. Then I would add a jump that can start from locomotion, land and continue moving. Those stages together complete the first milestone; I am not dropping the jump requirement. After the chain works in a simple scene, I would add the school layout and test reaching points using the same controls. In parallel, I can review existing lab logs offline. Physical measurements stay deferred until the gantry arrives and Prof. Sun permits testing.
 
+
+## Slide 27 References
+
+Every source used or cited in this deck is listed here with its link. GVHMR is first, with its code, project page and paper, because it is the tool that turns each video into human motion. Say that the Pexels clips are credited to their creators and free to use. No need to read the links aloud; they are clickable in PowerPoint.
+
 ## Q&A preparation
 
 - **Does GVHMR require a fixed camera?** No. It has a moving-camera path. My fixed-camera preference reduced preprocessing complexity; it was not proof of a hard algorithm limit.
