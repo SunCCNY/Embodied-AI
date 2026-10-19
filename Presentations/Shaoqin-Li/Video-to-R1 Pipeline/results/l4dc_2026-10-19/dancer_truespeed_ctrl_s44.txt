@@ -1,0 +1,16 @@
+scenario                 seeds  survived  mean err (rad)  median steps  failure reasons
+train_DR                    30   30/30             1.896          1321  {}
+train_DR+push3x             20    1/20             1.991           488  {'ee_z': 18, 'anchor_z': 1}
+train_DR+delay0ms           20   20/20             1.900          1321  {}
+train_DR+delay10ms          20   19/20             1.922          1321  {'ee_z': 1}
+train_DR+delay20ms          20   18/20             1.946          1321  {'ee_z': 2}
+train_DR+delay30ms          20    4/20             2.195           622  {'ee_z': 15, 'anchor_z': 1}
+train_DR+delay40ms          20    0/20             1.754           110  {'ee_z': 15, 'anchor_z': 5}
+train_DR+delay50ms          20    0/20             1.750            84  {'ee_z': 17, 'anchor_z': 3}
+train_DR+delay60ms          20    0/20             1.738            48  {'ee_z': 18, 'anchor_z': 2}
+train_DR+delay70ms          20    0/20             1.645            34  {'ee_z': 20}
+train_DR+delay80ms          20    0/20             1.663            32  {'ee_z': 18, 'anchor_z': 2}
+train_DR+kp-20%             20   16/20             2.030          1321  {'ee_z': 4}
+train_DR+payload2kg         20   19/20             1.914          1321  {'ee_z': 1}
+train_DR+fric0.15           20   12/20             2.012          1321  {'ee_z': 7, 'anchor_z': 1}
+train_DR+no_lin_vel         20    4/20             2.181           635  {'ee_z': 16}

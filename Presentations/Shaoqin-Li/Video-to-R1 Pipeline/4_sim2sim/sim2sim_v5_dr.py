@@ -32,6 +32,16 @@ SCENARIOS = {
     "train_DR+latency1": dict(TRAIN, latency=1),
     "train_DR+latency2": dict(TRAIN, latency=2),
     "train_DR+latency3": dict(TRAIN, latency=3),
+    # command delay in 5 ms physics steps (the unit training uses); 40 ms here == latency2 above
+    "train_DR+delay0ms": dict(TRAIN, delay_phys=0),
+    "train_DR+delay10ms": dict(TRAIN, delay_phys=2),
+    "train_DR+delay20ms": dict(TRAIN, delay_phys=4),
+    "train_DR+delay30ms": dict(TRAIN, delay_phys=6),
+    "train_DR+delay40ms": dict(TRAIN, delay_phys=8),
+    "train_DR+delay50ms": dict(TRAIN, delay_phys=10),
+    "train_DR+delay60ms": dict(TRAIN, delay_phys=12),
+    "train_DR+delay70ms": dict(TRAIN, delay_phys=14),
+    "train_DR+delay80ms": dict(TRAIN, delay_phys=16),
     "train_DR+kp-20%": dict(TRAIN, kp_scale=0.8),
     "train_DR+kp+20%": dict(TRAIN, kp_scale=1.2),
     "train_DR+payload2kg": dict(TRAIN, payload=2.0),
@@ -110,6 +120,8 @@ class Env:
 
         next_push = U(1.0, 3.0) if cfg["push"] else 1e9
         queue = [np.zeros(24)] * cfg["latency"]
+        dphys = cfg.get("delay_phys", 0)                     # physics-step delay: a ctrl target issued at physics step k acts at k + dphys
+        ctrl_hist = [H.DEFAULT_POS - bias] * dphys
         prev_action = np.zeros(24, np.float32)
         errs, aerrs = [], []
         reason, steps = None, 0
@@ -138,10 +150,12 @@ class Env:
             action = self.sess.run(None, feeds)[0][0]
             prev_action = action
             queue.append(action); applied = queue.pop(0)
-            data.ctrl[self.act] = H.DEFAULT_POS + applied * H.ACTION_SCALE - bias
+            target = H.DEFAULT_POS + applied * H.ACTION_SCALE - bias
             errs.append(np.linalg.norm(jpos - self.jp[f]))
 
             for _ in range(4):
+                ctrl_hist.append(target)
+                data.ctrl[self.act] = ctrl_hist.pop(0) if dphys else target
                 mujoco.mj_step(model, data)
             steps = t + 1
 
