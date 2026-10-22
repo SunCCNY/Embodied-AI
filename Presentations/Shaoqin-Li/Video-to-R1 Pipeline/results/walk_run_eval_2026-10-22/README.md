@@ -8,8 +8,8 @@ model_5000 = "walk" policy (trained up to 1.0 m/s) and model_10000 = "walk+fast"
 
 Scripts (copies in `scripts/`; they run from `~/unitree_rl_mjlab/scripts/` inside the unitree_rl_mjlab checkout): `eval_walk_run.py` (fixed-command metrics + ONNX export + video),
 `eval_stop_flight.py` (flight phase + stop behaviour), `eval_yaw_trace.py` (heading over the video schedule).
-Same simulator the policy was trained in (mjlab / MuJoCo-Warp, flat plane, no pushes, no obs noise) —
-this is NOT a sim2sim test yet.
+Sections 1-4: same simulator the policy was trained in (mjlab / MuJoCo-Warp, flat plane, no pushes, no obs noise).
+Section 5: sim2sim — exported ONNX in plain CPU MuJoCo with the observation/action wiring of Unitree's C++ deploy.
 
 ## Speed tracking (64 robots per speed, 20 s, mean over the last 16 s, robots that never fell)
 
@@ -46,6 +46,37 @@ So model_10000 is a **fast walk up to 2 m/s, not a true run** — call it "fast 
 All 192 standing robots: 0 falls, base drift ≤ 5 mm over 16 s, feet planted — unlike the PD-only default stand
 that tips over in ~3 s (hub-switch probe, 2026-10-20). Not yet tested: pushes, starting from a tracker's
 end pose, and the hand-off from the dance/tennis trackers.
+
+## 5. Sim2sim: ONNX in plain CPU MuJoCo, deploy wiring (`scripts/sim2sim_cpu.py`, `sim2sim_cpu/`)
+
+Model = the exact MjModel mjlab compiles for training (saved as .mjb, nominal — no DR); rollout uses
+onnxruntime + mujoco only, obs built as `deploy/include/isaaclab/envs/mdp/observations/observations.h` does.
+**Parity check first** (same states copied GPU -> CPU): ONNX vs torch actor max diff 2e-6; obs identical
+(only step 0 differs = test artifact, command not yet set); motor targets differ by a constant ≤0.015 rad =
+the training env's encoder-bias randomization. So the harness reproduces the deploy wiring.
+Rollouts: 20 s, 10 seeds (±0.05 rad initial joint noise), action delay applied at physics rate (200 Hz).
+
+**Survival (of 10) / achieved vx (m/s)**
+
+| cmd vx | model_10000, 0 ms | 20 ms | 40 ms | model_5000, 0 ms | 20 ms | 40 ms |
+|---|---|---|---|---|---|---|
+| 0 (stand) | 10 / 0.00 | 10 / 0.00 | **6** / 0.01 | 10 / 0.00 | 10 / 0.00 | **2** / 0.00 |
+| 0.5 | 10 / 0.44 | 10 / 0.44 | 10 / 0.43 | 10 / 0.48 | 10 / 0.44 | 10 / 0.45 |
+| 1.0 | 10 / 0.95 | 10 / 0.90 | 10 / 0.88 | 10 / 0.94 | 10 / 0.91 | 10 / 1.04 |
+| 1.5 | 10 / 1.50 | 10 / 1.42 | 10 / 1.39 | 10 / 1.43 | 10 / 1.44 | **0** |
+| 2.0 | 10 / 1.98 | 10 / 1.89 | 8 / 1.92 | — | — | — |
+
+- Cross-engine transfer is clean at 0 ms (150/150 for model_10000).
+- **Standing is the most latency-sensitive skill**: at 40 ms the stand falls after 4–8 s (slow-building
+  oscillation). The training config has NO action-delay randomization -> retrain with delay DR (the L4DC paper's
+  fix) before using it as the hub stand on hardware.
+
+**Deploy-config bug found:** Unitree's shipped `deploy/robots/r1/config/policy/velocity/v0/params/deploy.yaml`
+uses a flat action scale 0.25, but training uses per-joint 0.25·effort/stiffness (legs/waist 0.15, ankles
+0.3125, shoulder pitch/roll 0.375, shoulder yaw/elbow/wrist 0.4125). With the shipped 0.25 the policy falls in
+**every** walking run (~1.5 s) and in standing with any delay. `deploy_v1/deploy.yaml` = v0 with the trained
+scales and lin_vel_x up to 2.0 (installed locally as `velocity/v1/` with `exported/policy.onnx` = model_10000).
+For a first hardware test, cap lin_vel_x back to 1.0. The deploy also clamps the joystick command to this range.
 
 ## Files
 
