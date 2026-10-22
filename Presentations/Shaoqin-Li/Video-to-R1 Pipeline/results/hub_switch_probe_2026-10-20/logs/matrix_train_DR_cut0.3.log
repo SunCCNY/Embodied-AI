@@ -1,0 +1,6 @@
+dance->tennis bridge train_DR: A finished 20/20; switch+B survived 20/20 (of finished A); switch jp err 1.13 rad; B mean err 0.667; B first-1s err 1.06; failures {}
+dance->tennis direct train_DR: A finished 20/20; switch+B survived 20/20 (of finished A); switch jp err 2.31 rad; B mean err 0.687; B first-1s err 1.29; failures {}
+dance->tennis stand train_DR: A finished 20/20; switch+B survived 8/20 (of finished A); switch jp err 1.34 rad; B mean err 0.674; B first-1s err 1.13; failures {'transition:anchor_z': 1, 'transition:ee_z': 8, 'ee_z': 3}
+tennis->dance bridge train_DR: A finished 20/20; switch+B survived 20/20 (of finished A); switch jp err 0.94 rad; B mean err 2.264; B first-1s err 1.76; failures {}
+tennis->dance direct train_DR: A finished 20/20; switch+B survived 18/20 (of finished A); switch jp err 2.52 rad; B mean err 2.273; B first-1s err 2.04; failures {'ee_z': 2}
+tennis->dance stand train_DR: A finished 20/20; switch+B survived 20/20 (of finished A); switch jp err 1.11 rad; B mean err 2.260; B first-1s err 1.74; failures {}

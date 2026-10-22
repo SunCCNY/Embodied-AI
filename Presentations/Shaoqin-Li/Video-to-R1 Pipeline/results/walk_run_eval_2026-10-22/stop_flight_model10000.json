@@ -1,0 +1,43 @@
+{
+  "ckpt": "logs/rsl_rl/r1_velocity/2026-10-21_21-54-28_walk_run_flat/model_10000.pt",
+  "run_s": 8.0,
+  "stop_s": 5.0,
+  "rows": [
+    {
+      "cmd_vx": 0.5,
+      "fell": 0,
+      "flight_frac": 0.0013281248975545168,
+      "stop_yaw_final_deg_mean": 3.8668465614318848,
+      "stop_yaw_final_deg_max": 11.935362815856934,
+      "stop_yaw_peak_deg_mean": 4.930549621582031,
+      "stop_travel_m_mean": 0.1665751039981842
+    },
+    {
+      "cmd_vx": 1.0,
+      "fell": 0,
+      "flight_frac": 0.005078124813735485,
+      "stop_yaw_final_deg_mean": 2.2828917503356934,
+      "stop_yaw_final_deg_max": 11.785499572753906,
+      "stop_yaw_peak_deg_mean": 2.644986152648926,
+      "stop_travel_m_mean": 0.39709043502807617
+    },
+    {
+      "cmd_vx": 1.5,
+      "fell": 0,
+      "flight_frac": 0.015703123062849045,
+      "stop_yaw_final_deg_mean": 2.557765245437622,
+      "stop_yaw_final_deg_max": 10.13491439819336,
+      "stop_yaw_peak_deg_mean": 3.395954132080078,
+      "stop_travel_m_mean": 0.6474499702453613
+    },
+    {
+      "cmd_vx": 2.0,
+      "fell": 0,
+      "flight_frac": 0.027421873062849045,
+      "stop_yaw_final_deg_mean": 4.080204963684082,
+      "stop_yaw_final_deg_max": 15.062423706054688,
+      "stop_yaw_peak_deg_mean": 5.405066967010498,
+      "stop_travel_m_mean": 0.8576774597167969
+    }
+  ]
+}

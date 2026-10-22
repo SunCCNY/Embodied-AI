@@ -1,0 +1,93 @@
+{
+  "ckpt": "/home/sli3/unitree_rl_mjlab/logs/rsl_rl/r1_velocity/2026-10-21_21-54-28_walk_run_flat/model_10000.pt",
+  "tag": "run_model10000",
+  "seconds": 20.0,
+  "settle_s": 4.0,
+  "metrics": [
+    {
+      "cmd_vx": -0.5,
+      "envs": 64,
+      "fell": 0,
+      "vx_mean": -0.4304671585559845,
+      "vx_std": 0.02708427980542183,
+      "vy_mean": -0.024959947913885117,
+      "wz_mean": -0.01284997072070837
+    },
+    {
+      "cmd_vx": 0.0,
+      "envs": 64,
+      "fell": 0,
+      "vx_mean": 5.128805787535384e-05,
+      "vx_std": 3.114208084298298e-05,
+      "vy_mean": 4.590810931404121e-05,
+      "wz_mean": 9.004287858260795e-05,
+      "xy_drift_m_max": 0.0031070709228515625,
+      "xy_drift_m_mean": 0.0009483835892751813
+    },
+    {
+      "cmd_vx": 0.5,
+      "envs": 64,
+      "fell": 0,
+      "vx_mean": 0.4468439817428589,
+      "vx_std": 0.022239049896597862,
+      "vy_mean": -0.0003891682135872543,
+      "wz_mean": -0.021142136305570602
+    },
+    {
+      "cmd_vx": 1.0,
+      "envs": 64,
+      "fell": 0,
+      "vx_mean": 0.9607836008071899,
+      "vx_std": 0.026647556573152542,
+      "vy_mean": -0.012319018132984638,
+      "wz_mean": -0.02338912896811962
+    },
+    {
+      "cmd_vx": 1.5,
+      "envs": 64,
+      "fell": 0,
+      "vx_mean": 1.5076404809951782,
+      "vx_std": 0.0441608652472496,
+      "vy_mean": -0.005687206517904997,
+      "wz_mean": -0.022038808092474937
+    },
+    {
+      "cmd_vx": 2.0,
+      "envs": 64,
+      "fell": 0,
+      "vx_mean": 1.9775493144989014,
+      "vx_std": 0.0412423200905323,
+      "vy_mean": -0.016888625919818878,
+      "wz_mean": -0.0318487286567688
+    }
+  ],
+  "onnx": "/home/sli3/claude_code_projects/embodied_ai_r1/video_to_r1_pipeline/results/walk_run_eval_2026-10-22/run_model10000.onnx",
+  "video": "/home/sli3/claude_code_projects/embodied_ai_r1/video_to_r1_pipeline/results/walk_run_eval_2026-10-22/run_model10000.mp4",
+  "video_schedule": [
+    [
+      3.0,
+      0.0
+    ],
+    [
+      7.0,
+      0.5
+    ],
+    [
+      11.0,
+      1.0
+    ],
+    [
+      15.0,
+      1.5
+    ],
+    [
+      19.0,
+      2.0
+    ],
+    [
+      23.0,
+      0.0
+    ]
+  ],
+  "video_falls": 0
+}
