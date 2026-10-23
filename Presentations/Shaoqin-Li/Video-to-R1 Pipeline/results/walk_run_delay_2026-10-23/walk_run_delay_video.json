@@ -1,0 +1,47 @@
+{
+  "ckpt": "/home/sli3/unitree_rl_mjlab/logs/rsl_rl/r1_velocity/2026-10-23_00-30-49_walk_run_delay_ft/model_12999.pt",
+  "tag": "walk_run_delay_video",
+  "seconds": 20.0,
+  "settle_s": 4.0,
+  "metrics": [
+    {
+      "cmd_vx": 0.0,
+      "envs": 4,
+      "fell": 0,
+      "vx_mean": 1.4001849990563642e-07,
+      "vx_std": 2.9122293199179694e-06,
+      "vy_mean": -5.685272299160715e-06,
+      "wz_mean": -7.876098970882595e-05,
+      "xy_drift_m_max": 0.0002573735546320677,
+      "xy_drift_m_mean": 0.00011020102101610973
+    }
+  ],
+  "video": "logs/walk_delay_study_2026-10-23/walk_run_delay_video.mp4",
+  "video_schedule": [
+    [
+      3.0,
+      0.0
+    ],
+    [
+      7.0,
+      0.5
+    ],
+    [
+      11.0,
+      1.0
+    ],
+    [
+      15.0,
+      1.5
+    ],
+    [
+      19.0,
+      2.0
+    ],
+    [
+      23.0,
+      0.0
+    ]
+  ],
+  "video_falls": 0
+}

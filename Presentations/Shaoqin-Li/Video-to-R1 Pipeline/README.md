@@ -32,6 +32,11 @@ The paper is a first draft for the same reason; its LaTeX version is in `paper/l
 **New 2026-10-14:** three unseen stock clips, two with a moving camera, went through the whole pipeline. See
 [results/new_clips_2026-10-14/README.md](results/new_clips_2026-10-14/README.md) for side-by-side videos and sim2sim results.
 
+**New 2026-10-23:** command-delay training applied to the R1 walk/run policy, with a matched control: it now survives up to 60 ms
+of delay at every speed (the base and the control fail at 50-60 ms). See [results/walk_run_delay_2026-10-23/README.md](results/walk_run_delay_2026-10-23/README.md).
+Jump clips: jumping jacks work end to end (sim2sim 20/20 at 50 ms delay). Jump rope fails because of a bad retargeted reference.
+See [results/jump_clips_2026-10-23/README.md](results/jump_clips_2026-10-23/README.md).
+
 **Writing the paper or slides?** Start with [EVIDENCE.md](EVIDENCE.md): every figure, video and number, mapped to the claim it supports.
 
 Weekly decks with the step-by-step story: `../Week 26` (GMR), `../Week 27`, `../Week 28` (imitation learning + sim2sim),
