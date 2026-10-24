@@ -1,0 +1,743 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Week 31 Box by Box</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --ground:#f6f7f8; --surface:#ffffff; --sunk:#eceef0;
+  --ink:#16202b; --body:#2f3d49; --muted:#61707d; --line:#dde2e6;
+  --teal:#0f6e63; --teal-bg:#e6f1ef;
+  --ochre:#a8741a; --ochre-bg:#f7efdf;
+  --rust:#9d3b2f; --rust-bg:#f8e9e6;
+  --term-bg:#18212b; --term-fg:#d6e0e8;
+  --display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
+  --serif:"Source Serif 4",Georgia,serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){--ground:#10161c; --surface:#161e26; --sunk:#1d262f;
+  --ink:#e8eef3; --body:#c2ced8; --muted:#8698a6; --line:#2a353f;
+  --teal:#5fc4b4; --teal-bg:#12302c; --ochre:#d9a747; --ochre-bg:#33280f;
+  --rust:#e08878; --rust-bg:#33201c; --term-bg:#0b1016; --term-fg:#c8d4de;}
+}
+:root[data-theme="dark"]{--ground:#10161c; --surface:#161e26; --sunk:#1d262f;
+  --ink:#e8eef3; --body:#c2ced8; --muted:#8698a6; --line:#2a353f;
+  --teal:#5fc4b4; --teal-bg:#12302c; --ochre:#d9a747; --ochre-bg:#33280f;
+  --rust:#e08878; --rust-bg:#33201c; --term-bg:#0b1016; --term-fg:#c8d4de;}
+
+*{box-sizing:border-box}
+body{background:var(--ground);color:var(--body);font-family:var(--serif);
+  font-size:17px;line-height:1.55;margin:0;padding-block:0;
+  -webkit-font-smoothing:antialiased}
+.wrap{max-width:1080px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+header.top{padding-block:48px 28px;border-bottom:2px solid var(--ink)}
+.kicker{font-family:var(--display);font-weight:700;font-size:12px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--teal);margin:0 0 10px}
+h1{font-family:var(--display);font-weight:700;font-size:clamp(34px,6vw,52px);
+  line-height:1.02;color:var(--ink);margin:0 0 14px;text-wrap:balance;letter-spacing:-.02em}
+.standfirst{font-size:19px;color:var(--muted);max-width:62ch;margin:0}
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+.legend .role{cursor:default}
+
+.act{margin-top:46px;padding-top:14px;border-top:1px solid var(--line)}
+.act h2{font-family:var(--display);font-weight:700;font-size:13px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--muted);margin:0 0 4px}
+.act p{margin:0;font-size:16px;color:var(--muted);max-width:64ch}
+
+section.slide{margin-top:30px;background:var(--surface);border:1px solid var(--line);
+  border-radius:6px;overflow:hidden}
+.slide > .hd{display:flex;gap:14px;align-items:baseline;padding:16px 20px;
+  background:var(--sunk);border-bottom:1px solid var(--line)}
+.num{font-family:var(--mono);font-weight:600;font-size:13px;color:var(--teal);
+  font-variant-numeric:tabular-nums;flex:0 0 auto;padding-top:3px}
+.hd h3{font-family:var(--display);font-weight:600;font-size:20px;color:var(--ink);
+  margin:0;line-height:1.2;text-wrap:balance}
+.hd .job{display:block;font-family:var(--serif);font-weight:400;font-size:15px;
+  color:var(--muted);margin-top:4px}
+
+.box{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0;
+  border-top:1px solid var(--line)}
+.slide .box:first-of-type{border-top:none}
+.said{padding:16px 20px;border-right:1px solid var(--line);min-width:0}
+.means{padding:16px 20px;min-width:0}
+@media (max-width:720px){
+  .box{grid-template-columns:1fr}
+  .said{border-right:none;border-bottom:1px solid var(--line)}
+}
+.role{display:inline-block;font-family:var(--display);font-weight:700;font-size:10px;
+  letter-spacing:.12em;text-transform:uppercase;padding:3px 7px;border-radius:3px;
+  background:var(--sunk);color:var(--muted);margin-bottom:9px}
+.role.title{background:var(--ink);color:var(--ground)}
+.role.card{background:var(--teal-bg);color:var(--teal)}
+.role.flag{background:var(--ochre-bg);color:var(--ochre)}
+.role.fix{background:var(--rust-bg);color:var(--rust)}
+.role.data{background:var(--term-bg);color:var(--term-fg)}
+
+.quote{font-family:var(--serif);font-style:italic;color:var(--ink);margin:0;
+  font-size:16px;line-height:1.5}
+.quote.plain{font-style:normal}
+pre.term{font-family:var(--mono);font-size:11.5px;line-height:1.5;background:var(--term-bg);
+  color:var(--term-fg);padding:12px 14px;border-radius:4px;margin:0;
+  overflow-x:auto;font-variant-numeric:tabular-nums}
+.means p{margin:0 0 9px}
+.means p:last-child{margin-bottom:0}
+.means strong{color:var(--ink);font-weight:600}
+.why{font-family:var(--display);font-weight:700;font-size:10px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--muted);display:block;margin-bottom:9px}
+.media{padding:14px 20px;background:var(--sunk);font-size:15px;color:var(--muted);
+  border-top:1px solid var(--line)}
+.media b{color:var(--ink);font-weight:600}
+
+footer{margin:56px 0 40px;padding-top:18px;border-top:2px solid var(--ink);
+  font-size:15px;color:var(--muted)}
+footer b{color:var(--ink)}
+a{color:var(--teal)}
+@media (prefers-reduced-motion:no-preference){section.slide{scroll-margin-top:16px}}
+pre.term{white-space:pre-wrap;overflow-wrap:anywhere}
+</style>
+
+</head><body>
+<div class="wrap">
+<header class="top">
+  <p class="kicker">Speaker's companion · 24 slides</p>
+  <h1>Week 31, box by box</h1>
+  <p class="standfirst">Every text box in the deck, with what it says on the left and what it
+  means on the right, in plain words. Written to be read while you rehearse, not while you present.
+  The left column is quoted from the final deck file by script; the right column was written by hand.</p>
+  <div class="legend">
+    <span class="role title">Title / subtitle</span>
+    <span class="role card">Card</span>
+    <span class="role flag">Why it matters</span>
+    <span class="role data">Table</span>
+  </div>
+</header>
+
+<div class="act">
+  <h2>Act 1 · Slides 1–3 — the setup</h2>
+  <p>What the week is about, and where the paper stands.</p>
+</div>
+
+<section class="slide">
+  <div class="hd"><span class="num">01</span><div><h3>Title</h3>
+  <span class="job">Job: name the week and mark it simulation only.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Title and subtitle</span>
+    <p class="quote plain">WEEK 31<br>Walk, run and jump: the first R1 skills</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Series marker. The headline is the first three skills of the skill bag.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">plus: switching between two skills, and </span>
+    <p class="quote plain">plus: switching between two skills, and the paper went to L4DC</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Two side topics, both short: a switching test, and the paper's status. <strong>Simulation only</strong> sets the ceiling for every claim after this.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">tests run 2026-10-20 to 2026-10-23 -- si</span>
+    <p class="quote plain">tests run 2026-10-20 to 2026-10-23 -- simulation only</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Absolute dates on purpose. Nothing ran on the real R1.</p></div></div>
+</section>
+
+<section class="slide">
+  <div class="hd"><span class="num">02</span><div><h3>Three questions</h3>
+  <span class="job">Job: give the structure: switch, walk/run, jump.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Title and subtitle</span>
+    <p class="quote plain">What I set out to answer<br>Three questions this week</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Three questions, three parts. If someone remembers only the structure, it is this.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">1. Can one trained motion hand over to another?</span>
+    <p class="quote plain">1. Can one trained motion hand over to another?<br>The game needs the R1 to switch between skills.<br><br>Before training anything new, I tested a switch between two policies I already had: tennis and dance.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>A <strong>policy</strong> is the trained controller that turns what the robot senses into motor commands. The game needs to change policies on the fly.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">2. Can the R1 walk and run on command?</span>
+    <p class="quote plain">2. Can the R1 walk and run on command?<br>I trained a policy that follows a speed command and stands still at zero.<br><br>Then I tested how much command delay it survives, the same test as in my paper.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p><strong>Command delay</strong>: a motor command that arrives late. The delay is added in this simulation; the R1's actual delay has not been measured here.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">3. Can a jump come from a video?</span>
+    <p class="quote plain">3. Can a jump come from a video?<br>I sent two jump clips through my video-to-R1 pipeline without changing it, and checked the result in a second simulator.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The same pipeline as before: video, human motion, robot motion, training, then a check in a second simulator.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">Three words I use:  Policy = the trained</span>
+    <p class="quote plain">Three words I use:  Policy = the trained controller that turns what the robot senses into motor commands.  Command delay = a motor command that arrives late.  Sim2sim = testing the same policy in a second, separate simulator.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The three terms are defined once here, in plain words. <strong>Sim2sim</strong> is the check in a second simulator that is used all through the deck.</p></div></div>
+</section>
+
+<section class="slide">
+  <div class="hd"><span class="num">03</span><div><h3>The paper went to L4DC</h3>
+  <span class="job">Job: say the paper is submitted and what it found.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Title and subtitle</span>
+    <p class="quote plain">The paper went to L4DC<br>Submitted; this week&#x27;s results can go into a later, longer version</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>L4DC is a conference on learning and control. Submitted, under review; nothing new is added to it this week.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">How Much Command Delay Can a Learned Humanoid Mo</span>
+    <p class="quote plain">How Much Command Delay Can a Learned Humanoid Motion Tracker Tolerate?<br>From the paper: five R1 motions from video, three training seeds each, tested in a second simulator.<br><br>With 40 ms of command delay, survival fell to 15 % on average. With a random 0-50 ms delay in training, it was 95 %.<br><br>The same amount of extra training without delay did not help, so the gain comes from the delay itself.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>These numbers are the paper's. <strong>Seed</strong>: the random starting point of a training run; three seeds per motion make a one-off lucky run less likely. The control arm got the same extra training without delay.</p></div></div>
+  <div class="media"><b>Image:</b> chart, terminal panel or still from the results folders, used unchanged.</div>
+  <div class="box"><div class="said"><span class="role card">Orange = no delay in training. Blue = ra</span>
+    <p class="quote plain">Orange = no delay in training. Blue = random 0-50 ms delay in training. The shaded band is the training range.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The figure is the paper's own. The shaded band is the delay range used in training; blue holds past it.</p></div></div>
+  <div class="box"><div class="said"><span class="role flag">Why it matters</span>
+    <p class="quote plain">Why it matters:  practising with delay is the fix I reuse this week, on walking and on a jump.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Delay training is the tool used twice later: on walking (slide 15) and on the jump (slide 20).</p></div></div>
+</section>
+
+<div class="act">
+  <h2>Act 2 · Slides 4–8 — Part 1, switching between two skills</h2>
+  <p>A quick test with policies I already had, and what it taught me.</p>
+</div>
+
+<section class="slide">
+  <div class="hd"><span class="num">04</span><div><h3>Part 1 divider</h3>
+  <span class="job">Job: announce the switching test.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Title and subtitle</span>
+    <p class="quote plain">PART 1<br>Switching between two skills</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>A quick check with two policies I already had. No new training.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">Two policies I already had: tennis and dance</span>
+    <p class="quote plain">Two policies I already had: tennis and dance<br>no new training -- a quick check before building anything</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Tennis and dance were trained in earlier weeks. Testing them first avoids training new skills for a switch that might not work.</p></div></div>
+</section>
+
+<section class="slide">
+  <div class="hd"><span class="num">05</span><div><h3>How I tested a switch</h3>
+  <span class="job">Job: explain the test before showing results.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Title and subtitle</span>
+    <p class="quote plain">How I tested a switch<br>Same robot, same physics; only the policy in charge changes</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The physics never resets; only the policy in charge changes. That is what a game would do.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">1. Run A</span>
+    <p class="quote plain">1. Run A<br>Policy A (tennis or dance) plays its motion.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Tennis or dance, the two motions from earlier weeks.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">2. Cut</span>
+    <p class="quote plain">2. Cut<br>Stop A at the end, or 30 %, 50 % or 70 % of the way through.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Cutting in the middle tests switching from an awkward pose, not only from the end.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">3. Hand over</span>
+    <p class="quote plain">3. Hand over<br>Policy B takes over from exactly that robot state.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Policy B starts from wherever the robot is. Its motion is shifted to where the robot stands.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">4. Count</span>
+    <p class="quote plain">4. Count<br>20 runs per case. A run counts if the robot gets through all of B without falling.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p><strong>Survive</strong> means the robot finished without meeting the training's fall rules (body too low, tilted, or too far off the motion).</p></div></div>
+  <div class="box"><div class="said"><span class="role card">Three ways to hand over</span>
+    <p class="quote plain">Three ways to hand over</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Three hand-over styles, tested on the same cuts.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">Direct</span>
+    <p class="quote plain">Direct<br>B&#x27;s first frame at once.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The new target appears at once: a jump in the target.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">1 s ramp</span>
+    <p class="quote plain">1 s ramp<br>Blend the target from where the robot is to B&#x27;s first frame over one second.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The target slides over one second from where the robot is to the new motion's start.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">Via the stand</span>
+    <p class="quote plain">Via the stand<br>Go to the default standing pose first, then start B.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The <strong>default stand</strong> is the R1's standard standing joint angles. I expected this to be the safest; it was the worst.</p></div></div>
+</section>
+
+<section class="slide">
+  <div class="hd"><span class="num">06</span><div><h3>Tennis to dance video</h3>
+  <span class="job">Job: show one switch working.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Title and subtitle</span>
+    <p class="quote plain">Tennis to dance, direct switch<br>One of the 20 runs, cut at the end of tennis</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>One run out of the twenty, the direct style, cut at the end of tennis.</p></div></div>
+  <div class="media"><b>Embedded video:</b> tennis_to_dance_direct.mp4, 32 s, plain MuJoCo, label shows the policy in charge. Press play in slideshow mode.</div>
+  <div class="box"><div class="said"><span class="role card">The label in the corner shows which poli</span>
+    <p class="quote plain">The label in the corner shows which policy is in charge. 32 s, plain MuJoCo.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Watch the label switch. Plain MuJoCo is the second simulator, independent of training.</p></div></div>
+  <div class="box"><div class="said"><span class="role flag">Why it matters</span>
+    <p class="quote plain">Why it matters:  a switch can work with no extra training: the robot starts far from dance&#x27;s first pose and still recovers.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>At the moment of the switch the robot's pose is far from where dance starts, and it still recovers.</p></div></div>
+</section>
+
+<section class="slide">
+  <div class="hd"><span class="num">07</span><div><h3>Did the switch survive?</h3>
+  <span class="job">Job: give every number and point at the failures.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Title and subtitle</span>
+    <p class="quote plain">Did the switch survive?<br>Runs out of 20. Each policy alone survives 20 of 20.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Every number of the test. Each policy alone survives 20 of 20, so any drop is the switch.</p></div></div>
+  <div class="box"><div class="said"><span class="role data">Table</span>
+    <pre class="term">from -&gt; to       how I handed over  at A&#x27;s end  cut 30 %  cut 50 %  cut 70 %
+tennis -&gt; dance  direct             20          18        18        0
+tennis -&gt; dance  1 s ramp           19          20        20        19
+tennis -&gt; dance  via the stand      18          20        19        19
+dance -&gt; tennis  direct             20          20        20        20
+dance -&gt; tennis  1 s ramp           20          20        11        18
+dance -&gt; tennis  via the stand      1           8         7         2</pre></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Pink cells are the failures to point at: 0 (direct, arm up), 11 (ramp), and the whole 'via the stand' row from dance.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">What failed</span>
+    <p class="quote plain">What failed<br>Direct: only the cut with the arm up mid-serve, 0 of 20.<br><br>The 1 s ramp raised that case to 19 of 20, but another case fell to 11 of 20.<br><br>Through the stand was the worst: down to 1 of 20.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Three sentences that read the table for the audience.</p></div></div>
+  <div class="box"><div class="said"><span class="role flag">Why it matters</span>
+    <p class="quote plain">Why it matters:  in this test one cut (tennis at 70 %, arm up) failed every time: where the switch happens matters.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Only two motions and a few cut points were tested, so this is a first look. The idea of a safe pose to switch from drives Part 2.</p></div></div>
+</section>
+
+<section class="slide">
+  <div class="hd"><span class="num">08</span><div><h3>What the switch test told me</h3>
+  <span class="job">Job: turn the numbers into four lessons.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Title and subtitle</span>
+    <p class="quote plain">What the switch test told me<br>Four findings that shaped the rest of the week</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Four lessons, one per card.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">The motions do not start or end standing</span>
+    <p class="quote plain">The motions do not start or end standing<br>At the first and last frame the joints are far from the default standing pose. So I propose clips for the skill bag that start and end standing.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>A design proposal, not a proven rule: if skills hand over at the stand, clips that start and end standing make that easier. It is why the jumping-jacks clip was picked.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">A direct switch mostly works, but not always</span>
+    <p class="quote plain">A direct switch mostly works, but not always<br>It failed when the arm was up mid-serve, far from the pose dance starts from.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Extreme poses are the risk: the arm raised mid-serve is far from where dance starts.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">The tested ramp was inconsistent</span>
+    <p class="quote plain">The tested ramp was inconsistent<br>It helped one case and hurt another. The policies never saw ramps or pauses in training, so a blended target is new to them.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Mixed results across the cells. A likely reason: a policy only knows what it saw in training, and it never saw a slow blend.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">Motor springs alone did not hold the stand</span>
+    <p class="quote plain">Motor springs alone did not hold the stand<br>In one test, holding the default pose without a policy, the robot tipped over in about 3 s. The stand between skills has to be a balancing policy. That is Part 2.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p><strong>Motor springs</strong> = PD control: each motor pulls toward a target angle like a spring with damping. Nothing keeps the robot balanced. This was one 3 s test.</p></div></div>
+  <div class="box"><div class="said"><span class="role flag">Why it matters</span>
+    <p class="quote plain">Why it matters:  the stand in the middle of the bag must balance by itself, so I trained one next.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>This is the bridge to Part 2: the stand has to be a trained balancing policy.</p></div></div>
+</section>
+
+<div class="act">
+  <h2>Act 3 · Slides 9–16 — Part 2, walk and run on command</h2>
+  <p>A walking policy from Unitree&#x27;s code, a bug, and the delay fix.</p>
+</div>
+
+<section class="slide">
+  <div class="hd"><span class="num">09</span><div><h3>Part 2 divider</h3>
+  <span class="job">Job: announce the walking policy.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Title and subtitle</span>
+    <p class="quote plain">PART 2<br>Walk and run on command</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>A policy that follows a speed command. At speed 0 it is the stand that Part 1 asked for.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">A policy that follows a speed command, a</span>
+    <p class="quote plain">A policy that follows a speed command, and stands at zero</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Trained on the lab's RTX 5080 workstation.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">trained on the RTX 5080 workstation</span>
+    <p class="quote plain">trained on the RTX 5080 workstation</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The lab GPU machine; the ROG laptop only builds the slides.</p></div></div>
+</section>
+
+<section class="slide">
+  <div class="hd"><span class="num">10</span><div><h3>Where the walking policy came from</h3>
+  <span class="job">Job: say whose code it is and how it was trained.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Title and subtitle</span>
+    <p class="quote plain">Where the walking policy came from<br>Unitree&#x27;s own open-source training code, trained by me</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Honest credit: Unitree wrote the task, I trained it.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">Unitree&#x27;s R1 task, my training run</span>
+    <p class="quote plain">Unitree&#x27;s R1 task, my training run<br>Unitree&#x27;s open-source repo unitree_rl_mjlab has an R1 task that follows a speed command. I set it up in its own environment and trained it: 4,096 simulated environments in parallel, 10,001 iterations, 4 h 50 min.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p><strong>unitree_rl_mjlab</strong> is Unitree's open-source training repo with C++ code that runs policies on the real robot. The 4,096 environments are parallel simulated copies. An <strong>iteration</strong> is one round of training: all copies act briefly, then the network updates once.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">One run, two policies</span>
+    <p class="quote plain">One run, two policies<br>Halfway through, the task raises the top forward speed from 1 m/s to 2 m/s. So one run gave me a walk (iteration 5,000) and a faster version (iteration 10,000).</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Checkpoint 5,000 never trained above 1 m/s; checkpoint 10,000 trained up to 2 m/s.</p></div></div>
+  <div class="media"><b>Image:</b> chart, terminal panel or still from the results folders, used unchanged.</div>
+  <div class="box"><div class="said"><span class="role card">Two earlier launches failed: one stopped</span>
+    <p class="quote plain">Two earlier launches failed: one stopped when I closed the session, one trained a single simulated environment. I now check the environment count in the log right after launch.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The terminal above is real log output: 4,096 environments, no falls at the last iteration, 4 h 50 min. The failed launches come from the workstation's brief and are said plainly.</p></div></div>
+</section>
+
+<section class="slide">
+  <div class="hd"><span class="num">11</span><div><h3>Walk and faster walk videos</h3>
+  <span class="job">Job: show both checkpoints moving.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Title and subtitle</span>
+    <p class="quote plain">Walk and faster walk<br>Rendered in the training simulator; the speed command changes every 4 s</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Both videos are rendered in the training simulator.</p></div></div>
+  <div class="media"><b>Embedded video:</b> walk_model5000.mp4, 16 s, training simulator. Press play in slideshow mode.</div>
+  <div class="box"><div class="said"><span class="role card">Walk (iteration 5,000): stand -&gt; 0.5 -&gt; </span>
+    <p class="quote plain">Walk (iteration 5,000): stand -&gt; 0.5 -&gt; 1.0 m/s -&gt; stop, 16 s</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The walk: stand, half a meter per second, one meter per second, stop.</p></div></div>
+  <div class="media"><b>Embedded video:</b> run_model10000.mp4, 23 s, training simulator. Press play in slideshow mode.</div>
+  <div class="box"><div class="said"><span class="role card">Faster (iteration 10,000): stand -&gt; 0.5 </span>
+    <p class="quote plain">Faster (iteration 10,000): stand -&gt; 0.5 -&gt; 1.0 -&gt; 1.5 -&gt; 2.0 m/s -&gt; stop, 23 s</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Up to 2 m/s. The slow turn toward the camera is heading drift (about 1.5 degrees per second, nothing holds the heading), not a spin.</p></div></div>
+  <div class="box"><div class="said"><span class="role flag">Why it matters</span>
+    <p class="quote plain">Why it matters:  one policy covers standing, walking and walking fast, steered only by the speed I give it.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>One policy, steered only by a speed number: that is what a game controller sends.</p></div></div>
+</section>
+
+<section class="slide">
+  <div class="hd"><span class="num">12</span><div><h3>Speed tracking</h3>
+  <span class="job">Job: show it follows the command, and name the limits.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Title and subtitle</span>
+    <p class="quote plain">How well it follows the speed command<br>Training simulator: 64 simulated runs per speed, average over the last 16 s of 20 s</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>64 simulated runs per speed; the first 4 s are skipped and speed is averaged over the final 16 s.</p></div></div>
+  <div class="box"><div class="said"><span class="role data">Table</span>
+    <pre class="term">command (m/s)     walk (it. 5,000)  faster (it. 10,000)
+-0.5 (backwards)  --                -0.43
+0 (stand)         0.00              0.00
+0.5               0.47              0.45
+1.0               0.96              0.96
+1.5               1.44              1.51
+2.0               37 of 64 fell     1.98</pre></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Read across: asked speed, then what each checkpoint reached. The pink cell: the walk was never trained at 2 m/s, so it falls there.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">2.0 m/s is a fast walk, not a run</span>
+    <p class="quote plain">2.0 m/s is a fast walk, not a run<br>Both feet are off the ground only 2.7 % of the time, so I call it a fast walk.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Running has moments with both feet in the air. 2.7 % is almost none, so the honest word is fast walk.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">It stops without falling</span>
+    <p class="quote plain">It stops without falling<br>From 2.0 m/s it needs 0.86 m to stop; from 1.0 m/s, 0.40 m.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Stopping distance grows with speed, as expected.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">At zero it stands still</span>
+    <p class="quote plain">At zero it stands still<br>192 simulated runs (64 per checkpoint), none fell, drift under 5 mm in 16 s. This is the stand the switch test asked for.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>192 simulated runs = 64 for each of three checkpoints. This answers Part 1's need for a balancing stand, in simulation, without pushes.</p></div></div>
+  <div class="box"><div class="said"><span class="role flag">Why it matters</span>
+    <p class="quote plain">Why it matters:  Within trained command cells, the largest speed gap is 0.07 m/s; the walk checkpoint falls at 2.0 m/s.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Within tested commands each model was trained to follow, the largest gap is 0.07 m/s. The walk model falls at 2 m/s.</p></div></div>
+</section>
+
+<section class="slide">
+  <div class="hd"><span class="num">13</span><div><h3>Deploy-file bug</h3>
+  <span class="job">Job: report a real bug found before hardware.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Title and subtitle</span>
+    <p class="quote plain">A bug in Unitree&#x27;s deploy file<br>Found in a CPU simulation that feeds the policy the way the real robot&#x27;s code does</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p><strong>Deploy</strong> = the C++ program and settings file that run a trained policy on the real robot.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">What I found</span>
+    <p class="quote plain">What I found<br>I wrote a second check in plain CPU MuJoCo that builds the policy&#x27;s inputs like Unitree&#x27;s C++ deploy code. In the parity check, the exported ONNX actor and trained Torch actor differed by at most 0.000002 (walk_run_eval_2026-10-22/README.md, section 5). This checks actor outputs only, not full deploy-input or hardware parity.<br><br>In this CPU simulation, with the deploy file Unitree ships, the robot fell in every walking run, usually within 2 s and always within 3 s.<br><br>The file scales every joint command by 0.25. Training scaled each joint group differently. I made a corrected copy (v1). For a first real-robot test I would also cap the speed at 1 m/s.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The CPU check copies how the robot's own code feeds the policy. The 0.000002 is the maximum difference between ONNX and Torch actor outputs only (walk_run_eval_2026-10-22/README.md, section 5); it does not prove full deploy-input or hardware parity. Every walking run fell in this simulation; the median was about 1.5 s and none lasted past 3 s.</p></div></div>
+  <div class="box"><div class="said"><span class="role data">Table</span>
+    <pre class="term">joint group                 shipped  trained
+legs and waist              0.25     0.15
+ankles                      0.25     0.3125
+shoulder pitch, roll        0.25     0.375
+shoulder yaw, elbow, wrist  0.25     0.4125</pre></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Pink: the shipped file uses 0.25 everywhere. Training used a different value per joint group.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">How much one unit of policy output moves</span>
+    <p class="quote plain">How much one unit of policy output moves the joint target, per joint group.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The table's caption. An <strong>action scale</strong> turns the policy's output into a joint target; a wrong scale makes every command too big or too small for that joint.</p></div></div>
+  <div class="box"><div class="said"><span class="role flag">Why it matters</span>
+    <p class="quote plain">Why it matters:  the shipped settings failed in this CPU simulation; the corrected file is ready for a later real test.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Found in CPU simulation; nothing ran on the real robot. Unitree has not been told yet.</p></div></div>
+</section>
+
+<section class="slide">
+  <div class="hd"><span class="num">14</span><div><h3>Standing under delay</h3>
+  <span class="job">Job: show the weak spot and the fix plan.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Title and subtitle</span>
+    <p class="quote plain">Standing was the weak skill under delay<br>So I applied the paper&#x27;s recipe to the walking policy</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>A surprise: standing, not running, was the most sensitive to delay.</p></div></div>
+  <div class="media"><b>Image:</b> chart, terminal panel or still from the results folders, used unchanged.</div>
+  <div class="box"><div class="said"><span class="role card">Standing (command 0), 10 runs per delay.</span>
+    <p class="quote plain">Standing (command 0), 10 runs per delay. Columns: delay in ms, runs survived, average speed.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The terminal is real output: top block the original policy, bottom block the delay-trained one. 6/10 at 40 ms becomes 10/10.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">The problem</span>
+    <p class="quote plain">The problem<br>With 40 ms of command delay, the walking policy fell while standing in 4 of 10 runs: a slow wobble that grows. Walking held up better than standing.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>A slow wobble that grows until the robot falls.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">Delay arm</span>
+    <p class="quote plain">Delay arm<br>3,000 more iterations with a random 0-50 ms delay, as in the paper.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The paper's recipe: practise with random delays up to 50 ms.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">Control arm</span>
+    <p class="quote plain">Control arm<br>The same 3,000 iterations without delay: a matched comparison for the delay.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The <strong>control</strong> gets the same extra training without delay. With one seed per arm it supports the delay explanation but does not prove it.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">One fix on the way: the training library</span>
+    <p class="quote plain">One fix on the way: the training library gave each joint group its own random delay. I set the simulation so all 24 joints share one delay, and checked it.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>How the simulation was set up: one delay shared by all 24 joints. How real motors receive commands was not measured.</p></div></div>
+  <div class="box"><div class="said"><span class="role flag">Why it matters</span>
+    <p class="quote plain">Why it matters:  In this CPU simulation, standing was sensitive to the tested command delays; real-system delay is not measured here.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>This CPU simulation shows the stand's response to the tested delays. Actual command delay on the R1 has not been measured here.</p></div></div>
+</section>
+
+<section class="slide">
+  <div class="hd"><span class="num">15</span><div><h3>Delay chart</h3>
+  <span class="job">Job: show the fix worked and why it is the delay.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Title and subtitle</span>
+    <p class="quote plain">Delay training moved the limit past 60 ms<br>Runs that survived out of 50 (5 speeds x 10 runs), CPU check simulator</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Each point is 50 runs: 5 speeds times 10.</p></div></div>
+  <div class="media"><b>Image:</b> chart, terminal panel or still from the results folders, used unchanged.</div>
+  <div class="box"><div class="said"><span class="role card">What the chart shows</span>
+    <p class="quote plain">What the chart shows<br>Base and control fail between 40 and 60 ms.<br><br>The 3,000 extra plain iterations did not move the limit.<br><br>Delay-trained: 50 of 50 up to 60 ms, 46 at 80 ms. Its only failures are standing at 80 ms, 6 of 10 survived.<br><br>One training run (seed) per arm.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Green and orange overlap: extra plain training changed nothing. Blue holds to 60 ms.</p></div></div>
+  <div class="box"><div class="said"><span class="role flag">Why it matters</span>
+    <p class="quote plain">Why it matters:  this run&#x27;s matched control supports delay training as the reason; one seed, so more seeds are needed.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The same pattern as the paper, on a different kind of policy; one seed per arm.</p></div></div>
+</section>
+
+<section class="slide">
+  <div class="hd"><span class="num">16</span><div><h3>Delay-trained walk video</h3>
+  <span class="job">Job: show the fixed policy and its cost.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Title and subtitle</span>
+    <p class="quote plain">The delay-trained walk<br>Speed command 0 -&gt; 0.5 -&gt; 1.0 -&gt; 1.5 -&gt; 2.0 -&gt; 0 m/s, 4 s each</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The fixed policy, from standing to 2 m/s and back, no falls.</p></div></div>
+  <div class="media"><b>Embedded video:</b> walk_run_delay_model12999.mp4, 23 s, training simulator, delay-trained policy. Press play in slideshow mode.</div>
+  <div class="box"><div class="said"><span class="role card">Delay-trained policy, training simulator</span>
+    <p class="quote plain">Delay-trained policy, training simulator, no falls</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Rendered in the training simulator.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">What it costs</span>
+    <p class="quote plain">What it costs<br>At a 2.0 m/s command it reaches 1.85 m/s, about 7.5 % below.<br><br>Backwards at -0.5 m/s it reaches -0.39, about 22 % below.<br><br>From 0 to 1.0 m/s it matches the others.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>About 7.5 % below the 2.0 m/s command forward and about 22 % below backwards. Up to 1 m/s nothing changes.</p></div></div>
+  <div class="box"><div class="said"><span class="role flag">Why it matters</span>
+    <p class="quote plain">Why it matters:  1.85 vs 2.0 m/s forward and -0.39 vs -0.5 backward buy a 60 ms margin: my best simulated stand candidate.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>A 60 ms margin at stand, in simulation, in exchange for that speed.</p></div></div>
+</section>
+
+<div class="act">
+  <h2>Act 4 · Slides 17–21 — Part 3, a jump from a video</h2>
+  <p>Jumping jacks work; jump rope fails before training.</p>
+</div>
+
+<section class="slide">
+  <div class="hd"><span class="num">17</span><div><h3>Part 3 divider</h3>
+  <span class="job">Job: announce the jump.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Title and subtitle</span>
+    <p class="quote plain">PART 3<br>A jump from a video</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>A jump, made from a stock video by the same pipeline as the earlier motions.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">Two stock clips through the unchanged pipeline</span>
+    <p class="quote plain">Two stock clips through the unchanged pipeline<br>video -&gt; GVHMR -&gt; GMR -&gt; mjlab training -&gt; plain MuJoCo check</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p><strong>GVHMR</strong> estimates a 3D human body from ordinary video; <strong>GMR</strong> maps it onto the robot's joints; <strong>mjlab</strong> trains the policy on the GPU; plain MuJoCo is the independent check.</p></div></div>
+</section>
+
+<section class="slide">
+  <div class="hd"><span class="num">18</span><div><h3>Picking a clip</h3>
+  <span class="job">Job: show how the clip was chosen.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Title and subtitle</span>
+    <p class="quote plain">Picking a clip<br>I downloaded 11 Pexels clips and checked each one</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Eleven free Pexels clips, each checked by a script and by eye.</p></div></div>
+  <div class="box"><div class="said"><span class="role data">Table</span>
+    <pre class="term">rejected                    why
+two &quot;person jumping&quot; clips  body cut off in every frame, camera moving
+two jump-rope clips         framed from the waist up
+gym clip                    two people
+trampoline                  not flat ground
+parkour leap                slow motion, so the timing is wrong
+bed jumping                 several people</pre></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Each reason is something GVHMR needs, as found last week: whole body, one person, fixed camera, flat ground, real-time speed.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">Chosen</span>
+    <p class="quote plain">Chosen<br>Jumping jacks: one person, whole body in frame, fixed camera, real flight, and it starts and ends standing.<br><br>Jump rope: fixed camera, small fast hops.<br><br>I found no clean clip of a single vertical jump.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Jumping jacks also starts and ends standing, which Part 1 said every skill should.</p></div></div>
+  <div class="box"><div class="said"><span class="role flag">Why it matters</span>
+    <p class="quote plain">Why it matters:  the pipeline is only as good as the video: choosing the clip is half the work.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Most of the work of a new skill is finding a usable video.</p></div></div>
+</section>
+
+<section class="slide">
+  <div class="hd"><span class="num">19</span><div><h3>Jumping jacks video</h3>
+  <span class="job">Job: show the jump working.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Title and subtitle</span>
+    <p class="quote plain">Jumping jacks: video next to the R1<br>10.4 s, about 10 jumping jacks (20 jumps)</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>About 10 jumping jacks, 20 jumps, in 10.4 s.</p></div></div>
+  <div class="media"><b>Embedded video:</b> jumping_jacks_side_by_side.mp4, 10.4 s, original video next to the R1 in plain MuJoCo. Press play in slideshow mode.</div>
+  <div class="box"><div class="said"><span class="role card">Left: original video (Kindel Media, Pexe</span>
+    <p class="quote plain">Left: original video (Kindel Media, Pexels). Right: the delay-trained R1 policy in plain MuJoCo, frame-synced.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Frame-synced: the same moment on both sides. Credit to Kindel Media on Pexels.</p></div></div>
+  <div class="box"><div class="said"><span class="role flag">Why it matters</span>
+    <p class="quote plain">Why it matters:  the bag has a simulated jump with a flight phase (both feet up 20 % of the time) that starts and ends standing.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>20 % of the time both feet are in the air: a simulated jump with a flight phase, not a shuffle.</p></div></div>
+</section>
+
+<section class="slide">
+  <div class="hd"><span class="num">20</span><div><h3>Jumping jacks under delay</h3>
+  <span class="job">Job: show the delay fix carries over.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Title and subtitle</span>
+    <p class="quote plain">Jumping jacks under delay<br>Runs that survived out of 20, CPU MuJoCo: one fixed delay per run, plus the training&#x27;s random changes</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p><strong>Training randomization</strong> = the random changes used in training (friction, mass, motor strength, sensor offsets), kept on in this check.</p></div></div>
+  <div class="media"><b>Image:</b> chart, terminal panel or still from the results folders, used unchanged.</div>
+  <div class="box"><div class="said"><span class="role card">Same pattern as walking</span>
+    <p class="quote plain">Same pattern as walking<br>Plain policy: 2 of 20 at 40 ms.<br>Delay-trained: 20 of 20 up to 50 ms, 19 at 60 ms.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Plain: falls apart at 40 ms. Delay-trained: holds to 50 ms and nearly to 60.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">Tracking</span>
+    <p class="quote plain">Tracking<br>Average joint-angle error: about 34 degrees (0.59 rad) with no random changes.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Average joint-angle error was about 34 degrees (0.59 rad) without random changes.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">Weak point: pushes</span>
+    <p class="quote plain">Weak point: pushes<br>Three times stronger pushes: 8 of 20 without delay training, 11 of 20 with it. A push in the air cannot be corrected until the robot lands.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p><strong>x3 pushes</strong> = three times the shove strength used in training. In the air the robot cannot react until it lands.</p></div></div>
+  <div class="box"><div class="said"><span class="role flag">Why it matters</span>
+    <p class="quote plain">Why it matters:  it improved in this run, like walking; one seed and 3,000 extra iterations, so the cause is not isolated.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Better in this run, but one seed and 3,000 extra iterations: the cause is not isolated.</p></div></div>
+</section>
+
+<section class="slide">
+  <div class="hd"><span class="num">21</span><div><h3>Jump rope failure</h3>
+  <span class="job">Job: explain a failure honestly and where it comes from.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Title and subtitle</span>
+    <p class="quote plain">Jump rope: the robot follows a wrong reference<br>The problem enters before training</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>A failure, explained, not hidden.</p></div></div>
+  <div class="media"><b>Image:</b> chart, terminal panel or still from the results folders, used unchanged.</div>
+  <div class="box"><div class="said"><span class="role card">video and R1 policy, same moment</span>
+    <p class="quote plain">video and R1 policy, same moment</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Top: the person and the robot at the same moment. The arms differ.</p></div></div>
+  <div class="media"><b>Image:</b> chart, terminal panel or still from the results folders, used unchanged.</div>
+  <div class="box"><div class="said"><span class="role card">the reference motion by itself: no physi</span>
+    <p class="quote plain">the reference motion by itself: no physics, no policy</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The <strong>reference</strong> is the target motion made from the video. Drawn alone, with no physics and no policy, it already has the arms out.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">What went wrong</span>
+    <p class="quote plain">What went wrong<br>The person hops about 26 times. The robot barely leaves the ground (0.5 % of the time), holds its arms out to the sides and leans its torso.<br><br>I drew the reference motion by itself, with no physics and no policy. It already has the arms out. The policy is tracking a wrong target.<br><br>So the error comes from GVHMR, from GMR, or from both. I have not yet found which one. For the skill bag I use jumping jacks.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The policy copies its target well; the target itself is wrong, so more training would not fix it. The open question is which stage bends the arms: GVHMR (video to human body) or GMR (human body to robot).</p></div></div>
+  <div class="box"><div class="said"><span class="role flag">Why it matters</span>
+    <p class="quote plain">Why it matters:  check the copied motion first, before blaming training.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Before retraining anything, look at the motion the robot is asked to copy.</p></div></div>
+</section>
+
+<div class="act">
+  <h2>Act 5 · Slides 22–24 — honesty, next steps, references</h2>
+  <p>What is not shown, the plan, the question.</p>
+</div>
+
+<section class="slide">
+  <div class="hd"><span class="num">22</span><div><h3>What this does not show</h3>
+  <span class="job">Job: bound every claim before someone else does.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Title and subtitle</span>
+    <p class="quote plain">What this does not show<br>The honest slide</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The honest slide. Every item limits a claim made earlier.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">Everything is simulation. Nothing ran on a real </span>
+    <p class="quote plain">Everything is simulation. Nothing ran on a real R1.<br>One training seed per arm for walk and run, and one per jump clip.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>No hardware run of any kind.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">The switch test used two motions and pol</span>
+    <p class="quote plain">The switch test used two motions and policies trained without delay. &quot;Survived&quot; uses the training rules for a fall, which allow large joint error.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The fall rules allow large joint error, so 'survived' is a generous word.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">I have not yet tested switching from a m</span>
+    <p class="quote plain">I have not yet tested switching from a motion policy into the walking policy&#x27;s stand.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The key next test: motion policy into the walking stand.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">The &quot;run&quot; is a fast walk: both feet are in the a</span>
+    <p class="quote plain">The &quot;run&quot; is a fast walk: both feet are in the air only 2.7 % of the time.<br>For the jump clips, the delay stage also adds 3,000 iterations. Only the walk control and the paper&#x27;s seed study separate the delay from extra training.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Repeated from slide 12 on purpose.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">The CPU check for walking has no pushes,</span>
+    <p class="quote plain">The CPU check for walking has no pushes, sensor noise or rough ground.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>No pushes, sensor noise or rough ground in the walking check.</p></div></div>
+</section>
+
+<section class="slide">
+  <div class="hd"><span class="num">23</span><div><h3>Next</h3>
+  <span class="job">Job: give the plan and ask Prof. Sun the question.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Title and subtitle</span>
+    <p class="quote plain">Next<br>My plan, in order</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Three steps, in order.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">1. Connect them</span>
+    <p class="quote plain">1. Connect them<br>Switch from a motion into the delay-trained stand and back.<br><br>Then walk -&gt; jumping jacks -&gt; walk in one MuJoCo scene: the first piece of the game.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>The first real piece of the game: several skills in one scene, no resets.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">2. A better jump</span>
+    <p class="quote plain">2. A better jump<br>Draw GVHMR&#x27;s body over the jump-rope video to find which stage goes wrong.<br><br>Find, or record on my phone, a clean vertical jump that starts and ends standing.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Find which stage breaks jump rope, and get a clean vertical jump.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">3. Question for Prof. Sun</span>
+    <p class="quote plain">3. Question for Prof. Sun<br>Before the gantry arrives, may I record the R1&#x27;s own sensor stream (rt/lowstate) while it stays still, with no motion commands?<br><br>The corrected deploy file is ready for later, speed capped at 1 m/s.</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p><strong>rt/lowstate</strong> is the R1's own data stream: joint angles, motor currents and the body sensor. The ask is only to record it while the robot stays still. What it can measure, and whether it is safe enough, are his call. Leave time for his answer.</p></div></div>
+</section>
+
+<section class="slide">
+  <div class="hd"><span class="num">24</span><div><h3>References</h3>
+  <span class="job">Job: credit every source with a link.</span></div></div>
+
+  <div class="box"><div class="said"><span class="role title">Title and subtitle</span>
+    <p class="quote plain">References<br>Everything used or cited in this deck, with links</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Every source in the deck, with clickable links in PowerPoint.</p></div></div>
+  <div class="box"><div class="said"><span class="role card">References list</span>
+    <p class="quote plain">unitree_rl_mjlab  (R1 walk/run task and C++ deploy)<br>Unitree Robotics, open source.<br>Code: github.com/unitreerobotics/unitree_rl_mjlab<br><br>mjlab  (GPU training framework)<br>MuJoCo-Warp, Isaac-Lab-style API; the tracking task follows BeyondMimic.<br>Code: github.com/mujocolab/mjlab<br><br>GVHMR  (video to SMPL-X human motion)<br>Shen et al., World-Grounded Human Motion Recovery via Gravity-View Coordinates. SIGGRAPH Asia 2024.<br>Code: github.com/zju3dv/GVHMR<br>Paper: arxiv.org/abs/2409.06662<br><br>GMR  (retargeting SMPL-X to the robot)<br>Araujo et al., Retargeting Matters: General Motion Retargeting for Humanoid Motion Tracking.<br>Code: github.com/YanjieZe/GMR<br>Paper: arxiv.org/abs/2510.02252<br><br>My paper  (L4DC 2027 submission)<br>Li and Sun, How Much Command Delay Can a Learned Humanoid Motion Tracker Tolerate? Delay Randomization and Sim-to-Sim Transfer. Under review.<br><br>Video-to-R1 pipeline  (my code and all results in this deck)<br>Results folders dated 2026-10-20 to 2026-10-23.<br>Repo: github.com/SunCCNY/Embodied-AI/tree/main/Presentations/Shaoqin-Li/Video-to-R1%20Pipeline<br><br>Video clips  (Pexels, free to use, credit given)<br>Elderly Man Doing Jumping Jacks Outside (Kindel Media); A Man Jumping Over The Skip Rope.<br>Jumping jacks: www.pexels.com/video/elderly-man-doing-jumping-jacks-outside-7299359/<br>Jump rope: www.pexels.com/video/a-man-jumping-over-the-skip-rope-4812842/<br><br>MuJoCo  (the second simulator)<br>Google DeepMind physics engine.<br>Code: github.com/google-deepmind/mujoco</p></div>
+    <div class="means"><span class="why">What it means</span>
+    <p>Code, papers, the clip credits and my own repo. Pexels clips are free to use; credit given.</p></div></div>
+</section>
+
+<footer>
+  <p>Deck: <b>Embodied AI Week 31.pptx</b>, 24 slides · Speaker script: <code>week31_speaker_script.md</code>
+  (also the slide notes) · Tests run 2026-10-20 to 2026-10-23, simulation only. Every number comes from the results
+  READMEs in the <a href="https://github.com/SunCCNY/Embodied-AI/tree/main/Presentations/Shaoqin-Li/Video-to-R1%20Pipeline">Video-to-R1 Pipeline</a>
+  folder; charts and terminal panels are the workstation's, used unchanged.</p>
+</footer>
+</div>
+</body></html>
