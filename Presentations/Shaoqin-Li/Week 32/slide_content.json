@@ -1,0 +1,751 @@
+[
+  {
+    "title": "Week 32 | Connecting running and jumping",
+    "sub": "Shaoqin Li · Applied and Embodied AI Lab · CCNY\nOctober 31, 2026 · Background → goal → experiments → measured results",
+    "boxes": [
+      {
+        "title": "Starting point",
+        "text": "Week 31: separate movement skills in simulation.",
+        "meaning": "Walking, jumping jacks and limited motion switching existed, but the complete continuous running-jump milestone had not been established."
+      },
+      {
+        "title": "This week’s question",
+        "text": "Can the R1 run, jump, land and keep running?",
+        "meaning": "The desired behavior is one continuous physics-controlled sequence. It is not an edited sequence of separate clips."
+      },
+      {
+        "title": "What I can show today",
+        "text": "Verified measurements and training curves; no new Week 32 rollout video.",
+        "meaning": "Historical Week 31 images are labeled explicitly. Week 32 figures are numerical evidence, not robot-motion images."
+      }
+    ],
+    "notes": "I will start with the project goal and what I had last week, because the meaning of this week’s results depends on that context. I am building a set of movement skills for the R1. Last week I had separate pieces. This week I worked on a continuous run, jump, landing and return to running. All the work is in simulation. The workstation handoff contains measurements and training logs, but no new rendered rollout video.",
+    "source": "Week 31 script; Week 32 P04/P08/P09 reports",
+    "chart": null,
+    "take": "",
+    "layout": "cards"
+  },
+  {
+    "title": "The project goal is a reusable bag of R1 movement skills",
+    "sub": "A skill should be controllable and connect to the next skill.",
+    "boxes": [
+      {
+        "title": "Robot and environment",
+        "text": "Unitree R1 humanoid, modeled in MuJoCo physics.",
+        "meaning": "MuJoCo computes contact, gravity and movement. The actor must balance the body by commanding joints; this is not a prerecorded animation."
+      },
+      {
+        "title": "Long-term use",
+        "text": "Move through a simulated scene: stand, walk, run, jump and perform actions.",
+        "meaning": "The skill-bag idea is to combine reusable behaviors for an interactive game or scene rather than train one long fixed performance."
+      },
+      {
+        "title": "Why connections matter",
+        "text": "A policy must recover into a usable state for the next action.",
+        "meaning": "A good-looking jump is insufficient if the robot falls after landing or cannot resume locomotion."
+      }
+    ],
+    "notes": "My long-term idea is a bag of skills that I can use in one simulated scene. The R1 should follow movement commands and perform actions while staying balanced. That makes transitions important: I need to know not only whether it can jump, but whether it can run into the jump and keep moving afterward. Nothing in this presentation is a physical-robot demonstration.",
+    "source": "Week 31 slides 1–2 and 22–23",
+    "chart": null,
+    "take": "",
+    "layout": "cards"
+  },
+  {
+    "title": "Week 31 established three separate pieces",
+    "sub": "These were useful starting points, not the completed Week 32 milestone.",
+    "boxes": [
+      {
+        "title": "Speed-controlled locomotion",
+        "text": "One policy could stand, walk and move faster when I changed its speed command.",
+        "meaning": "The fast gait was still a fast walk: brief time with both feet airborne did not meet the later true-running contract."
+      },
+      {
+        "title": "Video-based jumping jacks",
+        "text": "A separate tracking policy followed a retargeted jumping-jacks motion.",
+        "meaning": "This demonstrated a simulated jump-like skill with flight phases, primarily around one place; it was not a forward running jump."
+      },
+      {
+        "title": "A first switching test",
+        "text": "I tested handovers between tennis and dance policies.",
+        "meaning": "Some direct switches worked; difficult poses and standing-pose handovers exposed limitations. This did not establish a general skill-composition system."
+      }
+    ],
+    "notes": "Week 31 had three parts. First, I trained a speed-command locomotion policy. Second, I obtained a jumping-jacks tracker through the human-video pipeline. Third, I tried switching between two other motion policies. Those results showed useful individual skills, but they did not prove that one robot state could flow through running, a forward jump, landing and running again.",
+    "source": "Week 31 slides 5–8, 10–12, 18–22",
+    "chart": null,
+    "take": "",
+    "layout": "cards"
+  },
+  {
+    "title": "These images show the Week 31 starting point",
+    "sub": "HISTORICAL WEEK 31 IMAGES · NOT evidence of the new Week 32 policies",
+    "boxes": [],
+    "notes": "These are two historical frames from the previous presentation. The left is the delay-trained locomotion policy, and the right is the jumping-jacks comparison between a human video and the simulated R1. I am showing them only to make the starting point concrete. They are not images of the new command-jump or imitation policies evaluated this week.\n\nThe first slides explain the Week 31 background; all Week 32 counts refer to simulation. Historical pictures are explicitly labeled and do not substitute for current rollout media.",
+    "source": "Week 31 poster_walk_run_delay.png; poster_jumping_jacks.png",
+    "chart": null,
+    "take": "Week 31 showed separate skills; Week 32 asked whether running and jumping could form one sequence.",
+    "layout": "cards",
+    "pictures": [
+      {
+        "file": "week31_historical_walk.png",
+        "label": "WEEK 31 · Speed-command locomotion"
+      },
+      {
+        "file": "week31_historical_jacks.png",
+        "label": "WEEK 31 · Human video and jumping-jacks tracker"
+      }
+    ]
+  },
+  {
+    "title": "Week 31 left three specific gaps",
+    "sub": "These gaps explain the experiment order in Week 32.",
+    "boxes": [
+      {
+        "title": "Fast walk ≠ true run",
+        "text": "Speed alone did not establish a running gait.",
+        "meaning": "The later running test requires repeated brief flight phases and alternating support, not just a high commanded speed."
+      },
+      {
+        "title": "Jumping jacks ≠ running jump",
+        "text": "A jump in place did not establish approach, forward travel and recovery.",
+        "meaning": "A continuous running jump needs the skills to work while the body is already moving and after the landing."
+      },
+      {
+        "title": "Working once ≠ reliable skill",
+        "text": "Delay and difficult transitions could break a policy.",
+        "meaning": "Repeated seeded evaluations, disturbed conditions and defined failure criteria are needed before a stronger claim."
+      }
+    ],
+    "notes": "The important distinction is between the names of the skills and the measured behavior. A policy going fast can still be walking. Jumping jacks can leave the ground without solving a running jump. And one successful rollout does not tell me how the skill handles different timing or delays. Those were the gaps I turned into explicit tests.",
+    "source": "Week 31 slides 12, 14–16, 20, 22",
+    "chart": null,
+    "take": "",
+    "layout": "cards"
+  },
+  {
+    "title": "Week 32 targeted one continuous running-jump sequence",
+    "sub": "I tested the whole sequence, not just whether both feet left the floor.",
+    "boxes": [],
+    "notes": "This diagram is the goal, not a rollout image. The policy should establish a run, take off into a larger jump, travel forward in flight, land, and return to running. The simulator is not reset between phases. I also need to distinguish the large commanded jump from the short flight phases that occur naturally while running.",
+    "source": "P04 fallback specification; P08 contract",
+    "chart": "week32_goal.png",
+    "take": "The goal includes the approach and recovery, not only the airborne moment.",
+    "layout": "cards"
+  },
+  {
+    "title": "I split the week into a prerequisite and two routes",
+    "sub": "This keeps the command-policy result separate from the imitation result.",
+    "boxes": [
+      {
+        "title": "First · establish true running",
+        "text": "I changed the fast-walk task and checked a genuine flight-based running test.",
+        "meaning": "This created a running controller to build on, before adding a jump request."
+      },
+      {
+        "title": "Route A · commanded jump",
+        "text": "I taught the controller to respond to an explicit jump request.",
+        "meaning": "This route does not copy a human running-jump reference. Its rewards and command signal specify the behavior."
+      },
+      {
+        "title": "Route B · motion imitation",
+        "text": "I repaired a human running-jump reference and trained a separate tracker.",
+        "meaning": "This route tests whether the R1 can follow the reference under physics. It has different inputs and a separate success test."
+      }
+    ],
+    "notes": "There are two routes in the results, not one policy that changed its purpose halfway through. I first needed a true-running controller. One route extended that controller with a jump command. In parallel, the other route prepared a running-jump motion reference for a separate imitation tracker. Success in the command route does not make the imitation route a success.",
+    "source": "P04 README/JUMP_STAGE; P02; P08/P09 plans",
+    "chart": null,
+    "take": "",
+    "layout": "cards"
+  },
+  {
+    "title": "Four terms make the rest of the talk easier to follow",
+    "sub": "A learned controller is different from the motion it is trying to follow.",
+    "boxes": [
+      {
+        "title": "Policy",
+        "text": "The trained controller: robot observations in, joint commands out.",
+        "meaning": "The policy runs repeatedly while physics advances; it must react to the body state, not merely play recorded joint angles."
+      },
+      {
+        "title": "Reference",
+        "text": "A desired motion trajectory, expressed for the R1 body.",
+        "meaning": "A reference tells the tracker where the body and joints should be over time. It is a target, not proof that a robot can physically execute it."
+      },
+      {
+        "title": "Training versus evaluation",
+        "text": "Training updates the policy; evaluation freezes it and measures behavior.",
+        "meaning": "A reward is a numerical training incentive. An evaluation gate is a fixed success requirement; a high reward or long episode does not override a failed gate."
+      }
+    ],
+    "notes": "A policy is the actual learned controller. A reference is a target motion. Training changes the controller to pursue its rewards or reference, while evaluation freezes the controller and applies a fixed test. This is why I separate the learning curves from the final success counts. The terms are related but not interchangeable.",
+    "source": "P04/P09 task and evaluation contracts",
+    "chart": null,
+    "take": "",
+    "layout": "cards"
+  },
+  {
+    "title": "I kept the two policy families separate",
+    "sub": "Their inputs, robot models and success tests are different.",
+    "boxes": [
+      {
+        "title": "Route A · command policy",
+        "text": "Run command → jump countdown → learned response",
+        "meaning": "The jump is requested by an explicit countdown; it is not replaying a human motion reference."
+      },
+      {
+        "title": "Route B · imitation policy",
+        "text": "Human motion → R1 reference → tracking policy",
+        "meaning": "The actor observes a reference-dependent tracking task, including time/reference semantics."
+      },
+      {
+        "title": "Comparison rule",
+        "text": "I reported each family under its own frozen gates.",
+        "meaning": "Do not transfer landing forces, motor limits or success thresholds between the two embodiments."
+      }
+    ],
+    "notes": "These are two approaches to the same milestone. The command policy learns what to do when I request a jump. The tracking policy follows a retargeted motion. Their observation spaces and actuator models differ, so I do not compare them as matched experiments.",
+    "source": "P08 manifest; P09 export parity/config manifests",
+    "chart": null,
+    "take": "",
+    "layout": "cards"
+  },
+  {
+    "title": "I froze the evaluation before choosing a model",
+    "sub": "Training ran in mjlab; strict evaluation used saved policies in CPU MuJoCo.",
+    "boxes": [
+      {
+        "title": "Training setup",
+        "text": "4,096 simulated environments\nOne GPU job at a time\nSaved checkpoints and configuration pins",
+        "meaning": "The 4,096 count is the number of parallel simulated environments, not robots or independent training seeds."
+      },
+      {
+        "title": "Evaluation setup",
+        "text": "20 seeded episodes per row\nFull test target: at least 16/20\nOriginal c2 bank and thresholds",
+        "meaning": "The fixed 7000–7019 bank supports model selection; it is not an untouched confirmation bank."
+      },
+      {
+        "title": "Two different flight gates",
+        "text": "Command policy: at least 0.12 s\nOriginal c2 imitation: at least 0.24 s",
+        "meaning": "The imitation threshold is tied to the original human source. A previous report typo confused these gates; scoring used the correct values."
+      }
+    ],
+    "notes": "I loaded pinned checkpoints rather than a latest-file guess. I kept the original detector and thresholds during evaluation. For imitation, I used the same twenty initial-condition seeds to compare candidates; those are evaluation episodes, not twenty independent training runs.",
+    "source": "P08 run_jump_metrics; P09 s6_eval.py",
+    "chart": null,
+    "take": "",
+    "layout": "cards"
+  },
+  {
+    "title": "Before jumping, I trained and verified a true running gait",
+    "sub": "Week 32 prerequisite · speed-command fine-tune · 20 simulated trials",
+    "boxes": [
+      {
+        "title": "What I changed",
+        "text": "I adjusted the running gait schedule and rewarded real flight at faster commands.",
+        "meaning": "The parent was the Week 31 speed-command policy, not a new human-motion tracker. A second fine-tune increased foot-clearance margin."
+      },
+      {
+        "title": "What the running test required",
+        "text": "Forward speed, repeated flight phases, alternating steps and no fall.",
+        "meaning": "Both feet must be off the ground under force-and-height checks. Short windows throughout the run must satisfy the gait requirements."
+      },
+      {
+        "title": "Measured result",
+        "text": "20/20 passed at a 2.0 m/s command; about 16.7% airborne time.",
+        "meaning": "The selected running parent averaged about 1.95 m/s in this saved evaluation. It was then used to initialize the commanded-jump task."
+      }
+    ],
+    "notes": "This is a step missing from my earlier summary. I did not jump directly from Week 31’s fast walk to the final jump result. I first fine-tuned that locomotion policy to produce a genuine running gait and checked it under a flight-based contract. The selected second version passed all twenty steady-running trials at a two-meter-per-second command, with about sixteen-point-seven percent airborne time. This was a running result, not yet a running-jump result.",
+    "source": "P04 raw/runftv2_model_14498_vx2.json; JUMP_STAGE §1",
+    "chart": null,
+    "take": "",
+    "layout": "cards"
+  },
+  {
+    "title": "I then gave that running controller a jump request",
+    "sub": "A countdown signal told the controller when a larger jump was requested.",
+    "boxes": [
+      {
+        "title": "Before the request",
+        "text": "Keep running at the requested forward speed.",
+        "meaning": "The policy already had a running behavior; the jump training was initialized from that controller."
+      },
+      {
+        "title": "At the request",
+        "text": "A short countdown input activated jump-specific rewards.",
+        "meaning": "The new input changed the observation contract from 83 to 84 values. The policy still controlled the same robot joints."
+      },
+      {
+        "title": "After the landing",
+        "text": "Return to the running task without resetting the simulator.",
+        "meaning": "The test measures recovery speed and true running after landing. It does not count a jump followed by a fall as success."
+      }
+    ],
+    "notes": "For the command route I appended one jump-countdown input to the running controller. During a short requested window, the rewards encouraged the larger flight and height; outside the window, the normal running task remained. This makes the requested jump distinct from the small flight phases in an ordinary run. I tested the full before-and-after sequence in one physics rollout.",
+    "source": "P04 JUMP_STAGE §2; jump task self-tests",
+    "chart": null,
+    "take": "",
+    "layout": "cards"
+  },
+  {
+    "title": "My first commanded jump was too flat, so I fixed the target",
+    "sub": "I aligned the training reward with the height measured by the test.",
+    "boxes": [
+      {
+        "title": "First attempt",
+        "text": "0/20 full passes; mean rise after takeoff was about 3.0 cm.",
+        "meaning": "Other gates passed, but the jump-height requirement was at least 5 cm. The reward had measured pelvis rise from the command, counting some push-off height."
+      },
+      {
+        "title": "Correction",
+        "text": "Reward whole-body rise above the takeoff point, then continue training.",
+        "meaning": "I changed the rewarded height definition and its weight, retaining the evaluation gate. This was an engineering correction with extra training, not an isolated ablation."
+      },
+      {
+        "title": "Corrected result",
+        "text": "20/20 nominal passes; mean rise about 10.1 cm.",
+        "meaning": "The height increased, but the mean landing peak rose to about 8.8 body weights. That cost motivated the landing experiment shown next."
+      }
+    ],
+    "notes": "The first jump policy could make a long, flat leap but missed the height requirement. I found that its reward measured pelvis rise from the time of the request, while the test measured whole-body rise after takeoff. Those are different quantities. I changed the reward definition and weight, trained further and reported the fixed final checkpoint. It passed twenty of twenty nominal trials, but the stronger jump also made landing forces larger.",
+    "source": "P04 raw/jump_model_17497_jump_vx2.json; jumpapex_model_20496_jump_vx2.json",
+    "chart": null,
+    "take": "",
+    "layout": "cards"
+  },
+  {
+    "title": "I reproduced the nominal commanded jump",
+    "sub": "Original model_20496 · seed bank A · corrected evaluator",
+    "boxes": [],
+    "notes": "The original command policy passed all twenty nominal episodes. Two commands per episode gave forty successful events. Random command timing was weaker: sixteen of twenty passed, below the eighteen-of-twenty acceptance target. Friction edge cells passed.",
+    "source": "P08 S1/rework_v2 raw",
+    "chart": "nominal.png",
+    "take": "Random command timing remained a failed robustness cell: 16/20.",
+    "layout": "cards"
+  },
+  {
+    "title": "I found a clear action-delay boundary",
+    "sub": "The delay was inserted into the action path; this was not an observation-delay test.",
+    "boxes": [],
+    "notes": "At twenty-five milliseconds, the composite run-jump test failed even though the policy did not fall. At fifty milliseconds, all twenty episodes fell. Survival and the complete skill test are different outcomes.",
+    "source": "P08 S1/rework_v2 B0/D25/D50",
+    "chart": "delay.png",
+    "take": "No fall did not mean the complete run-jump skill passed.",
+    "layout": "cards"
+  },
+  {
+    "title": "I reduced landing peaks, but missed the target",
+    "sub": "The landing candidate kept nominal jump passes at 20/20.",
+    "boxes": [],
+    "notes": "The landing candidate reduced the mean peak from 8.77 to 6.27 body weights and the maximum from 10.00 to 8.01. But the target was a maximum no greater than seven. It missed that target and was not promoted. Torque saturation also increased.",
+    "source": "P08 S3/raw and S5/bankB B0",
+    "chart": "landing.png",
+    "take": "The landing target failed; the original policy remained the fallback.",
+    "layout": "cards"
+  },
+  {
+    "title": "I gained delay-tolerant running and lost the jump",
+    "sub": "S4 delay fine-tune · final model_26300 · no promotion",
+    "boxes": [
+      {
+        "title": "Running at 25 / 50 ms",
+        "text": "20/20 passed the run and no-fall checks.",
+        "meaning": "Under the candidate, both delay cells stayed upright and met the running subgates."
+      },
+      {
+        "title": "Full jump test",
+        "text": "0/20 in every evaluated cell.",
+        "meaning": "The candidate lost the jump even in the nominal setting; median B0 flight was 0.075 s with less than 1 mm rise."
+      },
+      {
+        "title": "My decision",
+        "text": "I rejected the candidate and kept model_20496.",
+        "meaning": "Improving a subskill did not satisfy the predeclared all-gates promotion rule."
+      }
+    ],
+    "notes": "Delay training changed the behavior, but not in the way I needed. The policy could run under the tested delays without falling, while the jump disappeared. I stopped this branch rather than choosing an earlier checkpoint after seeing the failure.",
+    "source": "P08 S4/raw; S5 decision",
+    "chart": null,
+    "take": "The desired run-jump delay envelope is still unsolved.",
+    "layout": "cards"
+  },
+  {
+    "title": "For imitation, I changed the source of the motion",
+    "sub": "Week 31 used human videos; this Week 32 branch used recorded human motion.",
+    "boxes": [
+      {
+        "title": "Week 31 pipeline",
+        "text": "Human video → estimated human pose → R1 target → trained tracker.",
+        "meaning": "A video reconstruction stage such as GVHMR estimates body movement before GMR maps it to the R1."
+      },
+      {
+        "title": "Week 32 source",
+        "text": "LAFAN1 recorded running-jump motions → R1 retargeting and repair.",
+        "meaning": "This branch did not obtain its references from a new camera-video reconstruction. Starting from recorded human motion removes that particular estimation step, not all reference problems."
+      },
+      {
+        "title": "Reference names",
+        "text": "c2: original running-jump target. c3: separately tested alternative.",
+        "meaning": "c2 source flight is 0.30 s, with a 0.24 s physical gate. c3 source flight is 0.40 s, with its own 0.32 s gate. They are not interchangeable tests."
+      }
+    ],
+    "notes": "The imitation route continues the idea of teaching motions from human data, but this week the source was different. Week 31 reconstructed movement from ordinary video. This running-jump branch used LAFAN1 recorded human motion, then retargeted and repaired it for the R1. I call the two chosen references c2 and c3 in the logs. These are just candidate names, not separate controller architectures. The alternative c3 keeps its own source-anchored test.",
+    "source": "Week 31 slides 18–21; P02 README; P09 A5 admission",
+    "chart": null,
+    "take": "",
+    "layout": "cards"
+  },
+  {
+    "title": "Then I built the imitation test around a repaired reference",
+    "sub": "Pipeline: source motion → retarget → repair/audit → train → strict rollout",
+    "boxes": [
+      {
+        "title": "Reference preparation",
+        "text": "I checked joint ranges, contact transitions and stored body poses.",
+        "meaning": "Kinematic admission catches representation and contact problems; it does not prove dynamic feasibility."
+      },
+      {
+        "title": "Native diagnosis",
+        "text": "The original pilot failed early in both the native environment and strict harness.",
+        "meaning": "A harness-only defect could not explain the whole failure; full equivalence was not established."
+      },
+      {
+        "title": "My next hypothesis",
+        "text": "I tested whether start-phase exposure was blocking progress.",
+        "meaning": "All 118 sampled starts before 2.5 seconds terminated on the end-effector condition in D0. This motivated A2, not a proof of causality."
+      }
+    ],
+    "notes": "The imitation path needed a reference the robot could at least represent. The original pilot failed during the approach, before the intended jump. I checked the stored motion and native environment, then tested changes to learning rather than declaring the robot incapable.",
+    "source": "P09 D0; S6 admission",
+    "chart": null,
+    "take": "",
+    "layout": "cards"
+  },
+  {
+    "title": "A complete imitation pass required four things together",
+    "sub": "At least 16 of 20 episodes must pass every requirement, not merely finish the clip.",
+    "boxes": [
+      {
+        "title": "1 · Complete without a fall",
+        "text": "Follow the full reference and avoid unintended body contact.",
+        "meaning": "The no-fall gate combines completion with no non-foot contact. A policy can finish the clip but still fail this gate."
+      },
+      {
+        "title": "2 · Flight and recovery",
+        "text": "Meet the required airborne duration, then regain forward speed.",
+        "meaning": "Original c2 requires at least 0.24 seconds of physical flight and recovery to about 2.31 m/s in the defined post-landing window."
+      },
+      {
+        "title": "3 · Track the joint motion",
+        "text": "Keep mean and peak-percentile joint errors within the fixed limits.",
+        "meaning": "The mean RMS limit is 0.15 radians, about 9 degrees; the 95th-percentile limit is 0.30 radians, about 17 degrees. These measure joint mismatch, not a fall."
+      }
+    ],
+    "notes": "The logs call this the L1 gate. I use full test in the slides. It is a conjunction: finishing without a fall or unintended body contact, enough physical flight, adequate recovery speed, and sufficiently accurate joint tracking. For the original c2 reference, physical flight must last at least 0.24 seconds. Mean joint RMS must stay at or below 0.15 radians, roughly nine degrees, with the higher-percentile bound also met. A row needs sixteen full passes out of twenty. The command route uses a different test, so its 0.12-second jump threshold must not be substituted here.",
+    "source": "P09 unchanged s6_eval.py; P03/P09 gate text",
+    "chart": null,
+    "take": "",
+    "layout": "cards"
+  },
+  {
+    "title": "I tested three explanations for the early tracking failure",
+    "sub": "A1, A2 and A3 are attempt names in the logs, not three different robots.",
+    "boxes": [
+      {
+        "title": "A1 · too-strict early termination?",
+        "text": "Temporarily widen the hands/feet tracking tolerance, then restore it.",
+        "meaning": "The hypothesis was that early stopping prevented useful learning. Final evaluation always kept the original strict tolerance."
+      },
+      {
+        "title": "A2 · start-phase exposure?",
+        "text": "Guarantee starts at the beginning, approach and jump transition.",
+        "meaning": "The hypothesis was that the original adaptive sampler concentrated on easier motion segments. Evaluation still started from frame zero."
+      },
+      {
+        "title": "A3 · too little speed incentive?",
+        "text": "Double the existing velocity-tracking reward weight.",
+        "meaning": "This kept the original sampler and tolerance. It tested whether the available velocity signal needed more emphasis; no reference or evaluation gate changed."
+      }
+    ],
+    "notes": "The original pilot ended before reaching the intended jump. I did not treat that as proof that the jump was physically impossible. I tested three learning explanations separately. A1 widened and then restored a tracking tolerance. A2 changed which reference phases training episodes began from. A3 increased an existing speed-tracking reward. Each was a fresh single-seed training attempt, with its one intended scientific change plus read-only diagnostics.",
+    "source": "P09 A1–A3 manifests; D0 diagnosis",
+    "chart": null,
+    "take": "",
+    "layout": "cards"
+  },
+  {
+    "title": "I changed where training episodes started",
+    "sub": "A2 retained the full motion and its reference pose/velocity at every reset.",
+    "boxes": [
+      {
+        "title": "25% · frame zero",
+        "text": "I repeatedly exposed the policy to the actual beginning.",
+        "meaning": "This supplies starts at the frame used by the strict evaluation."
+      },
+      {
+        "title": "25% · early approach",
+        "text": "I sampled starts between 0 and 1.5 seconds.",
+        "meaning": "This increases exposure to the approach segment without cropping away the rest."
+      },
+      {
+        "title": "25% · transition",
+        "text": "I sampled starts between 2.0 and 3.4 seconds.",
+        "meaning": "This covers takeoff and landing neighborhoods; the entire reference remains available."
+      },
+      {
+        "title": "25% · adaptive",
+        "text": "I kept the original full-clip adaptive sampler.",
+        "meaning": "The existing sampler and failure bookkeeping still contribute one component."
+      }
+    ],
+    "notes": "I split the starts into four equal components. This was a training-only change. The evaluation still began at frame zero with the original termination threshold. A2 was the first attempt to complete the clip, but this is still a single-seed observation.",
+    "source": "P09 A2 manifest; p09_cfgs_v2_copy.py",
+    "chart": null,
+    "take": "",
+    "layout": "cards"
+  },
+  {
+    "title": "Five attempts finished; none passed the full test gate",
+    "sub": "A1: tolerance · A2: start phases · A3: speed reward · A4: combined · A5: alternate reference",
+    "boxes": [],
+    "notes": "A1 relaxed the training termination threshold and then tightened it. A2 changed start-phase sampling. A3 increased velocity reward weight. A4 combined the A2 configuration with the velocity change and extra training. A5 changed the reference under the original sampler. Only A2 and A4 completed the clip; every full L1 count remained zero.",
+    "source": "P09 A1–A5 raw JSONs",
+    "chart": "sweep.png",
+    "take": "A6 was skipped; I did not reuse its slot for an unlisted experiment.",
+    "layout": "cards"
+  },
+  {
+    "title": "I monitored the learning curves, not only the final score",
+    "sub": "Actual saved native-training diagnostics · sampled every 250 updates",
+    "boxes": [],
+    "notes": "These are the actual training curves, not the final evaluation scores. A2 and resumed A4 developed longer episodes. A1 became shorter again as its tolerance tightened. A3 and the c3 variant remained short. The x-axis starts at the first saved diagnostic for each row; A4 already inherited A2 training, so these are not matched fresh starts. Training uses varied reference starts, pushes and randomization, so episode duration is not a full skill pass.",
+    "source": "P09 A1–A5/train_diag_every250.json",
+    "chart": "training_episodes.png",
+    "take": "Longer training episodes were useful evidence, but did not replace strict evaluation.",
+    "layout": "cards"
+  },
+  {
+    "title": "I also tracked error during training",
+    "sub": "Native training summaries differ from the strict frame-zero evaluation.",
+    "boxes": [],
+    "notes": "The left graph is episode-mean training joint RMS, and the right graph is anchor velocity error at the last step. I do not use these as L1 passes or compare them directly with the strict evaluation values. A4 is a resumed policy and A5 changes reference. A1 did not log the new joint RMS metric, so it is omitted rather than filled in. Each curve comes from its saved native-training diagnostics.",
+    "source": "P09 A2–A5/train_diag_every250.json",
+    "chart": "training_errors.png",
+    "take": "These are training diagnostics, not proof of full-clip success or a causal ablation.",
+    "layout": "cards"
+  },
+  {
+    "title": "A1 episodes shortened as I restored strict tolerance",
+    "sub": "The training curriculum finished at the original 0.25 m tolerance.",
+    "boxes": [],
+    "notes": "A1 started with a wider end-effector termination tolerance, then tightened it to the original setting. The duration curve fell sharply around the return to strict tolerance. This describes one training run; it does not prove a unique cause. The final strict frame-zero evaluation still failed all twenty episodes. The data were already logged; I did not rerun training to make this graph.",
+    "source": "P09 A1/train_diag_every250.json",
+    "chart": "training_curriculum.png",
+    "take": "The relaxed training phase did not yield a passing strict policy.",
+    "layout": "cards"
+  },
+  {
+    "title": "I saw progress in recovery and joint tracking",
+    "sub": "A4 resumed from A2, added the velocity-weight change and trained 3,000 more updates.",
+    "boxes": [],
+    "notes": "A4 recovered at the required speed in all twenty episodes. Eighteen met the joint-error gate, compared with zero for A2. The no-fall count stayed eighteen. Flight remained zero. Sixteen episodes met all non-flight gates together; I do not count them as full passes.",
+    "source": "P09 A2/A4 raw JSONs",
+    "chart": "gates.png",
+    "take": "A4 improved partial metrics, but all 20 episodes still failed full test.",
+    "layout": "cards"
+  },
+  {
+    "title": "Flight duration remained the binding common failure",
+    "sub": "The human-source threshold stayed fixed; I did not lower it to fit the results.",
+    "boxes": [],
+    "notes": "A2 flew for 0.200 to 0.225 seconds. A4 flew for 0.195 to 0.215 seconds. The R1 reference geometry gives about 0.22 seconds of airborne time, while the physical gate is 0.24. That suggests a tension between close tracking and the flight requirement. Geometric reference flight and physical force-based flight are different measurements, so this does not prove impossibility.",
+    "source": "P09 A2/A4 raw; S6 reference admission",
+    "chart": "flight.png",
+    "take": "Reference feasibility needs investigation; the success gate still failed.",
+    "layout": "cards"
+  },
+  {
+    "title": "I kept the extra-training confound visible",
+    "sub": "A2 and A4 are a lineage, not a matched ablation.",
+    "boxes": [
+      {
+        "title": "A2 · fresh seed 48",
+        "text": "3,000 updates\nMean joint RMS: 0.178 rad\nRecovery: 10/20",
+        "meaning": "The start mixture is the scientific change relative to the original pilot."
+      },
+      {
+        "title": "A4 · resumed seed 49",
+        "text": "3,000 additional updates\nMean joint RMS: 0.148 rad\nRecovery: 20/20",
+        "meaning": "The candidate also inherited A2 training and changed the velocity weight. Its adaptive sampler history restarted."
+      },
+      {
+        "title": "What I can claim",
+        "text": "The combined candidate improved these measured outcomes.",
+        "meaning": "I cannot attribute the gain only to velocity weighting; extra training and the new seed are confounds."
+      }
+    ],
+    "notes": "The result is encouraging as engineering progress, but it is not an isolated test of the velocity reward. A4 had more total updates and a resumed training lineage. I need matched-budget, multi-seed tests before making a causal claim.",
+    "source": "P09 A2/A4 manifests and raw",
+    "chart": null,
+    "take": "Lower joint error did not establish a complete running-jump skill.",
+    "layout": "cards"
+  },
+  {
+    "title": "I tried one other reference and kept one slot unused",
+    "sub": "A5 and A6 were not pooled with the original c2 comparison.",
+    "boxes": [
+      {
+        "title": "A5 · c3 variant",
+        "text": "0/20 full passes\nMedian survival: 1.22 s\nAll 20 ended before the jump",
+        "meaning": "This reference has its own 0.32-second flight anchor. It used the original sampler, not A2’s mixture."
+      },
+      {
+        "title": "A6 · skipped",
+        "text": "No admitted slower continuous reference existed within the bounded preparation scope.",
+        "meaning": "Skipping is a protocol outcome, not a failed training run. Uniform slow motion would alter flight feasibility."
+      },
+      {
+        "title": "What remained untested",
+        "text": "c3 with the A2/A4 configuration",
+        "meaning": "This is a future option. It was not run and is not presented as a result."
+      }
+    ],
+    "notes": "The alternate c3 reference still failed early under the original configuration. I did not train c3 with the successful start mixture in this sweep. I also did not manufacture a slower reference just to fill the sixth slot.",
+    "source": "P09 A5 raw/admission; A6 README",
+    "chart": null,
+    "take": "",
+    "layout": "cards"
+  },
+  {
+    "title": "The failed attempts also narrowed the next question",
+    "sub": "These are observations from this sweep, not universal conclusions.",
+    "boxes": [
+      {
+        "title": "A1 · temporary relaxation",
+        "text": "Episodes shortened again at strict tolerance; final full test 0/20.",
+        "meaning": "A wider training tolerance did not produce a passing strict policy in this one run. The missing native A1 RMS is not filled in."
+      },
+      {
+        "title": "A3 · more velocity reward alone",
+        "text": "No episode completed the clip; final full test 0/20.",
+        "meaning": "Increasing velocity reward under the original sampler did not fix the early failure in this run. That does not prove velocity reward is irrelevant in every setup."
+      },
+      {
+        "title": "A5 · different reference alone",
+        "text": "The c3 variant also failed before the jump; full test 0/20.",
+        "meaning": "The alternate reference used the original sampler. The sweep did not test c3 together with A2’s phase mixture, so that remains an untested combination."
+      }
+    ],
+    "notes": "The negative results help locate what still needs testing. Simply relaxing termination and returning to strict settings was not enough. Simply increasing the speed reward was not enough. A different reference under the original configuration also failed early. The phase-mixture attempts made the largest observed progress on c2, but more seeds and matched budgets are needed before I turn that observation into a general causal claim.",
+    "source": "P09 A1/A3/A5 raw; final report",
+    "chart": null,
+    "take": "",
+    "layout": "cards"
+  },
+  {
+    "title": "I stopped where the evidence stopped",
+    "sub": "No physical robot experiment or new rollout video is claimed.",
+    "boxes": [
+      {
+        "title": "Simulation only",
+        "text": "Nominal tests are not real-robot validation.",
+        "meaning": "P09 did not include the delay, friction, mass or push robustness sweep used for the separate command policy."
+      },
+      {
+        "title": "Single training seeds",
+        "text": "Twenty evaluation episodes are not twenty trained models.",
+        "meaning": "A4 also has a resumed lineage and extra compute. Generalization and uncertainty need new tests."
+      },
+      {
+        "title": "Private reference data",
+        "text": "LAFAN1 motions, derived models and videos stay private.",
+        "meaning": "This deck uses numeric summaries and diagrams. No LAFAN-derived rollout is embedded; the workstation had no rendered video."
+      }
+    ],
+    "notes": "The most important boundary is that all of this is simulation. I have not validated these policies on hardware. I also do not have a new rollout video from this sweep. The plotted evidence comes from the saved numeric evaluations.",
+    "source": "P08/P09 final reports; data handling rules",
+    "chart": null,
+    "take": "P09 used 5.874 GPU-hours; A6 was skipped, not replaced.",
+    "layout": "cards"
+  },
+  {
+    "title": "I would discuss three next tests with Prof. Sun",
+    "sub": "Proposed options only; none of these experiments has run.",
+    "boxes": [
+      {
+        "title": "Reference feasibility",
+        "text": "Audit the shortened c2 flight and a physically consistent repair.",
+        "meaning": "A changed reference would be a separately labeled variant with its own admission and provenance."
+      },
+      {
+        "title": "Transfer the useful recipe",
+        "text": "Test the start mixture on the admitted c3 variant.",
+        "meaning": "This needs a new bounded experiment; A5 alone did not test this combination."
+      },
+      {
+        "title": "Separate mechanisms",
+        "text": "Compare matched budgets and more training seeds.",
+        "meaning": "This would distinguish sampling, extra training and reward-weight effects before a stronger research claim."
+      }
+    ],
+    "notes": "My first question is whether we should prioritize repairing the reference’s flight or transferring the start mixture to c3. I would then compare matched training budgets with more seeds. I am presenting these as choices for discussion, not completed work or permission to run them.",
+    "source": "P09 final report: untested options",
+    "chart": null,
+    "take": "",
+    "layout": "cards"
+  },
+  {
+    "title": "My Week 32 result: progress, but no full imitation pass",
+    "sub": "The partial results tell me where to work next.",
+    "boxes": [
+      {
+        "title": "Commanded jump",
+        "text": "Nominal 20/20; random timing and action delay remain weak.",
+        "meaning": "The original command model remains the policy of record; neither fine-tune met promotion rules."
+      },
+      {
+        "title": "Reference tracking",
+        "text": "A4 completes 20/20, but full test remains 0/20.",
+        "meaning": "Recovery and tracking improved while flight duration stayed below the fixed gate."
+      },
+      {
+        "title": "Discussion question",
+        "text": "Should I repair flight feasibility first, or test the mixture on c3?",
+        "meaning": "The next experiment should target the measured defect rather than add unbounded training."
+      }
+    ],
+    "notes": "I can now separate three things clearly: a command policy that jumps nominally, a tracker that completes the clip, and the full skill contract that remains unmet. That separation is the useful result of the week.",
+    "source": "P08 S5; P09 final/raw",
+    "chart": null,
+    "take": "",
+    "layout": "cards"
+  },
+  {
+    "title": "Evidence and reproducibility",
+    "sub": "Private working presentation · raw metrics frozen for this build",
+    "boxes": [
+      {
+        "title": "Command-policy evidence",
+        "text": "week_queue_2026-10-29/\nS1/rework_v2 · S3/raw · S4/raw · S5/bankB",
+        "meaning": "These folders contain the corrected episode-level results behind the command and landing charts."
+      },
+      {
+        "title": "Imitation evidence",
+        "text": "p09_s6_2026-10-29/\nA1–A5/raw · manifests · parity · train_status",
+        "meaning": "These are the original c2 rows and separately labeled c3 variant. No confirmation bank was used because nothing passed."
+      },
+      {
+        "title": "Companion files",
+        "text": "Speaker script · box-by-box HTML\nverified_metrics.json · evidence_manifest.json",
+        "meaning": "The companion explains each text box. Hashes point to the exact local evidence used; the builder reruns only saved-data aggregation."
+      }
+    ],
+    "notes": "The supporting files preserve the source of every result slide. I can reproduce the charts without new training or simulation. The presentation notes and box-by-box companion contain the definitions that would be too dense for the main slides.",
+    "source": "P08/P09 saved artifacts; snapshot recorded in README",
+    "chart": null,
+    "take": "",
+    "layout": "cards"
+  }
+]

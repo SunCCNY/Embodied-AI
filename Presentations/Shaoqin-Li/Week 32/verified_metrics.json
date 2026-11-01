@@ -1,0 +1,278 @@
+{
+  "A1": {
+    "n": 20,
+    "pass": 0,
+    "complete": 0,
+    "gates": {
+      "no_fall": 0,
+      "flight": 0,
+      "recovery": 0,
+      "joint_rms": 0
+    },
+    "rms": 0.33891511708732713,
+    "survival": 0.8300000000000001,
+    "flight": [
+      0.0,
+      0.0
+    ],
+    "parity": 4.291534423828125e-06,
+    "nonflight": 0,
+    "seconds": 3935
+  },
+  "A2": {
+    "n": 20,
+    "pass": 0,
+    "complete": 20,
+    "gates": {
+      "no_fall": 18,
+      "flight": 0,
+      "recovery": 10,
+      "joint_rms": 0
+    },
+    "rms": 0.17804645376334072,
+    "survival": 5.26,
+    "flight": [
+      0.2,
+      0.225
+    ],
+    "parity": 5.7220458984375e-06,
+    "nonflight": 0,
+    "seconds": 4595
+  },
+  "A3": {
+    "n": 20,
+    "pass": 0,
+    "complete": 0,
+    "gates": {
+      "no_fall": 0,
+      "flight": 0,
+      "recovery": 0,
+      "joint_rms": 0
+    },
+    "rms": 0.34735336505739856,
+    "survival": 0.86,
+    "flight": [
+      0.0,
+      0.0
+    ],
+    "parity": 3.814697265625e-06,
+    "nonflight": 0,
+    "seconds": 4265
+  },
+  "A4": {
+    "n": 20,
+    "pass": 0,
+    "complete": 20,
+    "gates": {
+      "no_fall": 18,
+      "flight": 0,
+      "recovery": 20,
+      "joint_rms": 18
+    },
+    "rms": 0.14797401300701257,
+    "survival": 5.26,
+    "flight": [
+      0.195,
+      0.215
+    ],
+    "parity": 6.67572021484375e-06,
+    "nonflight": 16,
+    "seconds": 4325
+  },
+  "A5": {
+    "n": 20,
+    "pass": 0,
+    "complete": 0,
+    "gates": {
+      "no_fall": 0,
+      "flight": 0,
+      "recovery": 0,
+      "joint_rms": 0
+    },
+    "rms": 0.32100711337843135,
+    "survival": 1.22,
+    "flight": [
+      0.0,
+      0.0
+    ],
+    "parity": 3.337860107421875e-06,
+    "nonflight": 0,
+    "seconds": 4025
+  },
+  "baseline": {
+    "B0": {
+      "pass": 20,
+      "falls": 0,
+      "landing_mean": 8.77362536393387,
+      "landing_max": 10.002222792645986
+    },
+    "T": {
+      "pass": 16,
+      "falls": 0,
+      "landing_mean": 8.168280760532266,
+      "landing_max": 9.923124319912054
+    },
+    "R": {
+      "pass": 20,
+      "falls": 0,
+      "landing_mean": 8.90032205984457,
+      "landing_max": 10.342935014223928
+    },
+    "F-low": {
+      "pass": 20,
+      "falls": 0,
+      "landing_mean": 8.764372552578195,
+      "landing_max": 9.907439150133412
+    },
+    "F-high": {
+      "pass": 20,
+      "falls": 0,
+      "landing_mean": 6.698614048535516,
+      "landing_max": 6.737593885319817
+    },
+    "D25": {
+      "pass": 0,
+      "falls": 0,
+      "landing_mean": 6.940259714923151,
+      "landing_max": 8.374950338578522
+    },
+    "D50": {
+      "pass": 0,
+      "falls": 20,
+      "landing_mean": 4.762896006594836,
+      "landing_max": 7.667652761855855
+    }
+  },
+  "S3": {
+    "B0": {
+      "pass": 20,
+      "falls": 0,
+      "landing_mean": 6.269943764468795,
+      "landing_max": 8.007445227971907
+    },
+    "T": {
+      "pass": 18,
+      "falls": 0,
+      "landing_mean": 6.6069100239892276,
+      "landing_max": 8.510575385844012
+    },
+    "R": {
+      "pass": 20,
+      "falls": 0,
+      "landing_mean": 6.105200663559764,
+      "landing_max": 8.007445227971907
+    },
+    "F-low": {
+      "pass": 20,
+      "falls": 0,
+      "landing_mean": 7.284064748481557,
+      "landing_max": 8.410584670530508
+    },
+    "F-high": {
+      "pass": 20,
+      "falls": 0,
+      "landing_mean": 4.680526525377347,
+      "landing_max": 4.84931866585118
+    },
+    "D25": {
+      "pass": 0,
+      "falls": 0,
+      "landing_mean": 6.908791244663787,
+      "landing_max": 9.401111415957295
+    },
+    "D50": {
+      "pass": 0,
+      "falls": 20,
+      "landing_mean": 5.133064575481174,
+      "landing_max": 7.779907329710748
+    }
+  },
+  "S4": {
+    "B0": {
+      "pass": 0,
+      "falls": 0,
+      "landing_mean": 4.004627997389601,
+      "landing_max": 4.348813080029378
+    },
+    "T": {
+      "pass": 0,
+      "falls": 0,
+      "landing_mean": 4.10132700121388,
+      "landing_max": 4.663661931969383
+    },
+    "R": {
+      "pass": 0,
+      "falls": 0,
+      "landing_mean": 3.9981250404461544,
+      "landing_max": 4.3713074996338825
+    },
+    "F-low": {
+      "pass": 0,
+      "falls": 0,
+      "landing_mean": 4.075905574828099,
+      "landing_max": 4.694922567224123
+    },
+    "F-high": {
+      "pass": 0,
+      "falls": 0,
+      "landing_mean": 3.5971666405444274,
+      "landing_max": 3.5980512473549227
+    },
+    "D25": {
+      "pass": 0,
+      "falls": 0,
+      "landing_mean": 3.714434890487635,
+      "landing_max": 3.9543847621215056
+    },
+    "D50": {
+      "pass": 0,
+      "falls": 0,
+      "landing_mean": 3.284814963692801,
+      "landing_max": 3.476878250383019
+    }
+  },
+  "bankB": {
+    "B0": {
+      "pass": 20,
+      "falls": 0,
+      "landing_mean": 8.875959622368367,
+      "landing_max": 10.139397543470603
+    },
+    "T": {
+      "pass": 16,
+      "falls": 0,
+      "landing_mean": 7.270615116706253,
+      "landing_max": 10.519069593779056
+    },
+    "R": {
+      "pass": 20,
+      "falls": 0,
+      "landing_mean": 8.983063874747652,
+      "landing_max": 10.139397543470603
+    },
+    "F-low": {
+      "pass": 20,
+      "falls": 0,
+      "landing_mean": 8.687396756093612,
+      "landing_max": 10.01159434857572
+    },
+    "F-high": {
+      "pass": 20,
+      "falls": 0,
+      "landing_mean": 6.700485113101442,
+      "landing_max": 6.733272208600526
+    },
+    "D25": {
+      "pass": 0,
+      "falls": 0,
+      "landing_mean": 6.951195309503334,
+      "landing_max": 8.882883051660029
+    },
+    "D50": {
+      "pass": 0,
+      "falls": 20,
+      "landing_mean": 4.794842725614325,
+      "landing_max": 6.009625234761433
+    }
+  }
+}

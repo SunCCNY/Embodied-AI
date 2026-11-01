@@ -1,0 +1,210 @@
+[
+  {
+    "file": "/home/sql/claude_brain/projects/embodied_ai_r1/video_to_r1_pipeline/results/p09_s6_2026-10-29/A1/raw/a1_m2999_s6.json",
+    "sha256": "11b2048466ab1c49a77c7a382adc53a0feb8fe0c159ed009bd6210ec9c1ba18c"
+  },
+  {
+    "file": "/home/sql/claude_brain/projects/embodied_ai_r1/video_to_r1_pipeline/results/p09_s6_2026-10-29/A1/export_parity_a1_model_2999.json",
+    "sha256": "f71c1ec566107ef51594f84107ed7555a1a45ae3a1c1c1389477225a4fee62c0"
+  },
+  {
+    "file": "/home/sql/claude_brain/projects/embodied_ai_r1/video_to_r1_pipeline/results/p09_s6_2026-10-29/A2/raw/a2_m2999_s6.json",
+    "sha256": "5aebdca7029e1e24d9f5b245262ce07ec303870511c8e1d037eb76c2d8510958"
+  },
+  {
+    "file": "/home/sql/claude_brain/projects/embodied_ai_r1/video_to_r1_pipeline/results/p09_s6_2026-10-29/A2/export_parity_a2_model_2999.json",
+    "sha256": "e87bebfc906778ca5d6f42073a55004a9c5491dcf002583599487cd46add6386"
+  },
+  {
+    "file": "/home/sql/claude_brain/projects/embodied_ai_r1/video_to_r1_pipeline/results/p09_s6_2026-10-29/A3/raw/a3_m2999_s6.json",
+    "sha256": "6c156e815d97693a5abf004111bc96336e2699134f9b1be0bee40e165a7f1ebc"
+  },
+  {
+    "file": "/home/sql/claude_brain/projects/embodied_ai_r1/video_to_r1_pipeline/results/p09_s6_2026-10-29/A3/export_parity_a3_model_2999.json",
+    "sha256": "197934f8960555bf83a028a0d62e38ef8d92bc1d38033880efa64b0560eb21ce"
+  },
+  {
+    "file": "/home/sql/claude_brain/projects/embodied_ai_r1/video_to_r1_pipeline/results/p09_s6_2026-10-29/A4/raw/a4_m5998_s6.json",
+    "sha256": "3209d57074fffb211c23fcb00b920b6b1b071cd2876797d67a14fa7dc94023d4"
+  },
+  {
+    "file": "/home/sql/claude_brain/projects/embodied_ai_r1/video_to_r1_pipeline/results/p09_s6_2026-10-29/A4/export_parity_a4_model_5998.json",
+    "sha256": "6529f286c85775982778486b766d9e08dd41041f032a7b053b385bcb79b40654"
+  },
+  {
+    "file": "/home/sql/claude_brain/projects/embodied_ai_r1/video_to_r1_pipeline/results/p09_s6_2026-10-29/A5/raw/a5c3_m2999_s6.json",
+    "sha256": "249e6b49c312730bdba3e304e7be4cb847843d68acfb40e41500d9f41a415eb3"
+  },
+  {
+    "file": "/home/sql/claude_brain/projects/embodied_ai_r1/video_to_r1_pipeline/results/p09_s6_2026-10-29/A5/export_parity_a5_model_2999.json",
+    "sha256": "78e8be95ed8056114e992888099063591c8e9d44b477a89f3cb9860cff7fc679"
+  },
+  {
+    "file": "/home/sql/claude_brain/projects/embodied_ai_r1/video_to_r1_pipeline/results/week_queue_2026-10-29/S1/rework_v2/m20496v2_B0.json",
+    "sha256": "d74fceed1aceede7fab1c5b389e81921186a55fac11350074d60d517e2b25bfc"
+  },
+  {
+    "file": "/home/sql/claude_brain/projects/embodied_ai_r1/video_to_r1_pipeline/results/week_queue_2026-10-29/S1/rework_v2/m20496v2_T.json",
+    "sha256": "009fbc80645404e977abbe98d9a371ad2c63342ad20c2bcb2a4fd69defc8a590"
+  },
+  {
+    "file": "/home/sql/claude_brain/projects/embodied_ai_r1/video_to_r1_pipeline/results/week_queue_2026-10-29/S1/rework_v2/m20496v2_R.json",
+    "sha256": "e063d5ccff4623059efd8a6e183555e57bc877621ce8e75ceffdc16b64bdce3e"
+  },
+  {
+    "file": "/home/sql/claude_brain/projects/embodied_ai_r1/video_to_r1_pipeline/results/week_queue_2026-10-29/S1/rework_v2/m20496v2_F-low.json",
+    "sha256": "bd733b58dbf7c3ee2663565bddb366a61dc653287c603e61131569cfecaffa9b"
+  },
+  {
+    "file": "/home/sql/claude_brain/projects/embodied_ai_r1/video_to_r1_pipeline/results/week_queue_2026-10-29/S1/rework_v2/m20496v2_F-high.json",
+    "sha256": "cc95e4ece6a2f03a2c6d3ba79cb39b85dec2b8a047a75d1db4342782948ef922"
+  },
+  {
+    "file": "/home/sql/claude_brain/projects/embodied_ai_r1/video_to_r1_pipeline/results/week_queue_2026-10-29/S1/rework_v2/m20496v2_D25.json",
+    "sha256": "e7cef88a062d0babb0dcabadb98d318f17984b02da20710f034bef9d93836be6"
+  },
+  {
+    "file": "/home/sql/claude_brain/projects/embodied_ai_r1/video_to_r1_pipeline/results/week_queue_2026-10-29/S1/rework_v2/m20496v2_D50.json",
+    "sha256": "1590f28f632fb853a1f75a6b55275dad6c9ea79e0aad3f5cf8f1ea142d1bd61e"
+  },
+  {
+    "file": "/home/sql/claude_brain/projects/embodied_ai_r1/video_to_r1_pipeline/results/week_queue_2026-10-29/S3/raw/s3m23495_B0.json",
+    "sha256": "da297e352cb188abf15334dbe59d1d6032af8033d59de841e3ad755aaf587896"
+  },
+  {
+    "file": "/home/sql/claude_brain/projects/embodied_ai_r1/video_to_r1_pipeline/results/week_queue_2026-10-29/S3/raw/s3m23495_T.json",
+    "sha256": "7468f483a560123bab43aa6f6aad6243714c0e91c6f56cf3d70b0e32660ea13f"
+  },
+  {
+    "file": "/home/sql/claude_brain/projects/embodied_ai_r1/video_to_r1_pipeline/results/week_queue_2026-10-29/S3/raw/s3m23495_R.json",
+    "sha256": "3507922ccb8f304f0fd5e90068200eb7f126f58a3da17f6349944831cc177697"
+  },
+  {
+    "file": "/home/sql/claude_brain/projects/embodied_ai_r1/video_to_r1_pipeline/results/week_queue_2026-10-29/S3/raw/s3m23495_F-low.json",
+    "sha256": "8da17274ea6554fd824b0ee3fc1a6eeb1ce780484b0ad632af138ac47c1a8663"
+  },
+  {
+    "file": "/home/sql/claude_brain/projects/embodied_ai_r1/video_to_r1_pipeline/results/week_queue_2026-10-29/S3/raw/s3m23495_F-high.json",
+    "sha256": "c1331ead3deff77a3431f66997d94c03c501ecd4a5378d7ab0f4ecd0a58e597e"
+  },
+  {
+    "file": "/home/sql/claude_brain/projects/embodied_ai_r1/video_to_r1_pipeline/results/week_queue_2026-10-29/S3/raw/s3m23495_D25.json",
+    "sha256": "a378359268337c770a6d05283b2bc8465fd87e9bedd1ba29404b9f18a2575c88"
+  },
+  {
+    "file": "/home/sql/claude_brain/projects/embodied_ai_r1/video_to_r1_pipeline/results/week_queue_2026-10-29/S3/raw/s3m23495_D50.json",
+    "sha256": "5f02fbb7ee47b0dcc1c873d31fc2172bc8600dbfad7e701f8ec45ff59cb3afc5"
+  },
+  {
+    "file": "/home/sql/claude_brain/projects/embodied_ai_r1/video_to_r1_pipeline/results/week_queue_2026-10-29/S4/raw/s4m26300_B0.json",
+    "sha256": "2084e5d1796ea2ee27903b3b1951876c7f69a10ad8fdababc67bb9a0833ecb3a"
+  },
+  {
+    "file": "/home/sql/claude_brain/projects/embodied_ai_r1/video_to_r1_pipeline/results/week_queue_2026-10-29/S4/raw/s4m26300_T.json",
+    "sha256": "82690ec6ab476446521a1791f97a934ccecf2042c3d620d22bb6d5d8d5fb95a2"
+  },
+  {
+    "file": "/home/sql/claude_brain/projects/embodied_ai_r1/video_to_r1_pipeline/results/week_queue_2026-10-29/S4/raw/s4m26300_R.json",
+    "sha256": "38d6522405f9a9441198c70bf226b40907a4f36a44a7c07d6cfb8b07049b909c"
+  },
+  {
+    "file": "/home/sql/claude_brain/projects/embodied_ai_r1/video_to_r1_pipeline/results/week_queue_2026-10-29/S4/raw/s4m26300_F-low.json",
+    "sha256": "1bc5a86c9b36dc60c92c693e3093cf09f8391bfd604918edc15c267f00c6bbf3"
+  },
+  {
+    "file": "/home/sql/claude_brain/projects/embodied_ai_r1/video_to_r1_pipeline/results/week_queue_2026-10-29/S4/raw/s4m26300_F-high.json",
+    "sha256": "9e6c720572e8d52cdaf20f1a0e12c1942c6534e5d55bb2c7ad1943b29917b5b4"
+  },
+  {
+    "file": "/home/sql/claude_brain/projects/embodied_ai_r1/video_to_r1_pipeline/results/week_queue_2026-10-29/S4/raw/s4m26300_D25.json",
+    "sha256": "4f4984bccab5828c755b7b93adc5a08ff32a321353438009b6329cc7cbc12fba"
+  },
+  {
+    "file": "/home/sql/claude_brain/projects/embodied_ai_r1/video_to_r1_pipeline/results/week_queue_2026-10-29/S4/raw/s4m26300_D50.json",
+    "sha256": "1660f3751f25edd5c56e925a139fa5c9e27245ccd5604d6b5acc6cddc662e06e"
+  },
+  {
+    "file": "/home/sql/claude_brain/projects/embodied_ai_r1/video_to_r1_pipeline/results/week_queue_2026-10-29/S5/bankB/m20496_bankB_B0.json",
+    "sha256": "11f9847f89cf0582127c5552add36d3032abb4ca1f9881e9f86e7cceb1626fa8"
+  },
+  {
+    "file": "/home/sql/claude_brain/projects/embodied_ai_r1/video_to_r1_pipeline/results/week_queue_2026-10-29/S5/bankB/m20496_bankB_T.json",
+    "sha256": "c390c4c7af66b28acfb6f72ab5d66d39127e46a2d4a5f228080e1b83f53e0a40"
+  },
+  {
+    "file": "/home/sql/claude_brain/projects/embodied_ai_r1/video_to_r1_pipeline/results/week_queue_2026-10-29/S5/bankB/m20496_bankB_R.json",
+    "sha256": "b370a3a366aafc195a15ec75a516b11e2cc12c8f890748e038acfc3bfa54f77a"
+  },
+  {
+    "file": "/home/sql/claude_brain/projects/embodied_ai_r1/video_to_r1_pipeline/results/week_queue_2026-10-29/S5/bankB/m20496_bankB_F-low.json",
+    "sha256": "b35baf5c34535200a60a9f1bb4176519ed06d446a841c39948de331c2a8f8b7d"
+  },
+  {
+    "file": "/home/sql/claude_brain/projects/embodied_ai_r1/video_to_r1_pipeline/results/week_queue_2026-10-29/S5/bankB/m20496_bankB_F-high.json",
+    "sha256": "a020a3cdf79a2708ff29f380209380535907c93bce6d2ea12ad1f6c58ac0ec45"
+  },
+  {
+    "file": "/home/sql/claude_brain/projects/embodied_ai_r1/video_to_r1_pipeline/results/week_queue_2026-10-29/S5/bankB/m20496_bankB_D25.json",
+    "sha256": "179b6f36222030761e3bdf997342315d7a33bc8e8c1abff7356761ba5915c336"
+  },
+  {
+    "file": "/home/sql/claude_brain/projects/embodied_ai_r1/video_to_r1_pipeline/results/week_queue_2026-10-29/S5/bankB/m20496_bankB_D50.json",
+    "sha256": "ed193997b24437767a46cb5bc59d1c3d37721ec9430bc40176dff878e4a519f4"
+  },
+  {
+    "file": "/home/sql/claude_brain/projects/embodied_ai_r1/video_to_r1_pipeline/results/p09_s6_2026-10-29/A1/train_diag_every250.json",
+    "sha256": "875c9205eabcb4cadea92ec574b596f895b2c24e9b8f6b2297fb8df678dac02a"
+  },
+  {
+    "file": "/home/sql/claude_brain/projects/embodied_ai_r1/video_to_r1_pipeline/results/p09_s6_2026-10-29/A2/train_diag_every250.json",
+    "sha256": "79901b42b29b8cc2ed6d1e66f7a2258f022a12d67587ba6b4eca7511c9ea62f6"
+  },
+  {
+    "file": "/home/sql/claude_brain/projects/embodied_ai_r1/video_to_r1_pipeline/results/p09_s6_2026-10-29/A3/train_diag_every250.json",
+    "sha256": "5dbc5a7d22f762b1c36708a24880dffd732fea7f1816a150bb8dbd8ecdeef1ca"
+  },
+  {
+    "file": "/home/sql/claude_brain/projects/embodied_ai_r1/video_to_r1_pipeline/results/p09_s6_2026-10-29/A4/train_diag_every250.json",
+    "sha256": "80c529b7bd71341105ce5342e2ca9d52c22d8e7c9202b3ebf4ad138cf9b37528"
+  },
+  {
+    "file": "/home/sql/claude_brain/projects/embodied_ai_r1/video_to_r1_pipeline/results/p09_s6_2026-10-29/A5/train_diag_every250.json",
+    "sha256": "3a5b50e8e5a0e08472b1403e3b8e15fec541abe8ca837379ff4efde6541b1de1"
+  },
+  {
+    "file": "/home/sql/claude_brain/projects/embodied_ai_r1/video_to_r1_pipeline/results/run_jump_P04_2026-10-28/raw/runftv2_model_14498_vx2.json",
+    "sha256": "ddfa77a3145e53a9e3f7e381c41c3d258330640930330b84f297eb20d09288d4"
+  },
+  {
+    "file": "/home/sql/claude_brain/projects/embodied_ai_r1/video_to_r1_pipeline/results/run_jump_P04_2026-10-28/raw/jump_model_17497_jump_vx2.json",
+    "sha256": "3c3e05a90d0ca2ed077e283d60894d763d2730292f8895a04b862b0550df8ece"
+  },
+  {
+    "file": "/home/sql/claude_brain/projects/embodied_ai_r1/video_to_r1_pipeline/results/run_jump_P04_2026-10-28/raw/jumpapex_model_20496_jump_vx2.json",
+    "sha256": "4004e85f987336c91505d93925bda0517e12734ec1c6b491f07a7766f52adc01"
+  },
+  {
+    "file": "/home/sql/claude_brain/projects/embodied_ai_r1/video_to_r1_pipeline/results/run_jump_P04_2026-10-28/README.md",
+    "sha256": "e66498b38e28f79ecd08ea279413ca67f7c4c976b6983bd0a18e55243b3a4e3b"
+  },
+  {
+    "file": "/home/sql/claude_brain/projects/embodied_ai_r1/video_to_r1_pipeline/results/run_jump_P04_2026-10-28/JUMP_STAGE.md",
+    "sha256": "938ffcb6a04ec27337f13b2c884ed6fe7bf392acc1367f27a52e536e27fc6e10"
+  },
+  {
+    "file": "/home/sql/claude_brain/projects/embodied_ai_r1/video_to_r1_pipeline/results/run_jump_P04_2026-10-28/BRANCH_B_retarget_repair.md",
+    "sha256": "6e1f3025d47ae10164fdfa83451d6cfb274c692edf54d668ce1ae431df27b0e7"
+  },
+  {
+    "file": "/home/sql/claude_code_projects/embodied_ai_r1/presentations/week_31/speaker_script_week31.md",
+    "sha256": "68785b744d92982d9944d21fb27c4655fc71508104865274b2d10b72c323e626"
+  },
+  {
+    "file": "/home/sql/claude_code_projects/embodied_ai_r1/presentations/week_31/week31_shots/poster_walk_run_delay.png",
+    "sha256": "31a2f6a70ebc69db9dffd8a7e1d84f7b138e30009e10a40e58f5982e11111de5"
+  },
+  {
+    "file": "/home/sql/claude_code_projects/embodied_ai_r1/presentations/week_31/week31_shots/poster_jumping_jacks.png",
+    "sha256": "74ecca94168405ef582a76864f79170aaeee78f606239e2353592c895fb10022"
+  }
+]

@@ -1,0 +1,12 @@
+WEEK 32 / SAVED-DATA AUDIT
+Source: P09 raw episode JSONs
+row  clip complete  full L1  median(s)  joint RMS(rad)
+A1    0/20           0/20     0.83      0.339
+A2   20/20           0/20     5.26      0.178
+A3    0/20           0/20     0.86      0.347
+A4   20/20           0/20     5.26      0.148
+A5    0/20           0/20     1.22      0.321
+
+A4: 16/20 meet all gates EXCEPT flight.
+All full L1 results remain FAIL.
+No simulation or training ran in this audit.
